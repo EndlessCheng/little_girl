@@ -150,7 +150,7 @@ int main()
 			SI(b);
 			if (b[i]) scanf("%d%d", h + i, d + i);
 		}
-		scanf("%d%d%d", &H, &D, &P);
+		SIII(a,b,c);
 		//solve();
 	}
 	return 0;
