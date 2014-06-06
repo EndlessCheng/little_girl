@@ -147,7 +147,7 @@ int main()
 	{
 		Forr(i, 1, n + 1)
 		{
-			scanf("%d", b + i);
+			SI(b);
 			if (b[i]) scanf("%d%d", h + i, d + i);
 		}
 		scanf("%d%d%d", &H, &D, &P);
