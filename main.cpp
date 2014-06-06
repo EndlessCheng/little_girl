@@ -142,7 +142,6 @@ const int mx = int(1e5) + 5;
 
 int main()
 {
-    ll a, b;
-    while (~SLL(a, b)) PL(a + b);
+
     return 0;
 }
