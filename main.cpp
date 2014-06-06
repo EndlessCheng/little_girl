@@ -142,6 +142,15 @@ const int mx = int(1e5) + 5;
 
 int main()
 {
-
-    return 0;
+	while (scanf("%d", &n) != EOF)
+	{
+		for (int i = 1; i <= n; ++i)
+		{
+			scanf("%d", b + i);
+			if (b[i]) scanf("%d%d", h + i, d + i);
+		}
+		scanf("%d%d%d", &H, &D, &P);
+		solve();
+	}
+	return 0;
 }
