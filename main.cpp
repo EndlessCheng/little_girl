@@ -18,7 +18,7 @@ typedef long long ll;
 #define Uni(a) a.resize(unique(all(a)) - a.begin()) /// STL专用
 #define SUni(a) sort(all(a)); Uni(a) /// STL专用
 #define Unii(a, n) (unique(a, a + (n)) - a) /// 使用前请sort
-#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 注意0LL!!!!!
+#define Acc(a, n) (accumulate(a, a + (n), 0))
 #define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
 #define Cnt1(n) (__builtin_popcount(n))
 #define Cntt1(n) (__builtin_popcountll(n)) /// 参数必须为ull类型
@@ -84,7 +84,7 @@ typedef multimap<int, int>::iterator mmter;
 #define PL(a) printf("%lld\n", a)
 #define PLL(a, b) printf("%lld %lld\n", a, b)
 #define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
-#define PD(a) printf("%f\n", a)
+#define PD(a) printf("%.10f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
@@ -97,6 +97,8 @@ typedef multimap<int, int>::iterator mmter;
 #define Pn() putchar(10)
 #define Ps() putchar(32)
 
+#define Fin(f) freopen(f, "r", stdin) /// 请手动加.in
+#define Fout(f) freopen(f, "w", stdout) /// 请手动加.out
 #define random(m) ((rand() << 16 | rand()) % m) /// [0,m)之间的伪随机数
 #define SR() srand((unsigned)time(NULL))
 
@@ -124,36 +126,170 @@ __asm__("movl %0, %%esp\n" :: "r"(__p__));
 */
 //ios_base::sync_with_stdio(0);
 
-typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
-typedef pair<pair<int, int>, int> p3;
-typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
-//#define MT(a, b, c) make_pair(make_pair(a, b), c)
 
-typedef priority_queue<int> pqi;
-//const double eps = 1e-8;
-//const int mod = int(1e9) + 7;
-#define Pcas() printf("Case %d: ", ++cas) /// 请仔细对照
-const int mx = int(1e6) + 1;
+
+
+
+
+const double eps = 1e-8;
+const int mx = 205;
+
+struct Point
+{
+	double x, y;
+	Point(double x = 0, double y = 0): x(x), y(y) {}
+	void read() {SDD(x, y);}
+	bool operator < (const Point &b) const
+    {
+        return x < b.x || x == b.x && y < b.y;
+        //return x + eps < b.x || fabs(x - b.x) < eps && y + eps < b.y;
+    }
+} p[mx], ans[mx];
+typedef pair<double, pair<Point, Point> > p3;
+#define MT(a, b, c) make_pair(a, make_pair(b, c))
+typedef Point Vec;
+
+Vec operator + (const Vec &a, const Vec &b) {return Vec(a.x + b.x, a.y + b.y);}
+Vec operator - (const Point &a, const Point &b) {return Vec(a.x - b.x, a.y - b.y);}
+Vec operator - (const Point &a) {return Vec(-a.x, -a.y);}
+Vec operator * (const Vec &a, double p) {return Vec(a.x * p, a.y * p);}
+Vec operator / (const Vec &a, double p) {return Vec(a.x / p, a.y / p);}
+
+inline double Dot(const Vec &a, const Vec &b) {return a.x * b.x + a.y * b.y;}
+inline double Cross(const Vec &a, const Vec &b) {return a.x * b.y - a.y * b.x;} /// b在a左边为正，b在a右边为负
+inline double Len(const Vec &a) {return hypot(a.x, a.y);}
+inline double Angle(const Vec &a, const Vec &b) {return acos(Dot(a, b) / Len(a) / Len(b));} /// 向量夹角
+inline double cosA(const Vec &a, const Vec &b) {return Dot(a, b) / Len(a) / Len(b);} /// 向量夹角的余弦
+inline Vec Rotate(const Vec &a, double rad) {return Vec(a.x * cos(rad) - a.y * sin(rad), a.x * sin(rad) + a.y * cos(rad));} /// 逆时针旋转向量a
+inline Vec UnitVec(Vec &a) {double l = Len(a); return Vec(-a.y / l, a.x / l);} /// 返回a的单位法向量
+
+/// 角度转弧度 *注意正负
+inline double deg2rad(double deg) {return deg / 180.0 * pi;}
+/// 弧度转角度 *注意正负
+inline double rad2deg(double rad) {return rad / pi * 180.0;}
+/// 求向量极角 *注意范围是(-pi,pi]
+inline double PolarAngle(Vec v) {return atan2(v.y, v.x);}
+
+struct Line
+{
+	Point p;
+	Vec v;
+	Line() {}
+	Line(Point p, Vec v): p(p), v(v) {}
+	Point point(double t) {return p + v * t;}
+	/// d>0左平移, d<0右平移
+	Line move(double d) {return Line(p + UnitVec(v) * d, v);}
+};
+
+struct CC
+{
+	Point c; /// *o
+	double r;
+	CC() {}
+	CC(Point c, double r): c(c), r(r) {}
+	Point point(double a) {return Point(c.x + r * cos(a), c.y + r * sin(a));}
+} ci;
+
+/// 直线与圆的交点ans
+void getLineCCIntersection(Point &p, Point &p2, CC &C, vector<p3> &crossp)
+{
+	Line L(p, p2 - p);
+	double a = L.v.x, b = L.p.x - C.c.x, c = L.v.y, d = L.p.y - C.c.y;
+	double e = a * a + c * c, f = 2 * (a * b + c * d), g = b * b + d * d - C.r * C.r;
+	double delta = f * f - 4 * e * g;
+	/// 相交
+	delta = sqrt(delta);
+	double t1 = (-f - delta) / (2 * e);
+	crossp.push_back(MT(PolarAngle(L.point(t1)), p, p2));
+	double t2 = (-f + delta) / (2 * e);
+	crossp.push_back(MT(PolarAngle(L.point(t2)), p, p2));
+}
+
+double maxA;
+
+/// 求圆上一点与圆内两点的夹角的最大值, 三分的范围为(l, r), 注意角度值的连续性
+double maxAngle(CC &ci, Point &p1, Point &p2, double l, double r)
+{
+	double tmp, m1, m2;
+	double a1, a2;
+	int i;
+	Point cp1, cp2;
+	For(i, 200) /// ?
+	{
+		tmp = (r - l) / 3;
+		m1 = l + tmp;
+		m2 = r - tmp;
+		cp1 = ci.point(m1), cp2 = ci.point(m2);
+		a1 = Angle(p1 - cp1, p2 - cp1);
+		a2 = Angle(p1 - cp2, p2 - cp2);
+		maxA = max(maxA, max(a1, a2));
+		a1 + eps < a2 ? l = m1 : r = m2; /// 求极大值
+	}
+	l = Angle(p1 - cp1, p2 - cp1);
+	//if(l<-eps) l+=2*pi;
+	//if (l + eps > 2 * pi) l -= 2 * pi;
+	//PD(l);
+	return l;
+}
+
+vector<p3> crossp;
+bool cmp(p3 a, p3 b)
+{
+	return a.first < b.first;
+}
+
+int convex_hull(Point *p, int n)
+{
+	sort(p, p + n);
+//unique(p, p + n); /// *去重，看题意
+	int cnt = 0, i;
+	For(i, n) ///构建一个下凸包，从0到n-1
+	{
+		while (cnt >= 2 && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps)
+			--cnt;
+		ans[cnt++] = p[i];
+	}
+///注意在构建上凸包的过程中我们用到了n-1这个点
+///为什么0要算两次？因为我们要借助它来删去那些在凸包内的点
+	int tmp = cnt;
+	rFor(i, n - 2) ///构建一个上凸包，从n-2到0
+	{
+		while (cnt > tmp && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps)
+			--cnt;
+		ans[cnt++] = p[i];
+	}
+	--cnt; ///0算了两次
+	ans[cnt] = ans[0]; /// *方便后续操作
+	return cnt;
+}
 
 int main()
 {
-    int t,cas=0,cnt,a,b;
-    ll s;
-    SI(t);
-    while(t--)
-    {
-        Pcas();
-       SII(a,b);
-       ll s=(ll)a*b;
-       cnt=0;
-       for(;s;s>>=1)
-       {
-           if(s&1) break;
-           ++cnt;
-       }
-       puts(cnt&1?"Alice":"Bob");
-    }
-    return 0;
+//Fin("in.txt");
+	int n, r, i;
+	while (~SII(n, r))
+	{
+		ci = CC(Point(0, 0), r); /// 根据这个优化一下
+		For(i, n) p[i].read();
+		n = convex_hull(p, n);
+		//p[n] = p[0];
+		crossp.clear();
+		For(i, n) getLineCCIntersection(p[i], p[i + 1], ci, crossp);
+		//SUni(crossp);
+		sort(all(crossp), cmp);
+#define x first
+#define y second
+		crossp.PB(MP(crossp[0].x + 2 * pi, crossp[0].y));
+		maxA = 0.0;
+		For(i, crossp.size() - 1)
+		{
+			// maxA = max(maxA, maxAngle(ci, crossp[i].y.x, crossp[i + 1].y.x, 1e-2, 2*pi+1e-2));
+			maxA = max(maxA, maxAngle(ci, crossp[i].y.x, crossp[i + 1].y.x, crossp[i].x - 1e-2, crossp[i + 1].x + 1e-2)); /// 4个优化成2个？
+			maxA = max(maxA, maxAngle(ci, crossp[i].y.x, crossp[i + 1].y.y, crossp[i].x - 1e-2, crossp[i + 1].x + 1e-2));
+			maxA = max(maxA, maxAngle(ci, crossp[i].y.y, crossp[i + 1].y.x, crossp[i].x - 1e-2, crossp[i + 1].x + 1e-2));
+			maxA = max(maxA, maxAngle(ci, crossp[i].y.y, crossp[i + 1].y.y, crossp[i].x - 1e-2, crossp[i + 1].x + 1e-2));
+		}
+		PD(maxA);
+	}
+	return 0;
 }
