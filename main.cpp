@@ -137,38 +137,23 @@ typedef priority_queue<int> pqi;
 #define Pcas() printf("Case %d: ", ++cas) /// Çë×ÐÏ¸¶ÔÕÕ
 const int mx = int(1e6) + 1;
 
-bool ok(int n)
-{
-    int cnt=0,i=0;
-    while(n)
-    {
-        if(n%10==7) ++cnt;
-        n/=10;
-        ++i;
-    }
-    return cnt+1>=i;
-}
-
-int sum[mx];
-
-void init()
-{
-    int i;
-    Forr(i,1,mx)
-    {
-        sum[i]=(ok(i)?sum[i-1]+1:sum[i-1]);
-    }
-}
-
 int main()
 {
-    init();
-    int t,cas=0,i;
+    int t,cas=0,cnt,a,b;
+    ll s;
     SI(t);
     while(t--)
     {
         Pcas();
-       SI(i),PI(sum[i]);
+       SII(a,b);
+       ll s=(ll)a*b;
+       cnt=0;
+       for(;s;s>>=1)
+       {
+           if(s&1) break;
+           ++cnt;
+       }
+       puts(cnt&1?"Alice":"Bob");
     }
     return 0;
 }
