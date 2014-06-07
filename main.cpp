@@ -135,35 +135,40 @@ typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const int mod = int(1e9) + 7;
 #define Pcas() printf("Case %d: ", ++cas) /// Çë×ÐÏ¸¶ÔÕÕ
-const int mx = int(1e5) + 5;
+const int mx = int(1e6) + 1;
 
-char c[5]="XTCP";
-int cnt[5];
-char s[105];
+bool ok(int n)
+{
+    int cnt=0,i=0;
+    while(n)
+    {
+        if(n%10==7) ++cnt;
+        n/=10;
+        ++i;
+    }
+    return cnt+1>=i;
+}
+
+int sum[mx];
+
+void init()
+{
+    int i;
+    Forr(i,1,mx)
+    {
+        sum[i]=(ok(i)?sum[i-1]+1:sum[i-1]);
+    }
+}
 
 int main()
 {
-    int t,cas=0,i,j;
+    init();
+    int t,cas=0,i;
     SI(t);
     while(t--)
     {
         Pcas();
-        SS(s);
-        mem(cnt,0);
-        for(i=0;s[i];++i)
-        {
-            For(j,4)
-            {
-                if(s[i]==c[j])
-                {
-                    if(j==2&&cnt[3]) ++cnt[4];
-                    else if(j==0||cnt[j-1]) ++cnt[j];
-                    break;
-                }
-            }
-        }
-       // PA(cnt,i,5);
-        puts(cnt[4]?"Yes":"No");
+       SI(i),PI(sum[i]);
     }
     return 0;
 }
