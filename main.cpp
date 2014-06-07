@@ -274,7 +274,7 @@ int main()
 		n = convex_hull(p, n);
 		//p[n] = p[0];
 		crossp.clear();
-		For(i, n) getLineCCIntersection(p[i], p[i + 1], ci, crossp);
+		For(i, n) getLineCCIntersection(ans[i], ans[i + 1], ci, crossp);
 		//SUni(crossp);
 		sort(all(crossp), cmp);
 #define x first
