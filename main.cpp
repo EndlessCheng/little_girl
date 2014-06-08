@@ -1,3 +1,11 @@
+/*
+* this code is made by endless
+* Problem: 1112
+* Verdict: Time Limit Exceeded
+* Submission Date: 2014-06-08 18:11:10
+* Time: 1000 MS
+* Memory: 21208 KB
+*/
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -135,135 +143,37 @@ typedef pair<int, pair<int, int> > pi3;
 
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
-const ll mod = ll(1e9) + 7LL;
+//const int mod = int(1e9) + 7;
 #define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
-const int mx = int(1e5) + 5;
+const int mx = 5000005;
 
-const ull B = 1e8 + 7; /// 哈希基数
-const int mx_s_num = 1;
+int maxp[mx];
+int dp[mx];
 
-char s[mx_s_num][mx]; /// 注意，一定要用gets(s[i] + 1)，从下标1开始读
-ull ha[mx_s_num][mx]; /// ha[i]从1开始，一直到ha[i][n]，对于只给mx_s_num * mx范围的题目，建议用vector<ull> ha[mx];
-ull bp[mx] = {1ULL}; /// B^i数组
-int len[mx_s_num]; /// len[i] = strlen(s[i] + 1); 一定要是s[i] + 1，否则n会是0
-
-void init_bp()
-{
-	int i;
-	Forr(i, 1, mx) bp[i] = bp[i - 1] * B;
-}
-
-void init_hash(int s_num) /// 请在main()中完成len的求取
+void sieve()
 {
 	int i, j;
-	For(i, s_num) Forr(j, 1, len[i] + 1) ha[i][j] = ha[i][j - 1] * B + s[i][j];
-	int n = Max(len, s_num); /// 调用#define的Max()
+	Forr(i, 2, mx) if (!maxp[i]) Forrr(j, i, mx, i) maxp[j] = i; /// j最大素因子为i
 }
 
-ull get_hash(char *s) /// 直接返回整个字符串的hash，必要时可自定义mod值
+inline int get_prime_divisor(int x)
 {
-	ull ha = 0ULL;
-	for (int i = 0; s[i]; ++i) ha = ha * B + s[i];
-	return ha;
+	if (x == 1) return 0;
+	if (dp[x]) return dp[x];
+	int cnt = 0;
+	for (; x >= 2; x /= maxp[x]) ++cnt;
+	return dp[x] = cnt;
 }
-
-ull get_hash(int *a, int n) /// 返回整个int数组的hash值，若要求桶很小，则可自定义mod值
-{
-	int i;
-	ull ha = 0ULL;
-	For(i, n) ha = ha * B + (ull)a[i];
-	return ha;
-}
-
-/// 注意pos一定不能是0!!!!
-inline ull get_hash(ull *Ha, int pos, int l) /// 返回Ha[pos...pos+l-1]的值，pos与l必须是正数
-{
-	return Ha[pos + l - 1] - Ha[pos - 1] * bp[l];
-}
-
-inline ull merge_hash(ull ha1, ull ha2, int len2) /// 返回s1+s2拼接后的hash值
-{
-	return ha1 * bp[len2] + ha2;
-}
-
-bool contain(int ida, int idb) /// b是否为a的子串 ，ida和idb为字符串下标，若只有两个字符串，使用时传入参数(0, 1)、(1, 0)就行
-{
-	if (len[ida] < len[idb]) return false;
-	ull hab = ha[idb][len[idb]];
-	for (int i = 1; i + len[idb] <= len[ida]; ++i)
-		if (get_hash(ha[ida], i, len[idb]) == hab) return true;
-	return false;
-}
-
-int overlap(int ida, int idb) /// 求a后缀与b前缀的最长公共子串，ida和idb为字符串下标，若只有两个字符串，使用时传入参数(0, 1)、(1, 0)就行
-{
-	int ans = 0, i;
-	Forr(i, 1, min(len[ida], len[idb]) + 1)
-	if (get_hash(ha[ida], len[ida] - i + 1, i) == get_hash(ha[idb], 1, i)) ans = i;
-// 可在if中加上 && strncmp(s[ida] + len[ida] - i + 1, s[idb] + 1, i) == 0(不过这就失去意义了，还不如双hash)
-	return ans;
-}
-
-int lcp(int i)
-{
-	int l = 0, r = len[0] - i + 2, m;
-	while (l + 1 < r)
-	{
-		m = (l + r) >> 1;
-		get_hash(ha[0], 1, m) == get_hash(ha[0], i, m) ? l = m : r = m;
-	}
-	return l;
-}
-
-long long CaculateFibonacci(int n)
-{
-	if (n == 0) return 0;
-	//if(n==1)
-	long long ans_arr[2][2] = { 1, 0, 0, 1 };
-	long long base_arr[2][2] = { 0, 1, 1, 1 };
-	long long temp00 = 0, temp01 = 0, temp10 = 0, temp11 = 0;
-	while (n)
-	{
-		if (n & 1)  //当前最低位为1,将目标矩阵与当前基矩阵对应的幂阵相乘
-		{
-			temp00 = ans_arr[0][0], temp01 = ans_arr[0][1], temp10 = ans_arr[1][0], temp11 = ans_arr[1][1];
-			ans_arr[0][0] = (temp00 * base_arr[0][0] + temp01 * base_arr[1][0]) % mod;
-			ans_arr[0][1] = (temp00 * base_arr[0][1] + temp01 * base_arr[1][1]) % mod;
-			ans_arr[1][0] = (temp10 * base_arr[0][0] + temp11 * base_arr[1][0]) % mod;
-			ans_arr[1][1] = (temp10 * base_arr[0][1] + temp11 * base_arr[1][1]) % mod;
-		}
-		//从基矩阵计算当前相应的幂阵
-		temp00 = base_arr[0][0], temp01 = base_arr[0][1], temp10 = base_arr[1][0], temp11 = base_arr[1][1];
-		base_arr[0][0] = (temp00 * temp00 + temp01 * temp10) % mod;
-		base_arr[0][1] = (temp00 * temp01 + temp01 * temp11) % mod;
-		base_arr[1][0] = (temp10 * temp00 + temp11 * temp10) % mod;
-		base_arr[1][1] = (temp10 * temp01 + temp11 * temp11) % mod;
-		n >>= 1;
-	}
-	return ans_arr[0][1];
-}
-
-int a[mx];
 
 int main()
 {
-	int i;
-	ll sum;
-	//For(i,5) PL(CaculateFibonacci(i));
-	init_bp();
-	while (gets(s[0] + 1))
+	sieve();
+	int n, x, ans;
+	while (SI(n) == 1)
 	{
-		len[0] = strlen(s[0] + 1);
-		init_hash(1);
-		a[len[0]] = (s[0][1] == s[0][len[0]]);
-		rForr(i, len[0] - 1, 1)
-		{
-			a[i] = a[i + 1] + lcp(i);
-		}
-		sum = 0;
-		//Forr(i,1,len[0]+1) PI(a[i]);
-		Forr(i, 1, len[0] + 1) sum = (sum + CaculateFibonacci(a[i])) % mod;
-		PI(sum);
+		ans = 0;
+		while (n--) SI(x), ans ^= get_prime_divisor(x);
+		puts(ans ? "Alice" : "Bob");
 	}
 	return 0;
 }
