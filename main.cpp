@@ -1,4 +1,3 @@
-
 #include<cstdio>
 #include<cctype>
 #include<cstring>
@@ -105,7 +104,7 @@ typedef multimap<int, int>::iterator mmter;
 #define PL(a) printf("%I64d\n", a)
 #define PLL(a, b) printf("%I64d %I64d\n", a, b)
 #define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
-#define PD(a) printf("%.3f\n", a)
+#define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
@@ -152,96 +151,65 @@ typedef pair<int, pair<int, int> > pi3;
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 
 typedef priority_queue<int> pqi;
-const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7LL;
-#define Pcas() printf("Case %d: ", ++cas) /// 请仔细对照
-const int mx = 105;
+//const double eps = 1e-8;
+//const int mod = int(1e9) + 7;
+#define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
+const int mx = int(1e6) + 5;
 
-struct Point
+int divide[mx];
+
+void getDivide()
 {
-    double x, y;
-    //double alpha; /// 向量极角alpha = atan2(y, x); *注意范围是(-pi,pi]
-    Point(double x = 0, double y = 0): x(x), y(y) {} /// *必要时请手动改int
-    void read() {SDD(x, y);}
-    bool operator < (const Point &b) const
-    {
-        return x < b.x || x == b.x && y < b.y;
-        //return x + eps < b.x || fabs(x - b.x) < eps && y + eps < b.y;
-    }
-}p[mx],ans[mx];
-typedef Point Vec;
-
-Vec operator + (const Vec &a, const Vec &b) {return Vec(a.x + b.x, a.y + b.y);}
-Vec operator - (const Point &a, const Point &b) {return Vec(a.x - b.x, a.y - b.y);}
-Vec operator - (const Point &a) {return Vec(-a.x, -a.y);}
-Vec operator * (const Vec &a, double p) {return Vec(a.x * p, a.y * p);}
-Vec operator / (const Vec &a, double p) {return Vec(a.x / p, a.y / p);}
-
-inline double Dot(const Vec &a, const Vec &b) {return a.x * b.x + a.y * b.y;}
-inline double Cross(const Vec &a, const Vec &b) {return a.x * b.y - a.y * b.x;} /// b在a左边为正，b在a右边为负
-inline double Len(const Vec &a) {return hypot(a.x, a.y);}
-inline double Angle(const Vec &a, const Vec &b) {return acos(Dot(a, b) / Len(a) / Len(b));} /// 向量夹角
-inline double cosA(const Vec &a, const Vec &b) {return Dot(a, b) / Len(a) / Len(b);} /// 向量夹角的余弦
-inline Vec Rotate(const Vec &a, double rad){return Vec(a.x * cos(rad) - a.y * sin(rad), a.x * sin(rad) + a.y * cos(rad));} /// 逆时针旋转向量a
-inline Vec UnitVec(Vec &a) {double l = Len(a); return Vec(-a.y / l, a.x / l);} /// 返回a的单位法向量
-
-/// 角度转弧度 *注意正负
-inline double deg2rad(double deg) {return deg / 180.0 * pi;}
-/// 弧度转角度 *注意正负
-inline double rad2deg(double rad) {return rad / pi * 180.0;}
-/// 求向量极角 *注意范围是(-pi,pi] *有时要去掉引用
-inline double PolarAngle(Vec &v) {return atan2(v.y, v.x);}
-
-double perimeter(Point *p, int n)
-{
- double sum = 0.0;
- int i;
- //p[n] = p[0]; /// *可提前在凸包中赋值
- For(i, n) sum += Len(p[i + 1] - p[i]);
- return sum;
+	int t = sqrt(mx * 1.0);
+	for (int i = 1; i <= t ; i++)
+	{
+		for (int j = i + 1 ; j * i < mx ; j++)
+			divide[i * j] += 2; //i和j是不同的，因此加2
+		++divide[i * i]; //i和i相同那么加1即可
+	}
 }
 
-int convex_hull(Point *p, int n)
+///////
+
+int a[mx], mina[mx][25], maxa[mx][25]; /// 最大也就24
+
+void init_RMQ(int n)
 {
- sort(p, p + n);
- //unique(p, p + n); /// *去重，看题意
- int cnt = 0, i;
- For(i, n) ///构建一个下凸包，从0到n-1
- {
-  while (cnt >= 2 && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps)
-   --cnt;
-  ans[cnt++] = p[i];
- }
- ///注意在构建上凸包的过程中我们用到了n-1这个点
- ///为什么0要算两次？因为我们要借助它来删去那些在凸包内的点
- int tmp = cnt;
- rFor(i, n - 2) ///构建一个上凸包，从n-2到0
- {
-  while (cnt > tmp && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps)
-   --cnt;
-  ans[cnt++] = p[i];
- }
- --cnt; ///0算了两次
- ans[cnt] = ans[0]; /// *方便后续操作
- return cnt;
+	int i, j;
+	For(i, n) mina[i][0] = a[i];
+	for (j = 1; (1 << j) <= n; ++j)
+		for (i = 0; i + (1 << j) <= n; ++i)
+			mina[i][j] = max(mina[i][j - 1], mina[i + (1 << (j - 1))][j - 1]); /// *随题目变化
 }
 
-double calc(int n)
+int RMQ(int l, int r) /// 闭区间
 {
-    if(n==1) return 0;
-    if(n==2) return Len(ans[0]-ans[1]);
-    return perimeter(ans,n);
+	int k = 0;
+	while ((1 << (k + 1)) <= r - l + 1) ++k;
+	return max(mina[l][k], mina[r - (1 << k) + 1][k]); /// *随题目变化
 }
+
 
 int main()
 {
-	int cas=0,i,n;
-while(SI(n),n)
+	int t, n, i, x, q, l, r;
+	getDivide();
+	//For(i,10) PII(i,divide[i]);
+	SI(t);
+	while (t--)
 	{
-		Pcas();
-		For(i,n) p[i].read();
-n=convex_hull(p,n);
-PD(calc(n));
+		SI(n);
+		Forr(i, 1,n+1) SI(x), a[i] = divide[x];
+		init_RMQ(n+1);
+		//Forr(i,1,n+1) PII(a[i],RMQ(i,i));
+
+
+		SI(q);
+		while (q--)
+		{
+			SII(l, r);
+			PI(RMQ(l, r));
+		}
 	}
 	return 0;
 }
