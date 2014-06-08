@@ -157,111 +157,40 @@ typedef priority_queue<int> pqi;
 #define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
 const int mx = int(1e5) + 5;
 
-struct ed
+char s[100],tmp[mx];
+
+int  solve(int a, int b)
 {
-	int u, v, c, d;
-	void read()
+	if (a <= b) return b;
+	//sprintf(s, "%d", a);
+	sprintf(s, "%d", b);
+	int n=strlen(s);
+	int ans=inf,cc,pos,i;
+	For(pos,n+1)
 	{
-		SIIII(u, v, c, d);
-		--u, --v;
+	    for(char c='0';c<='9';++c)
+        {
+            For(i,pos) tmp[i]=s[i];
+            tmp[i++]=c;
+            for(;i<=n;++i) tmp[i]=s[i-1];
+            tmp[i]=0;
+            sscanf(tmp,"%d",&cc);
+        if(cc>a) ans=min(ans,cc);
+        }
+
 	}
-	bool operator < (const ed &b) const
-	{
-		return d < b.d;
-	}
-} ee[mx];
 
-typedef pair<int, int> P; ///first是当MST与该点连接时，所连的那条边的长度，second是顶点编号
+	return ans;
 
-struct edge
-{
-	int cost, to;
-	edge(int cost = 0, int to = 0): cost(cost), to(to) {}
-} e;
-
-vector<edge> G[mx];  /// *注意可能要事先For(i,n) G[i].clear()  并且 --a,--b; 使用方法：G[a].PB(edge(cost, b)), G[b].PB(edge(cost, a));
-int disTo[mx]; /// 当MST与点i连接时，所连的那条边的长度
-bool vis[mx]; /// 不要vis可不可以？
-priority_queue<P, vector<P>, greater<P> > pq;
-
-bool has;
-
-int prim(int n) /// 复杂度：O(ElogV)
-{
-	P p;
-	int v, i;
-	int sumcost = 0;
-	mem(disTo, 0x3f);
-	mem(vis, 0);
-	disTo[0] = 0; ///
-	while (!pq.empty()) pq.pop();
-	pq.push(P(0, 0));/// 从点0开始构造MST
-	while (!pq.empty())
-	{
-		p = pq.top(), pq.pop();
-		v = p.second; /// v视作e.from
-		if (vis[v] || p.first > disTo[v]) continue;
-		vis[v] = true;
-		sumcost += disTo[v];
-		for (i = 0; i < G[v].size(); ++i)
-		{
-			e = G[v][i]; /// v视作e.from
-			if (disTo[e.to] > e.cost)
-			{
-				disTo[e.to] = e.cost;
-				pq.push(P(disTo[e.to], e.to));
-			}
-		}
-	}
-	For(i, n) if (!vis[i]) return -1;
-	return sumcost;
-}
-
-
-int n, y, m;
-
-bool ok(int maxd)
-{
-	int i, a, b, cost;
-	For(i, n) G[i].clear();
-	For(i, m)
-	{
-		if (ee[i].d <= maxd)
-		{
-			a = ee[i].u, b = ee[i].v, cost = ee[i].c;
-			G[a].PB(edge(cost, b)), G[b].PB(edge(cost, a));
-		}
-		else break;
-	}
-	int tmp = prim(n);
-	if (tmp == -1) return false;
-	return tmp <= y;
-}
-
-int solve(int l, int r)
-{
-	has = false;
-	//ok(r);
-	//if (!has) return -1;
-	int mid;
-	do
-	{
-		mid = (l + r) >> 1;
-		//PII(m, ok(m));
-		ok(mid) ? (r = mid,has=true) : l = mid;
-	}
-	while (l + 1 < r);
-	return has?r:-1;
+	// PI(0);
 }
 
 int main()
 {
-	int i;
-	while (SIII(n, m, y) == 3)
+	int a, b;
+	while (~SII(a, b))
 	{
-		For(i, m) ee[i].read();
-		sort(ee, ee + m);
-		PI(solve(-1, ee[m - 1].d+1));
+		PI(solve(a, b));
 	}
 	return 0;
 }
