@@ -155,56 +155,113 @@ typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const int mod = int(1e9) + 7;
 #define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
-//const int mx = int(1e6) + 5;
+const int mx = int(1e5) + 5;
 
-int x, y, sx, sy, ex, ey;
-
-inline int d(int x , int y, int xx, int yy)
+struct ed
 {
-	return abs(x - xx) + abs(y - yy);
+	int u, v, c, d;
+	void read()
+	{
+		SIIII(u, v, c, d);
+		--u, --v;
+	}
+	bool operator < (const ed &b) const
+	{
+		return d < b.d;
+	}
+} ee[mx];
+
+typedef pair<int, int> P; ///first是当MST与该点连接时，所连的那条边的长度，second是顶点编号
+
+struct edge
+{
+	int cost, to;
+	edge(int cost = 0, int to = 0): cost(cost), to(to) {}
+} e;
+
+vector<edge> G[mx];  /// *注意可能要事先For(i,n) G[i].clear()  并且 --a,--b; 使用方法：G[a].PB(edge(cost, b)), G[b].PB(edge(cost, a));
+int disTo[mx]; /// 当MST与点i连接时，所连的那条边的长度
+bool vis[mx]; /// 不要vis可不可以？
+priority_queue<P, vector<P>, greater<P> > pq;
+
+bool has;
+
+int prim(int n) /// 复杂度：O(ElogV)
+{
+	P p;
+	int v, i;
+	int sumcost = 0;
+	mem(disTo, 0x3f);
+	mem(vis, 0);
+	disTo[0] = 0; ///
+	while (!pq.empty()) pq.pop();
+	pq.push(P(0, 0));/// 从点0开始构造MST
+	while (!pq.empty())
+	{
+		p = pq.top(), pq.pop();
+		v = p.second; /// v视作e.from
+		if (vis[v] || p.first > disTo[v]) continue;
+		vis[v] = true;
+		sumcost += disTo[v];
+		for (i = 0; i < G[v].size(); ++i)
+		{
+			e = G[v][i]; /// v视作e.from
+			if (disTo[e.to] > e.cost)
+			{
+				disTo[e.to] = e.cost;
+				pq.push(P(disTo[e.to], e.to));
+			}
+		}
+	}
+	For(i, n) if (!vis[i]) return -1;
+	return sumcost;
 }
 
 
+int n, y, m;
 
-inline int f1()///右上
+bool ok(int maxd)
 {
-    int tmp=0;
-    if(y==sy&&x>sx) tmp=2;
-	return tmp+d(x, y, sx - 1, sy) + d(sx, sy, ex, ey) + 2;
+	int i, a, b, cost;
+	For(i, n) G[i].clear();
+	For(i, m)
+	{
+		if (ee[i].d <= maxd)
+		{
+			a = ee[i].u, b = ee[i].v, cost = ee[i].c;
+			G[a].PB(edge(cost, b)), G[b].PB(edge(cost, a));
+		}
+		else break;
+	}
+	int tmp = prim(n);
+	if (tmp == -1) return false;
+	return tmp <= y;
 }
 
-inline int f2()///上右
+int solve(int l, int r)
 {
-     int tmp=0;
-    if(x==sx&&y>sy) tmp=2;
-	return tmp+d(x, y, sx, sy - 1) + d(sx, sy, ex, ey) + 2;
-}
-
-inline int calc()
-{
-	if (sx == ex && sy == ey) return 0;
-	if (sx > ex) x = -x, sx = -sx, ex = -ex;
-	if (sy > ey) y = -y, sy = -sy, ey = -ey;
-	if (sx == ex)
-    {
-         int tmp=0;
-    if(x==sx&&y>sy) tmp=2;
-        return ey - sy + d(x, y, sx, sy - 1)+tmp;
-    }
-	if (sy == ey)
-    {
-          int tmp=0;
-    if(y==sy&&x>sx) tmp=2;
-        return ex - sx + d(x, y, sx - 1, sy)+tmp;
-    }
-	return min(f1(), f2());
+	has = false;
+	//ok(r);
+	//if (!has) return -1;
+	int mid;
+	do
+	{
+		mid = (l + r) >> 1;
+		//PII(m, ok(m));
+		ok(mid) ? (r = mid,has=true) : l = mid;
+	}
+	while (l + 1 < r);
+	return has?r:-1;
 }
 
 int main()
 {
-	while (SIIIIII(x, y, sx, sy, ex, ey)==6)
+	int i;
+	while (SIII(n, m, y) == 3)
 	{
-		PI(calc());
+		For(i, m) ee[i].read();
+		sort(ee, ee + m);
+		PI(solve(-1, ee[m - 1].d+1));
 	}
 	return 0;
 }
