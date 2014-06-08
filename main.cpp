@@ -80,6 +80,7 @@ typedef map<int, int>::iterator miter;
 #define SIII(a, b, c) scanf("%d%d%d", &a, &b, &c)
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
+#define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
 #define SL(a) scanf("%I64d", &a)
 #define SLL(a, b) scanf("%I64d%I64d", &a, &b)
 #define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
@@ -156,60 +157,46 @@ typedef priority_queue<int> pqi;
 #define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
 const int mx = int(1e6) + 5;
 
-int divide[mx];
+int x,y,sx,sy,ex,ey;
 
-void getDivide()
+inline int d(int x ,int y,int xx,int yy)
 {
-	int t = sqrt(mx * 1.0);
-	for (int i = 1; i <= t ; i++)
-	{
-		for (int j = i + 1 ; j * i < mx ; j++)
-			divide[i * j] += 2; //i和j是不同的，因此加2
-		++divide[i * i]; //i和i相同那么加1即可
-	}
+    return abs(x-xx)+abs(y-yy);
 }
 
-///////
-
-int a[mx], mina[mx][25], maxa[mx][25]; /// 最大也就24
-
-void init_RMQ(int n)
+inline int f1()///右上
 {
-	int i, j;
-	For(i, n) mina[i][0] = a[i];
-	for (j = 1; (1 << j) <= n; ++j)
-		for (i = 0; i + (1 << j) <= n; ++i)
-			mina[i][j] = max(mina[i][j - 1], mina[i + (1 << (j - 1))][j - 1]); /// *随题目变化
+    return d(x,y,sx-1,sy)+d(sx,sy,ex,ey)+2;
 }
 
-int RMQ(int l, int r) /// 闭区间
+inline int f2()///上右
 {
-	int k = 0;
-	while ((1 << (k + 1)) <= r - l + 1) ++k;
-	return max(mina[l][k], mina[r - (1 << k) + 1][k]); /// *随题目变化
+    return d(x,y,sx,sy-1)+d(sx,sy,ex,ey)+2;
 }
 
+inline int calc()
+{
+    if(sx==ex&&sy==ey) return 0;
+     if(sx==ex)
+     {
+         if(sy<ey) return ey-sy+d(x,y,sx,sy-1);
+         return sy-ey+d(x,y,sx,sy+1);
+     }
+     if(sy==ey)
+     {
+         if(sx<ex) return ex-sx+d(x,y,sx-1,sy);
+         return sx-ex+d(x,y,sx+1,sy);
+     }
+     if(sx>ex) x=-x,sx=-sx,ex=-ex;
+    if(sy>ey) y=-y,sy=-sy,ey=-ey;
+    return min(f1(),f2());
+}
 
 int main()
 {
-	int t, n, i, x, q, l, r;
-	getDivide();
-	//For(i,10) PII(i,divide[i]);
-	SI(t);
-	while (t--)
-	{
-		SI(n);
-		Forr(i, 1,n+1) SI(x), a[i] = divide[x];
-		init_RMQ(n+1);
-		//Forr(i,1,n+1) PII(a[i],RMQ(i,i));
-
-
-		SI(q);
-		while (q--)
-		{
-			SII(l, r);
-			PI(RMQ(l, r));
-		}
-	}
+	while(~SIIIIII(x,y,sx,sy,ex,ey))
+    {
+        PI(calc());
+    }
 	return 0;
 }
