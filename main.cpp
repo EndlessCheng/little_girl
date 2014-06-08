@@ -154,44 +154,44 @@ typedef pair<int, pair<int, int> > pi3;
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7LL;
-#define Pcas() printf("Case #%d: ", ++cas) /// Çë×ÐÏ¸¶ÔÕÕ
-const int mx = int(1e3) + 5;
+#define Pcas() printf("Case %d:", ++cas) /// Çë×ÐÏ¸¶ÔÕÕ
+const int mx = int(1e5) + 5;
 
-double a[5];
-
-double calc(double x)
-{
-	if (x == 12.0) return 12;
-	x *= 0.2;
-	return round(x * 2);
-}
+int a[mx];
 
 int main()
 {
-	int t, n, i, x,pos;
-	double sum;
+	int t, cas=0,i,n,m,s,p,j,cnt,pos;
+	ll sum,tmp;
 	SI(t);
 	while (t--)
 	{
-		SI(n);
-		mem(a, 0);
-		while (n--)
-		{
-			sum = 0;
-			For(i, 4)
-			{
-				SI(x);
-				if (x)
-				{
-					a[i] -= calc(x);
-					sum += calc(x);
-				}
-				else pos=i;
-			}
-			a[pos] += sum;
-		}
-		For(i, n) a[i] = round( a[i]);
-		printf("%.0f %.0f %.0f %.0f\n", a[0], a[1], a[2], a[3]);
+		Pcas();
+		SIIII(n,m,s,p);
+		SA(a,i,n);
+		tmp=(ll)n-(ll)p*(m-1);
+		if(tmp<0) PI(0);
+		else
+        {
+            cnt=0;
+           // PL(tmp);
+            For(i,(int)tmp)
+            {
+                sum=0LL;
+                pos=i;
+                For(j,m)
+                {
+
+                   // PII(i,p);
+                    sum+=(ll)a[pos];
+                    pos+=p;
+                }
+               // PII(i,(int)sum);
+                if(sum==(ll)s) ++cnt;
+            }
+            PI(cnt);
+        }
+
 	}
 	return 0;
 }
