@@ -153,23 +153,45 @@ typedef pair<int, pair<int, int> > pi3;
 
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
-//const int mod = int(1e9) + 7;
+//const ll mod = ll(1e9) + 7LL;
 #define Pcas() printf("Case #%d: ", ++cas) /// Çë×ÐÏ¸¶ÔÕÕ
-const int mx = int(1e5) + 5;
+const int mx = int(1e3) + 5;
 
+double a[5];
 
+double calc(double x)
+{
+	if (x == 12.0) return 12;
+	x *= 0.2;
+	return round(x * 2);
+}
 
 int main()
 {
-    int n;
-    ll x,ans;
-    while(~SI(n))
-    {
-        ans=0LL;
-        n=(n<<1)+1;
-        while(n--) SL(x),ans^=x;
-        PL(ans);
-
-    }
-    return 0;
+	int t, n, i, x,pos;
+	double sum;
+	SI(t);
+	while (t--)
+	{
+		SI(n);
+		mem(a, 0);
+		while (n--)
+		{
+			sum = 0;
+			For(i, 4)
+			{
+				SI(x);
+				if (x)
+				{
+					a[i] -= calc(x);
+					sum += calc(x);
+				}
+				else pos=i;
+			}
+			a[pos] += sum;
+		}
+		For(i, n) a[i] = round( a[i]);
+		printf("%.0f %.0f %.0f %.0f\n", a[0], a[1], a[2], a[3]);
+	}
+	return 0;
 }
