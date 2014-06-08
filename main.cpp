@@ -155,48 +155,56 @@ typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const int mod = int(1e9) + 7;
 #define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
-const int mx = int(1e6) + 5;
+//const int mx = int(1e6) + 5;
 
-int x,y,sx,sy,ex,ey;
+int x, y, sx, sy, ex, ey;
 
-inline int d(int x ,int y,int xx,int yy)
+inline int d(int x , int y, int xx, int yy)
 {
-    return abs(x-xx)+abs(y-yy);
+	return abs(x - xx) + abs(y - yy);
 }
+
+
 
 inline int f1()///右上
 {
-    return d(x,y,sx-1,sy)+d(sx,sy,ex,ey)+2;
+    int tmp=0;
+    if(y==sy&&x>sx) tmp=2;
+	return tmp+d(x, y, sx - 1, sy) + d(sx, sy, ex, ey) + 2;
 }
 
 inline int f2()///上右
 {
-    return d(x,y,sx,sy-1)+d(sx,sy,ex,ey)+2;
+     int tmp=0;
+    if(x==sx&&y>sy) tmp=2;
+	return tmp+d(x, y, sx, sy - 1) + d(sx, sy, ex, ey) + 2;
 }
 
 inline int calc()
 {
-    if(sx==ex&&sy==ey) return 0;
-     if(sx==ex)
-     {
-         if(sy<ey) return ey-sy+d(x,y,sx,sy-1);
-         return sy-ey+d(x,y,sx,sy+1);
-     }
-     if(sy==ey)
-     {
-         if(sx<ex) return ex-sx+d(x,y,sx-1,sy);
-         return sx-ex+d(x,y,sx+1,sy);
-     }
-     if(sx>ex) x=-x,sx=-sx,ex=-ex;
-    if(sy>ey) y=-y,sy=-sy,ey=-ey;
-    return min(f1(),f2());
+	if (sx == ex && sy == ey) return 0;
+	if (sx > ex) x = -x, sx = -sx, ex = -ex;
+	if (sy > ey) y = -y, sy = -sy, ey = -ey;
+	if (sx == ex)
+    {
+         int tmp=0;
+    if(x==sx&&y>sy) tmp=2;
+        return ey - sy + d(x, y, sx, sy - 1)+tmp;
+    }
+	if (sy == ey)
+    {
+          int tmp=0;
+    if(y==sy&&x>sx) tmp=2;
+        return ex - sx + d(x, y, sx - 1, sy)+tmp;
+    }
+	return min(f1(), f2());
 }
 
 int main()
 {
-	while(~SIIIIII(x,y,sx,sy,ex,ey))
-    {
-        PI(calc());
-    }
+	while (SIIIIII(x, y, sx, sy, ex, ey)==6)
+	{
+		PI(calc());
+	}
 	return 0;
 }
