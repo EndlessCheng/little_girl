@@ -5,3 +5,10 @@ obj/Release/main.o
 little_girl.layout.save
 little_girl.depend
 main.cpp.save
+*.txt
+*.txt
+in.txt
+*.exe
+*.h
+*.o
+main.cpp
