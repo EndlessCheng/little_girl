@@ -1,3 +1,5 @@
+#include<cstdio>
+#include<cmath>
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -85,7 +87,7 @@ typedef multimap<int, int>::iterator mmter;
 #define PL(a) printf("%lld\n", a)
 #define PLL(a, b) printf("%lld %lld\n", a, b)
 #define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
-#define PD(a) printf("%.18f\n", a)
+#define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
@@ -141,53 +143,27 @@ typedef priority_queue<int> pqi;
 //const ll mod = ll(1e9) + 7;
 #define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
 const int mx = int(1e5) + 5;
-const double log2_10 = log2(10.0);
-char s[50];
 
-//#define IO /// *别忘了删掉/加上！
+#define EPS 1e-6
+
 int main()
 {
-#ifdef IO
-	FI;
-#endif
-	double a, tmp, res, ans;
-	int b, e, m, pos;
-	while (gets(s), strcmp(s, "0e0"))
+	freopen("in.txt", "r", stdin);
+	char s[100];
+	ull M, E, b, i;
+	double a, A, diff;
+	while (scanf("%s", s), strcmp(s, "0e0"))
 	{
-		// puts("ok");
 		*strchr(s, 'e') = 32;
-		//	puts(s);
-		sscanf(s, "%lf%d", &a, &b);
-		//PI(b);
-		if (a == 0) puts("0 1");
-		else
+		sscanf(s, "%lf%llu", &a, &b);
+		A = log(a) + b * log(10);
+		for (M = 0; M < 10; M++)
 		{
-			tmp = log2(a) + b * log2_10;
-			e = (int)round(tmp);
-			tmp -= e;
-			ans = 1e100;
-			Forr(m, 1, 10)
-			{
-				res = log2(1 - 1.0 / (1 << m));
-				if (fabs(res - tmp) < ans)
-				{
-					ans = fabs(res - tmp);
-					pos = m;
-				}
-			}
-			PII(pos - 1, Cnt1(e));
+			E = (ull)(log(M + 2 + (A - log(pow(2, M + 1) - 1)) / log(2)) / log(2) + 0.5);
+			diff = A - (pow(2, E) - M - 2) * log(2) - log(pow(2, M + 1) - 1);
+			if (fabs(diff) < EPS) break;
 		}
-		// m=frexp(x,&e);
-		//PD(m);
-		//PD(1/(1-m));
-		//m=1-m;
-		//cnt = -1;
-		//int i;
-		//For(i,10)
-		//while (m > 0) m = m * 2.0 - 1, ++cnt;
-		//inline bool isint(double x) {return fabs(x - round(x)) < eps;}
-		//  PI();
-		//PII(cnt, Cnt1(e));
+		printf("%llu %llu\n", M, E);
 	}
 	return 0;
 }
