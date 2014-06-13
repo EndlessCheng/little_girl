@@ -147,6 +147,7 @@ int main()
 #ifdef IO
 FI;
 #endif
-
+ll a, b;
+    while (~SLL(a, b)) PL(a + b);
     return 0;
 }
