@@ -1,5 +1,3 @@
-#include<cstdio>
-#include<cmath>
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -62,10 +60,10 @@ typedef map<int, int>::iterator miter;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%lld", &a)
-#define SLL(a, b) scanf("%lld%lld", &a, &b)
-#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -84,9 +82,9 @@ typedef multimap<int, int>::iterator mmter;
 #define PII(a, b) printf("%d %d\n", a, b)
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
-#define PL(a) printf("%lld\n", a)
-#define PLL(a, b) printf("%lld %lld\n", a, b)
-#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -118,20 +116,17 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
+int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
+
 /// 不可使用如下间接保留字：rank, tm,time, write, j0,j1,jn,y0,y1,yn
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-/// C++会帮你往上类型转换，但G++不会
-/*G++扩栈
-int __size__ = 256 << 20; // 256MB
-char *__p__ = (char*)malloc(__size__) + __size__;
-__asm__("movl %0, %%esp\n" :: "r"(__p__));
-*/
+//#pragma comment(linker, "/STACK:102400000,102400000")
 //ios_base::sync_with_stdio(false);
 
-typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
+typedef pair<int, int> p2;  /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
 //#define x first
@@ -141,29 +136,17 @@ typedef pair<int, pair<int, int> > pi3;
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7;
-#define Pcas() printf("Case #%d: ", ++cas) /// *注意case的大小写
+#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
 const int mx = int(1e5) + 5;
 
-#define EPS 1e-6
 
+
+#define IO /// *别忘了删掉/加上！
 int main()
 {
-	freopen("in.txt", "r", stdin);
-	char s[100];
-	ull M, E, b, i;
-	double a, A, diff;
-	while (scanf("%s", s), strcmp(s, "0e0"))
-	{
-		*strchr(s, 'e') = 32;
-		sscanf(s, "%lf%llu", &a, &b);
-		A = log(a) + b * log(10);
-		for (M = 0; M < 10; M++)
-		{
-			E = (ull)(log(M + 2 + (A - log(pow(2, M + 1) - 1)) / log(2)) / log(2) + 0.5);
-			diff = A - (pow(2, E) - M - 2) * log(2) - log(pow(2, M + 1) - 1);
-			if (fabs(diff) < EPS) break;
-		}
-		printf("%llu %llu\n", M, E);
-	}
-	return 0;
+#ifdef IO
+FI;
+#endif
+
+    return 0;
 }
