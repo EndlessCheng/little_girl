@@ -14,33 +14,33 @@ typedef long long ll;
 #define PB push_back
 #define MP make_pair
 #define all(a) a.begin(), a.end()
-#define Uni(a) a.resize(unique(all(a)) - a.begin()) /// STL×¨ÓÃ
-#define SUni(a) sort(all(a)); Uni(a) /// STL×¨ÓÃ
-#define Unii(a, n) (unique(a, a + (n)) - a) /// Ê¹ÓÃÇ°Çësort
-#define Acc(a, n) (accumulate(a, a + (n), 0)) /// ×¢Òâ0LL!!!!!ÒÔ¼°0.0!!!
-#define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *ÂýµÄ»°¾Í¸ÄÎªFor(i, n) a[i] += b[i](×¢Òâ¼Óint i)
+#define Uni(a) a.resize(unique(all(a)) - a.begin()) /// STL×¨ï¿½ï¿½
+#define SUni(a) sort(all(a)); Uni(a) /// STL×¨ï¿½ï¿½
+#define Unii(a, n) (unique(a, a + (n)) - a) /// Ê¹ï¿½ï¿½Ç°ï¿½ï¿½sort
+#define Acc(a, n) (accumulate(a, a + (n), 0)) /// ×¢ï¿½ï¿½0LL!!!!!ï¿½Ô¼ï¿½0.0!!!
+#define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *ï¿½ï¿½ï¿½Ä»ï¿½ï¿½Í¸ï¿½ÎªFor(i, n) a[i] += b[i](×¢ï¿½ï¿½ï¿½ï¿½int i)
 #define Cnt1(n) (__builtin_popcount(n))
-#define Cntt1(n) (__builtin_popcountll(n)) /// ²ÎÊý±ØÐëÎªullÀàÐÍ
+#define Cntt1(n) (__builtin_popcountll(n)) /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªullï¿½ï¿½ï¿½ï¿½
 #define cb(n) (32 - __builtin_clz(n))
-#define cbb(n) (64 - __builtin_clzll(n)) /// ²ÎÊý±ØÐëÎªullÀàÐÍ
+#define cbb(n) (64 - __builtin_clzll(n)) /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªullï¿½ï¿½ï¿½ï¿½
 #define sq(x) ((x) * (x))
 #define Sqrt(n) (int)sqrt(0.5 + n)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
-#define Rcpy(l, r, b) reverse_copy(l, r, b) /// ×¢ÒâÎª×ó±ÕÓÒ¿ªÇø¼ä
+#define Rcpy(l, r, b) reverse_copy(l, r, b) /// ×¢ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½ï¿½ï¿½
 
 typedef unsigned long long ull;
 #define gr() greater<int>()
-#define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *¿ÉÄÜÒªÊÂÏÈ--k
-#define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) /// *¿ÉÄÜÒªÊÂÏÈ--k
+#define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½--k
+#define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) /// *ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½--k
 #define Min(a, n) (*min_element(a, a + (n)))
 #define Max(a, n) (*max_element(a, a + (n)))
 #define Minpos(a, n) (min_element(a, a + (n)) - (a))
 #define Maxpos(a, n) (max_element(a, a + (n)) - (a))
 #define Lowpos(a, n, x) (lower_bound(a, a + (n), x) - (a))
 #define Upppos(a, n, x) (upper_bound(a, a + (n), x) - (a))
-#define BS(a, n, x) binary_search(a, a + (n), x) /// ·µ»ØboolÖµ
-#define Range(a, n, x) equal_range(a, a + (n), x) /// ·µ»Øpair
+#define BS(a, n, x) binary_search(a, a + (n), x) /// ï¿½ï¿½ï¿½ï¿½boolÖµ
+#define Range(a, n, x) equal_range(a, a + (n), x) /// ï¿½ï¿½ï¿½ï¿½pair
 #define Fpos(a, n, x) (find(a, a + (n), x) - (a))
 
 typedef vector<int>::iterator viter;
@@ -60,16 +60,16 @@ typedef map<int, int>::iterator miter;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%I64d", &a)
-#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
-#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
+#define SL(a) scanf("%lld", &a)
+#define SLL(a, b) scanf("%lld%lld", &a, &b)
+#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
 #define SDDDD(a, b, c, d) scanf("%lf%lf%lf%lf", &a, &b, &c, &d)
-#define SA(a, i, n) For(i, n) scanf("%d", a + i) /// ±ãÓÚÀ©Õ¹ *²»ÒªÔÚºóÃæ¼Ó¶ººÅ£¡
-#define SAA(a, i, n, j, m) For(i, n) For(j, m) SI(a[i][j]) /// *²»ÒªÔÚºóÃæ¼Ó¶ººÅ£¡
+#define SA(a, i, n) For(i, n) scanf("%d", a + i) /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ *ï¿½ï¿½Òªï¿½Úºï¿½ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½Å£ï¿½
+#define SAA(a, i, n, j, m) For(i, n) For(j, m) SI(a[i][j]) /// *ï¿½ï¿½Òªï¿½Úºï¿½ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½Å£ï¿½
 #define GC(c) (c = getchar())
 #define GCn() getchar()
 #define UC(c) ungetc(c, stdin)
@@ -82,17 +82,17 @@ typedef multimap<int, int>::iterator mmter;
 #define PII(a, b) printf("%d %d\n", a, b)
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
-#define PL(a) printf("%I64d\n", a)
-#define PLL(a, b) printf("%I64d %I64d\n", a, b)
-#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
+#define PL(a) printf("%lld\n", a)
+#define PLL(a, b) printf("%lld %lld\n", a, b)
+#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
-#define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(ÓÐÊ±ÒªÔÚÇ°Ãæ¼Ó»¨À¨ºÅ)ÓÉÓÚÒªÖ§³ÖSTLµÄÊý¾ÝÀàÐÍ£¬¹Ê²»ÓÃ+µÄÐÎÊ½£¬±ØÒªÊ±ÇëÊÖ¶¯¸Ä³É+
+#define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(ï¿½ï¿½Ê±Òªï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ó»ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ÒªÖ§ï¿½ï¿½STLï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½Ê²ï¿½ï¿½ï¿½+ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ÒªÊ±ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½Ä³ï¿½+
 #define PAA(a, i, n, j, m) For(i, n) {For(j, (m) - 1) printf("%d ", a[i][j]); PI(a[i][(m) - 1]);}
 #define PAn(a, i, n) For(i, n) PI(a[i])
-#define PiA(a, i, n) For(i, n) PII(i, a[i]) /// debugÓÃ
-#define rPA(a, i, n) rForr(i, n - 1, 1) printf("%d ", a[i]); PI(a[0]) /// *(ÓÐÊ±ÒªÔÚÇ°Ãæ¼Ó»¨À¨ºÅ)
+#define PiA(a, i, n) For(i, n) PII(i, a[i]) /// debugï¿½ï¿½
+#define rPA(a, i, n) rForr(i, n - 1, 1) printf("%d ", a[i]); PI(a[0]) /// *(ï¿½ï¿½Ê±Òªï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ó»ï¿½ï¿½ï¿½ï¿½ï¿½)
 #define rPAn(a, i, n) rFor(i, n - 1) PI(a[i])
 #define PC(c) putchar(c)
 #define Pn() putchar(10)
@@ -100,9 +100,9 @@ typedef multimap<int, int>::iterator mmter;
 
 #define FI freopen("in.txt", "r", stdin)
 #define FO freopen("out.txt", "w", stdout)
-#define Fin(f) freopen(f, "r", stdin) /// ÇëÊÖ¶¯¼Ó.in
-#define Fout(f) freopen(f, "w", stdout) /// ÇëÊÖ¶¯¼Ó.out
-#define random(m) ((rand() << 16 | rand()) % m) /// [0,m)Ö®¼äµÄÎ±Ëæ»úÊý
+#define Fin(f) freopen(f, "r", stdin) /// ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½.in
+#define Fout(f) freopen(f, "w", stdout) /// ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½.out
+#define random(m) ((rand() << 16 | rand()) % m) /// [0,m)Ö®ï¿½ï¿½ï¿½ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #define SR() srand((unsigned)time(NULL))
 
 typedef long double ld;
@@ -116,17 +116,20 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
-
-/// ²»¿ÉÊ¹ÓÃÈçÏÂ¼ä½Ó±£Áô×Ö£ºrank, tm,time, write, j0,j1,jn,y0,y1,yn
-/// Èç¹ûÓÃgets(s), GC(ch)¶ÁÈëWAµÄ»°£¬ÇëÓÃSS(s), scanf(" %c ", &ch)´úÌæ
-/// ÔÚmain()ÖÐ´óÁ¿³õÊ¼»¯STLÀàÐÍÈÝÒ×ËÀ»ú
-/// ×¢Òâstrncpy²»»á¼ÓÎ²0£¬ÇëÊÖ¶¯Ìí¼Ó
-/// Ïà¶ÔÎ»ÖÃ²»±äµÄÅÅÐòstable_sort(a, a + n);
-//#pragma comment(linker, "/STACK:102400000,102400000")
+/// ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Ó±ï¿½ï¿½ï¿½ï¿½Ö£ï¿½rank, tm,time, write, j0,j1,jn,y0,y1,yn
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gets(s), GC(ch)ï¿½ï¿½ï¿½ï¿½WAï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SS(s), scanf(" %c ", &ch)ï¿½ï¿½ï¿½ï¿½
+/// ï¿½ï¿½main()ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½STLï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+/// ×¢ï¿½ï¿½strncpyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î²0ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½
+/// ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½stable_sort(a, a + n);
+/// C++ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½G++ï¿½ï¿½ï¿½ï¿½
+/*G++ï¿½ï¿½Õ»
+int __size__ = 256 << 20; // 256MB
+char *__p__ = (char*)malloc(__size__) + __size__;
+__asm__("movl %0, %%esp\n" :: "r"(__p__));
+*/
 //ios_base::sync_with_stdio(false);
 
-typedef pair<int, int> p2;  /// ¸³ÖµÊ±Ö±½ÓSII(a[i].x, a[i].y)¾ÍÐÐ, ÓÐÊ±ºòÓÃLL
+typedef pair<int, int> p2; /// ï¿½ï¿½ÖµÊ±Ö±ï¿½ï¿½SII(a[i].x, a[i].y)ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
 //#define x first
@@ -136,18 +139,30 @@ typedef pair<int, pair<int, int> > pi3;
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7;
-#define Pcas() printf("Case %d: ", ++cas) /// *×¢ÒâCµÄ´óÐ¡Ð´
+#define Pcas() printf("Case #%d: ", ++cas) /// *×¢ï¿½ï¿½caseï¿½Ä´ï¿½Ð¡Ð´
 const int mx = int(1e5) + 5;
 
+#define EPS 1e-6
 
+char s[100];
 
-#define IO /// *±ðÍüÁËÉ¾µô/¼ÓÉÏ£¡
 int main()
 {
-#ifdef IO
-FI;
-#endif
-ll a, b;
-    while (~SLL(a, b)) PL(a + b);
-    return 0;
+	//freopen("in.txt", "r", stdin);
+	ull M, E, b, i;
+	double a, A, diff;
+	while (scanf("%s", s), strcmp(s, "0e0"))
+	{
+		*strchr(s, 'e') = 32;
+		sscanf(s, "%lf%llu", &a, &b);
+		A = log(a) + b * M_LN10;
+		For(M, 10)
+		{
+			E = (ull)round(log(M + 2 + (A - log(pow(2, M + 1) - 1)) * M_LOG2E) * M_LOG2E);
+			diff = A - (pow(2, E) - M - 2) * M_LN2 - log(pow(2, M + 1) - 1);
+			if (fabs(diff) < EPS) break;
+		}
+		printf("%llu %llu\n", M, E);
+	}
+	return 0;
 }
