@@ -37,7 +37,7 @@ typedef unsigned long long ull;
 #define Max(a, n) (*max_element(a, a + (n)))
 #define Minpos(a, n) (min_element(a, a + (n)) - (a))
 #define Maxpos(a, n) (max_element(a, a + (n)) - (a))
-#define Lowpos(a, x) (lower_bound(all(a), x) - (a.begin()))
+#define Lowpos(a, n, x) (lower_bound(a, a + (n), x) - (a))
 #define Upppos(a, n, x) (upper_bound(a, a + (n), x) - (a))
 #define BS(a, n, x) binary_search(a, a + (n), x) /// 返回bool值
 #define Range(a, n, x) equal_range(a, a + (n), x) /// 返回pair
@@ -129,59 +129,142 @@ __asm__("movl %0, %%esp\n" :: "r"(__p__));
 */
 //ios_base::sync_with_stdio(false);
 
-typedef pair<ll, ll> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
+typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-#define x first
-#define y second
+//#define x first
+//#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7;
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
-const int mx = int(1e3) + 5;
-ll xx, yy;
-vector<p2> p;
-bool ok(int n)
+
+
+const int maxn = 500000 + 10;
+const int maxnode = 1000000 + 10;
+typedef long long LL;
+
+//LL prefix_sum[mx];
+
+LL sum(int L, int R)
 {
-	if (p[0].x == xx) return false;
-	if (n == 1) return true;
-	int i;
-	int tmp = Lowpos(p, MP(xx, yy));
-	if (tmp && tmp < n) return false;
-	if (tmp == n) reverse(all(p));
-	For(i, n - 1) if (p[i].x == p[i + 1].x) return false;
-	//if (n == 2) return p[0].x != p[1].x;
-	ll a1 = sq(p[0].x) - sq(xx), b1 = p[0].x - xx, c1 = p[0].y - yy;
-	ll a2 = sq(p[1].x) - sq(xx), b2 = p[1].x - xx, c2 = p[1].y - yy;
-	ll d = a1 * b2 - a2 * b1, d1 = -(c2 * b1 - c1 * b2), d2 = a1 * c2 - a2 * c1;
-	//PLLL(d,d1,d2);
-	if (d == 0 || d1 == 0 || d < 0 && d1 < 0 || d > 0 && d1 > 0) return false;
-//	PLLL(d,d1,d2);
-	//PI(1);
-	Forr(i, 2, n)
-	{
-		a1 = sq(p[i].x) - sq(xx), b1 = p[i].x - xx, c1 = p[i].y - yy;
-		if (a1 * d1 + a2 * d2 != c1 * d) return false;
-	}
-	return true;
+	return prefix_sum[R] - prefix_sum[L - 1];
 }
 
-//#define IO /// *别忘了删掉!
+LL sum(p2 p)
+{
+	return sum(p.first, p.second);
+}
+
+p2 better(p2 a, p2 b)
+{
+	if (sum(a) != sum(b)) return sum(a) > sum(b) ? a : b;
+	return a < b ? a : b; // 利用pair自带的字典序
+}
+
+int qL, qR;
+
+struct IntervalTree
+{
+    int a[mx<<2];
+	int max_prefix[mx << 2];
+	int max_suffix[mx << 2];
+	p2 max_sub[mx << 2];
+	int add[mx<<2];
+
+	void build(int o, int L, int R)
+	{
+	    add[o]=0;
+		if (L == R)
+		{
+		    SI(a[o]);
+			max_prefix[o] = max_suffix[o] = L;
+			max_sub[o] = make_pair(L, L);
+		}
+		else
+		{
+			int M = L + (R - L) / 2;
+			// 递归创建子树
+			int lc = o * 2, rc = o * 2 + 1;
+			build(lc, L, M);
+			build(rc, M + 1, R);
+			// 递推max_prefix
+			LL v1 = sum(L, max_prefix[lc]);
+			LL v2 = sum(L, max_prefix[rc]);
+			if (v1 == v2) max_prefix[o] = min(max_prefix[lc], max_prefix[rc]);
+			else max_prefix[o] = v1 > v2 ? max_prefix[lc] : max_prefix[rc];
+			// 递推max_suffix
+			v1 = sum(max_suffix[lc], R);
+			v2 = sum(max_suffix[rc], R);
+			if (v1 == v2) max_suffix[o] = min(max_suffix[lc], max_suffix[rc]);
+			else max_suffix[o] = v1 > v2 ? max_suffix[lc] : max_suffix[rc];
+			// 递推max_sub
+			max_sub[o] = better(max_sub[lc], max_sub[rc]); // 完全在左子树或者右子树
+			max_sub[o] = better(max_sub[o], make_pair(max_suffix[lc], max_prefix[rc])); // 跨越中线
+		}
+	}
+
+	p2 query_prefix(int o, int L, int R)
+	{
+		if (max_prefix[o] <= qR) return make_pair(L, max_prefix[o]);
+		int M = L + (R - L) / 2;
+		int lc = o * 2, rc = o * 2 + 1;
+		if (qR <= M) return query_prefix(lc, L, M);
+		p2 i = query_prefix(rc, M + 1, R);
+		i.first = L;
+		return better(i, make_pair(L, max_prefix[lc]));
+	}
+
+	p2 query_suffix(int o, int L, int R)
+	{
+		if (max_suffix[o] >= qL) return make_pair(max_suffix[o], R);
+		int M = L + (R - L) / 2;
+		int lc = o * 2, rc = o * 2 + 1;
+		if (qL > M) return query_suffix(rc, M + 1, R);
+		p2 i = query_suffix(lc, L, M);
+		i.second = R;
+		return better(i, make_pair(max_suffix[rc], R));
+	}
+
+	p2 query(int o, int L, int R)
+	{
+		if (qL <= L && R <= qR) return max_sub[o];
+		int M = L + (R - L) / 2;
+		int lc = o * 2, rc = o * 2 + 1;
+		if (qR <= M) return query(lc, L, M);
+		if (qL > M) return query(rc, M + 1, R);
+		p2 i1 = query_prefix(rc, M + 1, R); // 右半的前缀
+		p2 i2 = query_suffix(lc, L, M); // 左半的后缀
+		p2 i3 = better(query(lc, L, M), query(rc, M + 1, R));
+		return better(make_pair(i2.first, i1.second), i3);
+	}
+};
+
+IntervalTree tree;
+
+#define IO /// *别忘了删掉!
 int main()
 {
-	int n, i;
-	ll xi, yi;
 #ifdef IO
 	FI;
 #endif
-	SLL(xx, yy);
-	SI(n);
-	//SIII(xx,yy,n);
-	// SI(n);
-	For(i, n) SLL(xi, yi), p.PB(MP(xi, yi));
-	SUni(p);
-	puts(ok(p.size()) ? "Yes" : "No");
+	int n, a, Q;
+	scanf("%d%d", &n, &Q);
+	{
+
+		tree.build(1, 1, n);
+		printf("Case %d:\n", ++kase);
+		while (Q--)
+		{
+			int L, R;
+			scanf("%d%d", &L, &R);
+			qL = L;
+			qR = R;
+			p2 ans = tree.query(1, 1, n);
+			printf("%d %d\n", ans.first, ans.second);
+		}
+	}
 	return 0;
 }
