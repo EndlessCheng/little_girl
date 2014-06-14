@@ -37,7 +37,7 @@ typedef unsigned long long ull;
 #define Max(a, n) (*max_element(a, a + (n)))
 #define Minpos(a, n) (min_element(a, a + (n)) - (a))
 #define Maxpos(a, n) (max_element(a, a + (n)) - (a))
-#define Lowpos(a, n, x) (lower_bound(a, a + (n), x) - (a))
+#define Lowpos(a, x) (lower_bound(all(a), x) - (a.begin()))
 #define Upppos(a, n, x) (upper_bound(a, a + (n), x) - (a))
 #define BS(a, n, x) binary_search(a, a + (n), x) /// 返回bool值
 #define Range(a, n, x) equal_range(a, a + (n), x) /// 返回pair
@@ -129,28 +129,59 @@ __asm__("movl %0, %%esp\n" :: "r"(__p__));
 */
 //ios_base::sync_with_stdio(false);
 
-typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
+typedef pair<ll, ll> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
+#define x first
+#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7;
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
-const int mx = int(1e5) + 5;
+const int mx = int(1e3) + 5;
+ll xx, yy;
+vector<p2> p;
+bool ok(int n)
+{
+	if (p[0].x == xx) return false;
+	if (n == 1) return true;
+	int i;
+	int tmp = Lowpos(p, MP(xx, yy));
+	if (tmp && tmp < n) return false;
+	if (tmp == n) reverse(all(p));
+	For(i, n - 1) if (p[i].x == p[i + 1].x) return false;
+	//if (n == 2) return p[0].x != p[1].x;
+	ll a1 = sq(p[0].x) - sq(xx), b1 = p[0].x - xx, c1 = p[0].y - yy;
+	ll a2 = sq(p[1].x) - sq(xx), b2 = p[1].x - xx, c2 = p[1].y - yy;
+	ll d = a1 * b2 - a2 * b1, d1 = -(c2 * b1 - c1 * b2), d2 = a1 * c2 - a2 * c1;
+	//PLLL(d,d1,d2);
+	if (d == 0 || d1 == 0 || d < 0 && d1 < 0 || d > 0 && d1 > 0) return false;
+//	PLLL(d,d1,d2);
+	//PI(1);
+	Forr(i, 2, n)
+	{
+		a1 = sq(p[i].x) - sq(xx), b1 = p[i].x - xx, c1 = p[i].y - yy;
+		if (a1 * d1 + a2 * d2 != c1 * d) return false;
+	}
+	return true;
+}
 
-
-
-    #define IO /// *别忘了删掉!
+//#define IO /// *别忘了删掉!
 int main()
 {
+	int n, i;
+	ll xi, yi;
 #ifdef IO
-    FI;
+	FI;
 #endif
-    ll a, b;
-    while (~SLL(a, b)) PL(a + b);
-    return 0;
+	SLL(xx, yy);
+	SI(n);
+	//SIII(xx,yy,n);
+	// SI(n);
+	For(i, n) SLL(xi, yi), p.PB(MP(xi, yi));
+	SUni(p);
+	puts(ok(p.size()) ? "Yes" : "No");
+	return 0;
 }
