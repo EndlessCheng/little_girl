@@ -10,7 +10,7 @@ using namespace std;
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
 
-typedef long long ll;
+typedef int ll;
 #define PB push_back
 #define MP make_pair
 #define all(a) a.begin(), a.end()
@@ -82,6 +82,7 @@ typedef multimap<int, int>::iterator mmter;
 #define PII(a, b) printf("%d %d\n", a, b)
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
+#define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
 #define PL(a) printf("%lld\n", a)
 #define PLL(a, b) printf("%lld %lld\n", a, b)
 #define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
@@ -130,119 +131,109 @@ __asm__("movl %0, %%esp\n" :: "r"(__p__));
 //ios_base::sync_with_stdio(false);
 
 typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
-typedef pair<pair<int, int>, int> p3;
+
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
-//#define MT(a, b, c) make_pair(make_pair(a, b), c)
+typedef pair<pair<int, int>, pi3 > p5;
+#define x first
+#define y second
+#define MT(a, b, c,d,e) make_pair(make_pair(a, b), make_pair(c,make_pair(d, e)))
 
 typedef priority_queue<int> pqi;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7;
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
+const int mx = int(1e5);
 
+#define lson rt << 1, l, m
+#define rson rt << 1 | 1, m + 1, r
+#define root 1, 1, n /// *不要0, 0, n - 1
 
-const int maxn = 500000 + 10;
-const int maxnode = 1000000 + 10;
-typedef long long LL;
+int lsum[mx << 2], rsum[mx << 2], msum[mx << 2], Set[mx << 2];
+int lnum[mx << 2], rnum[mx << 2];
 
-//LL prefix_sum[mx];
-
-LL sum(int L, int R)
+///加个define吧
+/// 加个「标准测试」debug吧
+inline void pushup(int rt)
 {
-	return prefix_sum[R] - prefix_sum[L - 1];
+    if (rnum[rt << 1] < lnum[rt << 1 | 1]) msum[rt] = rsum[rt << 1] + lsum[rt << 1 | 1];
+	else msum[rt] = max(rsum[rt << 1] , lsum[rt << 1 | 1]);
+
+	lsum[rt] = lsum[rt << 1], rsum[rt] = rsum[rt << 1 | 1];
+
+	if(lsum[rt]+rsum[rt]==msum[rt]) lsum[rt]=rsum[rt]=msum[rt];
+
+	//if()
+
+    lnum[rt] = lnum[rt << 1], rnum[rt] = rnum[rt << 1 | 1];
+
+	PIIIII(lnum[rt],rnum[rt],lsum[rt],msum[rt],rsum[rt]);
 }
 
-LL sum(p2 p)
+inline void pushdown(int rt, int m) /// *随题目变动
 {
-	return sum(p.first, p.second);
+	if (Set[rt])
+	{
+		Set[rt << 1] = Set[rt];
+		Set[rt << 1 | 1] = Set[rt];
+		lsum[rt << 1] = msum[rt << 1] = rsum[rt << 1] = 1;
+		lsum[rt << 1 | 1] = msum[rt << 1 | 1] = rsum[rt << 1 | 1] = 1;
+		lnum[rt << 1] = rnum[rt << 1] = lnum[rt << 1 | 1] = rnum[rt << 1 | 1] = m;
+		//msum[rt << 1 | 1] = 1; ///平分父节点add，更新左右子区间和
+		Set[rt] = 0; ///父节点add清零
+	}
 }
 
-p2 better(p2 a, p2 b)
+void build(int rt, int l, int r)
 {
-	if (sum(a) != sum(b)) return sum(a) > sum(b) ? a : b;
-	return a < b ? a : b; // 利用pair自带的字典序
+	Set[rt] = 0;
+	if (l == r)
+	{
+		SI(lnum[rt]); /// *随题目变化
+		rnum[rt] = lnum[rt];
+		lsum[rt]=msum[rt]=rsum[rt]=1;
+		return;
+	}
+	int m = (l + r) >> 1;
+	build(lson);
+	build(rson);
+	pushup(rt);
 }
 
-int qL, qR;
-
-struct IntervalTree
+void update(int ql, int qr, int c, int rt, int l, int r)
 {
-    int a[mx<<2];
-	int max_prefix[mx << 2];
-	int max_suffix[mx << 2];
-	p2 max_sub[mx << 2];
-	int add[mx<<2];
-
-	void build(int o, int L, int R)
+	if (ql <= l && r <= qr)
 	{
-	    add[o]=0;
-		if (L == R)
-		{
-		    SI(a[o]);
-			max_prefix[o] = max_suffix[o] = L;
-			max_sub[o] = make_pair(L, L);
-		}
-		else
-		{
-			int M = L + (R - L) / 2;
-			// 递归创建子树
-			int lc = o * 2, rc = o * 2 + 1;
-			build(lc, L, M);
-			build(rc, M + 1, R);
-			// 递推max_prefix
-			LL v1 = sum(L, max_prefix[lc]);
-			LL v2 = sum(L, max_prefix[rc]);
-			if (v1 == v2) max_prefix[o] = min(max_prefix[lc], max_prefix[rc]);
-			else max_prefix[o] = v1 > v2 ? max_prefix[lc] : max_prefix[rc];
-			// 递推max_suffix
-			v1 = sum(max_suffix[lc], R);
-			v2 = sum(max_suffix[rc], R);
-			if (v1 == v2) max_suffix[o] = min(max_suffix[lc], max_suffix[rc]);
-			else max_suffix[o] = v1 > v2 ? max_suffix[lc] : max_suffix[rc];
-			// 递推max_sub
-			max_sub[o] = better(max_sub[lc], max_sub[rc]); // 完全在左子树或者右子树
-			max_sub[o] = better(max_sub[o], make_pair(max_suffix[lc], max_prefix[rc])); // 跨越中线
-		}
+		Set[rt] = c; /// 存至此，不再往下更新 *随题目变动
+		//sum[rt] = 1; /// *随题目变动
+		return;
 	}
+	pushdown(rt , c);///用父节点add往下细分计算
+	int m = (l + r) >> 1;
+	if (ql <= m) update(ql, qr, c, lson);
+	if (qr > m) update(ql, qr, c, rson);
+	pushup(rt);
+}
 
-	p2 query_prefix(int o, int L, int R)
+p5 query(int ql, int qr, int rt, int l, int r)
+{
+	if (ql <= l && r <= qr)
 	{
-		if (max_prefix[o] <= qR) return make_pair(L, max_prefix[o]);
-		int M = L + (R - L) / 2;
-		int lc = o * 2, rc = o * 2 + 1;
-		if (qR <= M) return query_prefix(lc, L, M);
-		p2 i = query_prefix(rc, M + 1, R);
-		i.first = L;
-		return better(i, make_pair(L, max_prefix[lc]));
+		return MT(lsum[rt], rsum[rt], msum[rt], lnum[rt], rnum[rt]);
 	}
+	pushdown(rt , r - l + 1);///用父节点add往下细分计算
+	int m = (l + r) >> 1;
+	p5 p = MT(-1, -1, -1, -1, -1), p2 = MT(-1, -1, -1, -1, -1), ans; /// *注意这里的类型
+	if (ql <= m) p = query(ql, qr, lson); /// *随题目变动
+	if (qr > m) p2 = query(ql, qr, rson);
+	if (p.x.x == -1) return p2;
+	if (p2.x.x == -1) return p;
+	ans.x.x = p.x.x;
+	ans.y.x = p2.y.x;
+	if (p.y.y.y < p2.y.y.x) ans.y.x = p.x.y + p2.x.x;
+	else ans.y.x = max(p.x.y, p2.x.x);
 
-	p2 query_suffix(int o, int L, int R)
-	{
-		if (max_suffix[o] >= qL) return make_pair(max_suffix[o], R);
-		int M = L + (R - L) / 2;
-		int lc = o * 2, rc = o * 2 + 1;
-		if (qL > M) return query_suffix(rc, M + 1, R);
-		p2 i = query_suffix(lc, L, M);
-		i.second = R;
-		return better(i, make_pair(max_suffix[rc], R));
-	}
-
-	p2 query(int o, int L, int R)
-	{
-		if (qL <= L && R <= qR) return max_sub[o];
-		int M = L + (R - L) / 2;
-		int lc = o * 2, rc = o * 2 + 1;
-		if (qR <= M) return query(lc, L, M);
-		if (qL > M) return query(rc, M + 1, R);
-		p2 i1 = query_prefix(rc, M + 1, R); // 右半的前缀
-		p2 i2 = query_suffix(lc, L, M); // 左半的后缀
-		p2 i3 = better(query(lc, L, M), query(rc, M + 1, R));
-		return better(make_pair(i2.first, i1.second), i3);
-	}
-};
-
-IntervalTree tree;
+	return ans;
+}
 
 #define IO /// *别忘了删掉!
 int main()
@@ -250,20 +241,20 @@ int main()
 #ifdef IO
 	FI;
 #endif
-	int n, a, Q;
-	scanf("%d%d", &n, &Q);
+	int n, q, ql, qr, x;
+	p5 p;
+	SII(n, q);
+	build(root);
+	char ch;
+	while (q--)
 	{
-
-		tree.build(1, 1, n);
-		printf("Case %d:\n", ++kase);
-		while (Q--)
+		scanf(" %c ", &ch);
+		SII(ql, qr);
+		if (ch == 'U') SI(x), update(ql, qr, x, root);
+		else
 		{
-			int L, R;
-			scanf("%d%d", &L, &R);
-			qL = L;
-			qR = R;
-			p2 ans = tree.query(1, 1, n);
-			printf("%d %d\n", ans.first, ans.second);
+			p = query(ql, qr, root);
+			PI(max(max(p.x.x, p.x.y), p.y.x));
 		}
 	}
 	return 0;
