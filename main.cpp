@@ -46,12 +46,12 @@
 #define REP(i, n) for (int i = 0; i < (int) (n); ++i)
 #define REPP(i, a, b) for (int i = (int) (a); i <= (int) (b); ++i)
 #define FOR(c,itr) for(__typeof((c).begin()) itr=(c).begin();itr!=(c).end();itr++)
-#define MID ((l + r) >> 1)
-#define L (x << 1)
-#define R ((x << 1) | 1)
-#define LC L, l, MID
-#define RC R, MID + 1, r
-#define LB(x) ((x) & (-(x)))
+#define mid ((l + r) >> 1)
+#define lo (o << 1)
+#define ro ((o << 1) | 1)
+#define LC lo, l, mid
+#define RC ro, mid + 1, r
+#define LB(o) ((o) & (-(o)))
 #pragma warning (disable : 4996)
 //#pragma comment(linker, "/STACK:102400000,102400000")
 #define EPS 1e-8
@@ -63,88 +63,98 @@
 using namespace std;
 
 int n, m;
-int mleft[4 * N], mright[4 * N], middle[4 * N], lx[4 * N], rx[4 * N], fl[4 * N], a[N], ql, qr, qd, ans;
+int mleft[4 * N], mright[4 * N], middle[4 * N], lx[4 * N], rx[4 * N], setv[4 * N], a[N], ql, qr, qd, ans;
 char s[5];
 
-void merge(int x, int l, int r) {
-    mleft[x] = mleft[L] + (mleft[L] == MID - l + 1 && rx[L] < lx[R] ? mleft[R] : 0);
-    mright[x] = mright[R] + (mright[R] == r - MID && rx[L] < lx[R] ? mright[L] : 0);
-    lx[x] = lx[L], rx[x] = rx[R];
-    int m = (rx[L] < lx[R] ? mright[L] + mleft[R] : 0);
-    middle[x] = max(m, max(middle[L], middle[R]));
+void merge(int o, int l, int r)
+{
+	mleft[o] = mleft[lo] + (mleft[lo] == mid - l + 1 && rx[lo] < lx[ro] ? mleft[ro] : 0);
+	mright[o] = mright[ro] + (mright[ro] == r - mid && rx[lo] < lx[ro] ? mright[lo] : 0);
+	lx[o] = lx[lo], rx[o] = rx[ro];
+	int m = (rx[lo] < lx[ro] ? mright[lo] + mleft[ro] : 0);
+	middle[o] = max(m, max(middle[lo], middle[ro]));
 }
 
-void bld(int x, int l, int r) {
-    if (l != r) {
-        bld(LC), bld(RC);
-        merge(x, l, r);
-    }
-    else {
-        mleft[x] = mright[x] = middle[x] = 1;
-        lx[x] = rx[x] = a[l];
-    }
+void bld(int o, int l, int r)
+{
+	if (l == r)
+	{
+		mleft[o] = mright[o] = middle[o] = 1;
+		lx[o] = rx[o] = a[l];
+		return;
+	}
+	bld(LC), bld(RC);
+	merge(o, l, r);
 }
 
-void push(int x, int l, int r) {
-    fl[L] = fl[R] = fl[x];
-    mleft[L] = middle[L] = mright[L] = 1, lx[L] = rx[L] = fl[x];
-    mleft[R] = middle[R] = mright[R] = 1, lx[R] = rx[R] = fl[x];
-    fl[x] = 0;
-}
-
-
-void upd(int x, int l, int r) {
-    if (ql <= l && qr >= r) {
-        fl[x] = qd;
-        mleft[x] = mright[x] = middle[x] = 1;
-        lx[x] = rx[x] = qd;
-    }
-    else {
-        if (fl[x]) push(x, l, r);
-        if (ql <= MID) upd(LC);
-        if (qr > MID) upd(RC);
-        merge(x, l, r);
-    }
-}
-
-void que(int x, int l, int r) {
-    if (ql <= l && qr >= r) {
-        ans = max(ans, middle[x]);
-    }
-    else {
-        if (fl[x]) push(x, l, r);
-        if (ql <= MID) que(LC);
-        if (qr > MID) que(RC);
-        if (rx[L] < lx[R]) {
-            int ll = min(MID - ql + 1, mright[L]) + min(qr - MID, mleft[R]);
-            ans = max(ans, ll);
-        }
-    }
+inline void push(int o, int l, int r)
+{
+	if (setv[o])
+	{
+		setv[lo] = setv[ro] = setv[o];
+		mleft[lo] = middle[lo] = mright[lo] = 1, lx[lo] = rx[lo] = setv[o];
+		mleft[ro] = middle[ro] = mright[ro] = 1, lx[ro] = rx[ro] = setv[o];
+		setv[o] = 0;
+	}
 }
 
 
-int main(){
-    int t, x, y, z, ca = 1;
-    // freopen("D:/Contest/1.in", "r", stdin);
-    //freopen("1.ans", "w", stdout);
-    //ios :: sync_with_stdio(false);
-    RII(n, m);
-    REPP(i, 1, n) RI(a[i]);
-    bld(1, 1, n);
-    while (m--) {
-        scanf("%s", s);
-        if (s[0] == 'Q') {
-            RII(ql, qr);
-            ans = 0;
-            que(1, 1, n);
-            PI(ans);
-        }
-        else {
-            RIII(ql, qr, qd);
-            upd(1, 1, n);
-        }
-    }
+void upd(int o, int l, int r)
+{
+	if (ql <= l && qr >= r)
+	{
+		setv[o] = qd;
+		mleft[o] = mright[o] = middle[o] = 1;
+		lx[o] = rx[o] = qd;
+		return;
+	}
+	push(o, l, r);
+	if (ql <= mid) upd(LC);
+	if (qr > mid) upd(RC);
+	merge(o, l, r);
+}
 
+void que(int o, int l, int r)
+{
+	if (ql <= l && qr >= r)
+	{
+		ans = max(ans, middle[o]);
+		return;
+	}
+	push(o, l, r);
+	if (ql <= mid) que(LC);
+	if (qr > mid) que(RC);
+	if (rx[lo] < lx[ro])
+	{
+		/// 关键！取最小值！
+		int ll = min(mid - ql + 1, mright[lo]) + min(qr - mid, mleft[ro]);
+		ans = max(ans, ll);
+	}
+}
 
-    return 0;
+/// 修改下头文件typedef位置
+
+int main()
+{
+	int t, o, y, z, ca = 1;
+	RII(n, m);
+	REPP(i, 1, n) RI(a[i]);
+	bld(1, 1, n);
+	while (m--)
+	{
+		scanf("%s", s);
+		if (s[0] == 'Q')
+		{
+			RII(ql, qr);
+			ans = 0;
+			que(1, 1, n);
+			PI(ans);
+		}
+		else
+		{
+			RIII(ql, qr, qd);
+			upd(1, 1, n);
+		}
+	}
+	return 0;
 }
