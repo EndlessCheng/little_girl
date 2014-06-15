@@ -50,7 +50,6 @@ using namespace std;
 #define rFor(i, n) for (i = (n); i >= 0; --i)
 #define rForr(i, n, end) for (i = n; i >= (end); --i)
 #define rForrr(i, n, end, step) for (i = n; i >= (end); i -= (step))
-#define loop(a) for (it = a.begin(); it != a.end(); ++it)
 
 #define SI(s) scanf("%d", &s)
 #define SII(s, b) scanf("%d%d", &s, &b)
@@ -118,7 +117,7 @@ using namespace std;
 #define BS(s, n, x) binary_search(s, s + (n), x) /// 返回bool值
 #define Range(s, n, x) equal_range(s, s + (n), x) /// 返回pair
 #define Fpos(s, n, x) (find(s, s + (n), x) - (s))
-#define Fd(s, x) (find(all(s),x) != s.end())
+#define Fd(s, x) (find(all(s), x) != s.end())
 
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
@@ -158,45 +157,44 @@ typedef pair<int, pair<int, int> > pi3;
 //#define x first
 //#define y second
 //#define MT(s, b, c) make_pair(make_pair(s, b), c)
+#define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
 
-const int mxn = int(1e9);
+const int mxn = int(1e3);
 
 set<ll> s;
 
 inline ll f(ll a, ll b)
 {
-	return a * b + ((a + b + 1) << 1);
+	return a * b + (a + b);
 }
 
-void init_closure(ll a0, ll a1)
+int init_closure(ll a0, ll a1)
 {
-	s.insert(1LL), s.insert(3LL);
-	int i, j, tmpsz;
-	ll a, tmp;
-	siter it;
-	for (i = 0;; ++i)
+    Pn();
+	// PLL(a0,a1);
+	s.clear();
+	s.insert(a0), s.insert(a1);
+	ll tmp;
+	siter it, it2;
+	loop(it, s) loop(it2, s)
 	{
-		for (it = s.begin(), j = 0; it != s.end(), j < i; ++it, ++j) ;
-		if (it == s.end()) break;
-		a = *it;
-		tmpsz = s.size();
-		loop(s)
-		{
-			tmp = f(a, *it);
-			if (tmp > mxn) break;
-			s.insert(tmp);
-		}
-		if (s.size() == tmpsz) break; /// 未发生修改
+		//  PL(tmp);
+		tmp = f(*it, *it2);
+		if (tmp > mxn) break;
+		s.insert(tmp);
 	}
+	loop(it, s) PL(*it);
+
+	return s.size();
 }
 
-#define IO /// *别忘了删掉!
 int main()
 {
-
+	int i;
+	Forr(i, 2, 10) PI(init_closure(1, i));
 	return 0;
 }
