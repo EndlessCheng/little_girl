@@ -1,6 +1,13 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+#define Fin(f) freopen(f, "r", stdin)
+#define Fout(f) freopen(f, "w", stdout)
+#define SR() srand((unsigned)time(NULL))
+#define random(m) ((rand() << 16 | rand()) % m) /// [0,m)之间的伪随机数
+
+#define all(a) a.begin(), a.end()
+
 #define Inter(v, a, n, b, m) v.resize(set_intersection(a, a + (n), b, b + (m), v.begin()) - v.begin())
 #define SInter(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Inter(v, a, n, b, m)
 #define Union(v, a, n, b, m) v.resize(set_union(a, a + (n), b, b + (m), v.begin()) - v.begin());
@@ -9,6 +16,15 @@ using namespace std;
 #define SDiff(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Diff(v, a, n, b, m)
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
+
+#define PB push_back
+#define MP make_pair
+#define Cnt1(n) (__builtin_popcount(n))
+#define Cntt1(n) (__builtin_popcountll(n)) /// 参数必须为ull类型
+#define cb(n) (32 - __builtin_clz(n))
+#define cbb(n) (64 - __builtin_clzll(n)) /// 参数必须为ull类型
+#define sq(x) ((x) * (x))
+#define Sqrt(n) (int)sqrt(0.5 + n)
 
 #define PB push_back
 #define MP make_pair
@@ -26,7 +42,7 @@ using namespace std;
 #define Sqrt(n) (int)sqrt(0.5 + n)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
-#define Rcpy(l, r, to) reverse_copy(l, r, to) /// 注意为左闭右开区间
+#define Rcpy(l, r, b) reverse_copy(l, r, b) /// 注意为左闭右开区间
 
 #define For(i, n) for (i = 0; i < (n); ++i)
 #define Forr(i, start, n) for (i = start; i < (n); ++i)
@@ -80,10 +96,15 @@ using namespace std;
 #define Pn() putchar(10)
 #define Ps() putchar(32)
 
-#define Fin(f) freopen(f, "r", stdin) /// 请手动加.in
-#define Fout(f) freopen(f, "w", stdout) /// 请手动加.out
-#define random(m) ((rand() << 16 | rand()) % m) /// [0,m)之间的伪随机数
-#define SR() srand((unsigned)time(NULL))
+#define Uni(a) a.resize(unique(all(a)) - a.begin()) /// STL专用
+#define SUni(a) sort(all(a)); Uni(a) /// STL专用
+#define Unii(a, n) (unique(a, a + (n)) - a)
+#define SUnii(a, n) sort(a, a + n); Unii(a, n)
+#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 注意0LL!!!!!以及0.0!!!
+#define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
+#define mem(a, num) memset(a, num, sizeof(a))
+#define cpy(to, from) memcpy(to, from, sizeof(from))
+#define Rcpy(l, r, b) reverse_copy(l, r, b) /// 注意为左闭右开区间
 
 #define gr() greater<int>()
 #define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *可能要事先--k
@@ -97,6 +118,7 @@ using namespace std;
 #define BS(a, n, x) binary_search(a, a + (n), x) /// 返回bool值
 #define Range(a, n, x) equal_range(a, a + (n), x) /// 返回pair
 #define Fpos(a, n, x) (find(a, a + (n), x) - (a))
+#define Fd(a, x) (find(all(a),x) != a.end())
 
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
@@ -138,129 +160,47 @@ typedef pair<int, pair<int, int> > pi3;
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7;
+//const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
 const int mx = int(1e5) + 5;
+const int mxw = int(1e5) + 5;
 
-const int mxn = mx << 2;
+int w[mx], v[mx], m[mx]; /// 物品重量、价值、数目
+bool dp[mxw];
 
-#define mid ((l + r) >> 1)
-#define lo (o << 1)
-#define ro ((o << 1) | 1)
-#define LC lo, l, mid /// [l, mid], 长度为mid-l+1
-#define RC ro, mid + 1, r /// (mid, r], 长度为r-mid
-
-int a[mx], ql, qr, val, ans;
-int sum[mxn]; /// 区间和
-int lsum[mxn], rsum[mxn], msum[mxn], lnum[mxn], rnum[mxn];
-int setv[mxn], addv[mxn];
-
-/// 合并两个子区间
-void merge(int o, int l, int r)
+int diffW(int n, int maxw)
 {
-	/// 跨越式合并(lo跨ro, ro跨lo)
-	lsum[o] = lsum[lo] + (lsum[lo] == mid - l + 1 && rnum[lo] < lnum[ro] ? lsum[ro] : 0);
-	rsum[o] = rsum[ro] + (rsum[ro] == r - mid && rnum[lo] < lnum[ro] ? rsum[lo] : 0);
-	msum[o] = max(rnum[lo] < lnum[ro] ? rsum[lo] + lsum[ro] : 0, max(msum[lo], msum[ro]));
-	lnum[o] = lnum[lo], rnum[o] = rnum[ro];
-	///
-	sum[o] = sum[lo] + sum[ro];
+	int cnt = 0, i;
+	Forr(i, 1, maxw + 1) if (dp[i]) ++cnt;
+	return cnt;
 }
 
-inline void Uset(int o, int val)
+int solve(int n, int maxw)
 {
-	lsum[o] = rsum[o] = msum[o] = 1;
-	lnum[o] = rnum[o] = val;
-}
-
-/// build(1, 1, n);
-void build(int o, int l, int r)
-{
-	if (l == r)
+	int i, k, j, num, mul;
+	dp[0] = true;
+	For(i, n)
 	{
-		/// *初始化代码
-		Uset(o, a[l]);
-		//addv[o] = 0;
-		return;
+		for (num = m[i], k = 1; num > 0; num -= k, k <<= 1)
+		{
+			mul = min(k, num); /// 把mul块物品视作一个整体
+			rForr(j, maxw, w[i] * mul) dp[j] |= dp[j - w[i] * mul];
+		}
 	}
-	build(LC), build(RC);
-	merge(o, l, r);
-}
-
-inline void down(int o, int l, int r)
-{
-	if (setv[o])
-	{
-		setv[lo] = setv[ro] = setv[o];
-		Uset(lo, setv[o]), Uset(ro, setv[o]);
-		setv[o] = 0;
-	}
-	///
-	if (addv[o])
-	{
-		addv[lo] += addv[o], addv[ro] += addv[o];
-		//做乘法可能要加(ll)
-		sum[lo] += addv[o] * (mid - l + 1), sum[ro] += addv[o] * (r - mid); /// 平分父节点add，更新子区间和
-		addv[o] = 0;
-	}
-}
-
-/// 先下再上
-/// SI(val), U(1, 1, n);
-void U(int o, int l, int r)
-{
-	if (ql <= l && qr >= r)
-	{
-		setv[o] = val; /// 存至此，不再往下更新
-		Uset(o, val);
-		///
-        addv[o] += val;
-        sum[o] += val * (r - l + 1); //做乘法可能要加(ll)
-		return;
-	}
-	down(o, l, r);
-	if (ql <= mid) U(LC);
-	if (qr > mid) U(RC);
-	merge(o, l, r);
-}
-
-/// ans = 0, Q(1, 1, n), PI(ans); (或PL)
-void Q(int o, int l, int r)
-{
-	if (ql <= l && qr >= r)
-	{
-		ans = max(ans, msum[o]);
-		//ans += sum[o];
-		return;
-	}
-	down(o, l, r);
-	if (ql <= mid) Q(LC);
-	if (qr > mid) Q(RC);
-	/// *更新全局变量ans, 有时可能不需要下面的代码
-	if (rnum[lo] < lnum[ro])
-	{
-		/// *注意对ql, qr「到头」的处理
-		ans = max(ans, min(mid - ql + 1, rsum[lo]) + min(qr - mid, lsum[ro]));
-	}
-}
-
-void solve()
-{
-	int n, m, i;
-	char c;
-	SII(n, m);
-	SA(a + 1, i, n);
-	build(1, 1, n);
-	while (m--)
-	{
-		SC(c), SII(ql, qr);
-		if (c == 'U') SI(val), U(1, 1, n);
-		else ans = 0, Q(1, 1, n), PI(ans);
-	}
+	return Acc(dp+1,maxw);
 }
 
 int main()
 {
-	solve();
+	int t, cas = 0, n, mw, i;
+	SI(t);
+	while (t--)
+	{
+		Pcas();
+		SII(n, mw);
+		SA(w, i, n);
+		SA(m, i, n);
+		PI(solve(n, mw));
+	}
 	return 0;
 }
