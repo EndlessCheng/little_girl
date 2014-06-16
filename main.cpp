@@ -1,86 +1,89 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include <ctype.h>
-#include <algorithm>
-#include <vector>
-#include <map>
-#include <set>
-#include <iostream>
-#include <string>
-#include <queue>
-#include <stack>
 
-#define sqr(x) (x*x)
-#define cube(x) (x*x*x)
-
+#include<cstdio>
+#include<cstdlib>
+#include<cmath>
+#include<map>
+#include<queue>
+#include<stack>
+#include<vector>
+#include<algorithm>
+#include<cstring>
+#include<string>
+#include<iostream>
+const int MAXN=30+10;
 using namespace std;
+char s[MAXN][MAXN][MAXN];
+int vis[MAXN][MAXN][MAXN];
+int x1,Y1,z1,x2,y2,z2;
+int l,r,c;
+int ok;
+int go[MAXN][3]={0,0,1,0,0,-1,1,0,0,-1,0,0,0,-1,0,0,1,0};
 
-int n,m,x,y,result,mx;
-char land[21][21],ch;
-bool check[21][21];
-
-int dirrection_r[]={0,0,1,-1};
-int dirrection_c[]={1,-1,0,0};
-
-inline bool validity (int i, int j)
+struct P
 {
-    if (i<0 || i>=m) return false;
-    if (check[i][j]) return false;
-    if (land[i][j]!=ch) return false;
+	int x,y,z,step;
+};
 
-    return true;
-}
-
-void dfs(int i, int j)
+int bfs()
 {
-    check[i][j]=true;
-    result++;
-
-    for (int k=0; k<4; k++)
-    {
-        int u = dirrection_r[k] + i , v = dirrection_c[k] + j;
-
-        if (v>=n) v=0;
-        else if (v<0) v=n-1;
-
-        if ( validity(u,v) ) dfs(u,v);
-    }
+	P cur,next;
+	cur.x=x1; cur.y=Y1; cur.z=z1; cur.step=0;
+	vis[x1][Y1][z1]=1;
+	queue<P>q;
+	q.push(cur);
+	while(!q.empty())
+	{
+		cur=q.front();
+		q.pop();
+		if(cur.x==x2 && cur.y==y2 && cur.z==z2){
+			return cur.step;
+		}
+		for(int i=0; i<6; i++){
+			int x,y,z;
+			next.x=x=cur.x+go[i][0];
+			next.y=y=cur.y+go[i][1];
+			next.z=z=cur.z+go[i][2];
+			if(x<0 || x>=r || y<0 || y>=c || z<0 || z>=l) continue;
+			if(vis[x][y][z] || s[x][y][z]=='#') continue;
+			vis[x][y][z]=1;
+			next.step=cur.step+1;
+			q.push(next);
+		}
+	}
+	return 0;
 }
 
 int main()
 {
-	//freopen("input.txt","r",stdin);
-
-	while (cin>>m>>n)
+	//freopen("in.txt","r",stdin);
+	while(cin>>l>>r>>c, l+r+c)
 	{
-	    for (int i=0; i<m; i++)
-        {
-            cin>>land[i];
-            memset(check[i],false,n+1);
-        }
-
-        cin>>x>>y;
-        ch=land[x][y];
-
-        mx=0;
-
-        dfs(x,y);
-
-        for (int i=0; i<m; i++)
-            for (int j=0; j<n; j++)
-                if (land[i][j]==ch && !check[i][j])
-                {
-                    result=0;
-                    dfs(i,j);
-
-                    if (result>mx) mx=result;
-                }
-
-
-        cout<<mx<<endl;
+		memset(vis,0,sizeof(vis));
+		ok=0;
+		int i,j,k;
+		for(k=0; k<l; k++)
+			for(i=0; i<r; i++)
+				for(j=0; j<c; j++){
+					cin>>s[i][j][k];
+					if(s[i][j][k]=='S'){
+						x1=i; Y1=j; z1=k;
+					}
+					if(s[i][j][k]=='E'){
+						x2=i; y2=j; z2=k;
+					}
+				}
+		//for(k=0; k<l; k++){
+			//for(i=0; i<r; i++){
+				//for(j=0; j<c; j++){
+					//cout<<s[i][j][k];
+				//}
+				//cout<<endl;
+			//}
+			//cout<<endl;
+		//}
+		int s=bfs();
+		if(s) cout<<"Escaped in "<<s<<" minute(s)."<<endl;
+		else cout<<"Trapped!"<<endl;
 	}
-
 	return 0;
 }
