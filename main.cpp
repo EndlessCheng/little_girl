@@ -1,25 +1,4 @@
-#include<cstdio>
-#include<cctype>
-#include<cstring>
-#include<cmath>
-#include<cstdlib>
-#include<climits>
-#include<iostream>
-#include<sstream>
-#include<algorithm>
-#include<functional>
-#include<numeric>
-#include<utility>
-#include<vector>
-#include<string>
-#include<bitset>
-#include<list>
-#include<deque>
-#include<stack>
-#include<queue>
-#include<set>
-#include<map>
-//#include<bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 #define Fin(f) freopen(f, "r", stdin)
@@ -47,6 +26,24 @@ using namespace std;
 #define sq(x) ((x) * (x))
 #define Sqrt(n) (int)sqrt(0.5 + n)
 
+#define PB push_back
+#define MP make_pair
+#define all(a) a.begin(), a.end()
+#define Uni(a) a.resize(unique(all(a)) - a.begin()) /// STL专用
+#define SUni(a) sort(all(a)); Uni(a) /// STL专用
+#define Unii(a, n) (unique(a, a + (n)) - a) /// 使用前请sort
+#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 注意0LL!!!!!以及0.0!!!
+#define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
+#define Cnt1(n) (__builtin_popcount(n))
+#define Cntt1(n) (__builtin_popcountll(n)) /// 参数必须为ull类型
+#define cb(n) (32 - __builtin_clz(n))
+#define cbb(n) (64 - __builtin_clzll(n)) /// 参数必须为ull类型
+#define sq(x) ((x) * (x))
+#define Sqrt(n) (int)sqrt(0.5 + n)
+#define mem(a, num) memset(a, num, sizeof(a))
+#define cpy(to, from) memcpy(to, from, sizeof(from))
+#define Rcpy(l, r, b) reverse_copy(l, r, b) /// 注意为左闭右开区间
+
 #define For(i, n) for (i = 0; i < (n); ++i)
 #define Forr(i, start, n) for (i = start; i < (n); ++i)
 #define Forrr(i, start, n, step) for (i = start; i < (n); i += (step))
@@ -60,10 +57,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%I64d", &a)
-#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
-#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
+#define SL(a) scanf("%lld", &a)
+#define SLL(a, b) scanf("%lld%lld", &a, &b)
+#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -82,9 +79,9 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%I64d\n", a)
-#define PLL(a, b) printf("%I64d %I64d\n", a, b)
-#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
+#define PL(a) printf("%lld\n", a)
+#define PLL(a, b) printf("%lld %lld\n", a, b)
+#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -132,14 +129,17 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
-
 /// 不可使用如下间接保留字：rank, tm,time, write, j0,j1,jn,y0,y1,yn
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-//#pragma comment(linker, "/STACK:102400000,102400000")
+/// C++会帮你往上类型转换，但G++不会
+/*G++扩栈
+int __size__ = 256 << 20; // 256MB
+char *__p__ = (char*)malloc(__size__) + __size__;
+__asm__("movl %0, %%esp\n" :: "r"(__p__));
+*/
 //ios_base::sync_with_stdio(false);
 
 typedef long long ll;
@@ -151,40 +151,88 @@ typedef map<int, int>::iterator miter; /// *请即时修改模板参数
 typedef multiset<int>::iterator msiter;
 typedef multimap<int, int>::iterator mmter;
 typedef priority_queue<int> pqi; /// *请即时修改模板参数
+typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *请即时修改模板参数
 typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
+#define x first
+#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7;
+//const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
-const int mx = int(1e5) + 5;
+const int mx = int(1e4) + 5;
 
-int h[mx], l[mx], r[mx], pos[mx];
+int a[mx], pos[mx], n;
+vector<p2> ans;
 
-ll solve(int n)
+//void swap(int p)
+//{
+//	int tp = p, range = 1,i,r;
+//	while (tp)
+//	{
+//		if (tp & 1)
+//		{
+//		    r=min(p+range,n);
+//			ans.PB(MP(p - range + 1, r));
+//			Forr(i, p - range, p) pos[a[i]] += range;
+//			Forr(i, p, r) pos[a[i]] -= range;
+//			rotate(a + p - range, a + p, a + r);
+//			p -= range;
+//		}
+//		tp >>= 1;
+//		range <<= 1;
+//	}
+//}
+
+void swap(int p, int st, int en)
 {
-	int top = 0, i;
-	For(i, n)
+
+  ///  PIII(p,st,en);
+
+	if (en - st == 1) return;
+	if ((en - st) & 1)
 	{
-		while (top && h[pos[top - 1]] >= h[i]) --top; /// *最大单调栈，小元素往下面挤
-		l[i] = (top ? pos[top - 1] + 1 : 0); /// 非>=h的最近位置+1
-		pos[top++] = i;
+		--en;
+		if (p == en) ans.PB(MP(p, p+1)), --pos[a[p]], ++pos[a[p - 1]], swap(a[p - 1], a[p]), --p;
+		swap(p, st, en);
+		return;
 	}
-	top = 0;
-	rFor(i, n - 1)
+	if(p == st) return;
+	int m = (st + en) >> 1;
+	if (p < m)
 	{
-		while (top && h[pos[top - 1]] >= h[i]) --top; /// *最大单调栈，小元素往下面挤
-		r[i] = (top ? pos[top - 1] : n); /// 因为右边为开，所以不用-1
-		pos[top++] = i;
+		swap(p, st, m);
+		return;
 	}
-	ll ans = 0LL;
-	For(i, n) ans = max(ans, (ll)h[i] * (r[i] - l[i]));
-	return ans;
+	if (p > m) swap(p, m, en);
+
+
+
+	/// 最后的旋转
+
+   // r=min(p+range,n);
+    ans.PB(MP(st+1, en));
+    int i;
+    Forr(i, st, m) pos[a[i]] += m-st;
+    Forr(i, m, en) pos[a[i]] -= m-st;
+    rotate(a + st, a + m, a + en);
+  //  p -= range;
+
+
+}
+
+int solve()
+{
+	ans.clear();
+	int i;
+
+	//PI(pos[1]);
+
+	Forr(i, 1, n) if (pos[i] != i - 1) swap(pos[i], i - 1, n);
+	return ans.size();
 }
 
 #define IO /// *别忘了删掉!
@@ -193,11 +241,14 @@ int main()
 #ifdef IO
 	Fin("in.txt");
 #endif
-	int n, i;
-	while (SI(n), n)
+	int t, i;
+	SI(t);
+	while (t--)
 	{
-		SA(h, i, n);
-		PL(solve(n));
+		SI(n);
+		SA(a, i, n), pos[a[i]] = i;
+		PI(n = solve());
+		For(i, n) PII(ans[i].x, ans[i].y);
 	}
 	return 0;
 }
