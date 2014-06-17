@@ -1,24 +1,4 @@
-#include<cstdio>
-#include<cctype>
-#include<cstring>
-#include<cmath>
-#include<cstdlib>
-#include<climits>
-#include<iostream>
-#include<sstream>
-#include<algorithm>
-#include<functional>
-#include<numeric>
-#include<utility>
-#include<vector>
-#include<string>
-#include<bitset>
-#include<list>
-#include<deque>
-#include<stack>
-#include<queue>
-#include<set>
-#include<map>
+#include<bits/stdc++.h>
 using namespace std;
 
 #define Fin(f) freopen(f, "r", stdin)
@@ -183,39 +163,34 @@ typedef pair<int, pair<int, int> > pi3;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
-const int mx = 27;
+const int mx = int(1e5) + 5;
 
-int n;
-bool edge[mx][mx];
-char s[mx], tmp[205];
+int a[mx], dp[mx], pos[mx], fa[mx];
+vector<int> ans;
 
-int checkTopo(char *s)
+int get_lis(int n) /// O(nlog n)，打印路径
 {
-	int i, j;
-	/// 检测有没有逆向边(与当前拓扑结果矛盾的边)
-	rForr(i, n - 1, 1) rFor(j, i - 1){ if (edge[s[i] & 31][s[j] & 31]) return false;}
-	return true;
+	mem(dp, 0x3f);
+	int i, lpos;
+	pos[0] = -1;
+	For(i, n)
+	{
+		dp[lpos = Lowpos(dp, n, a[i])] = a[i];
+		pos[lpos] = i; /// *靠后打印
+		fa[i] = (lpos ? pos[lpos - 1] : -1);
+	}
+	n = Lowpos(dp, n, inf);
+	for (i = pos[n - 1]; ~fa[i]; i = fa[i]) ans.PB(a[i]);
+	ans.PB(a[i]);
+	return n;
+	//rPAn(ans, i, n);
 }
 
 int main()
 {
-	int i;
-	bool ok = false;
-	while (gets(tmp))
-	{
-		ok ? Pn() : ok = true;
-		n = 0;
-		for (i = 0; tmp[i]; i++) if(tmp[i]!=32)s[n++] = tmp[i];
-		s[n] = 0;
-		sort(s, s + n);
-		mem(edge, 0);
-		gets(tmp);
-
-		for (i = 0; tmp[i]; i += 4) edge[tmp[i] & 31][tmp[i + 2] & 31] = true;
-		//int j;PAA(edge,i,27,j,27);
-
-		do if (checkTopo(s)) puts(s);
-		while (next_permutation(s, s + n));
-	}
+	int n = 0, i;
+	while (~SI(a[n++])) ;
+	PI(n = get_lis(n));
+	puts("-");
 	return 0;
 }
