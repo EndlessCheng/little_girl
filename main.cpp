@@ -1,24 +1,43 @@
+#include <stdio.h>
+#include <string.h>
 
-#include<iostream>
-#include<cstdio>
-#include<cstring>
-using namespace std;
-int main(){
-	int q,i;
-	char c[20];
-	while(cin>>q&&q){
-		int m=1,n=2,s=5,e=4,w=3,o=6,t;
-		for(i=0;i<q;i++){
-			scanf("%s",c);
-		if(strcmp(c,"north")==0)
-		{t=n;n=m;m=s;s=o;o=t;}
-		else if(strcmp(c,"south")==0)
-		{t=s;s=m;m=n;n=o;o=t;}
-		else if(strcmp(c,"east")==0)
-		{t=e;e=m;m=w;w=o;o=t;}
-		else{t=w;w=m;m=e;e=o;o=t;}
+int f( char x )
+{
+	if( '0' <= x && x <= '9' )
+		return x-'0';
+	return x-'A'+10;
+}
+char g( int x )
+{
+	if( x < 10 )
+		return '0'+x;
+	else
+		return 'A'+x-10;
+}
+
+int main()
+{
+	char s[10];
+	int a, b, i;
+	while( scanf( "%s %d %d" , s , &a , &b ) > 0 )
+	{
+		int len = strlen( s ), cur = 0;
+		for( i = 0 ; i < len ; i ++ )
+			cur = cur * a + f( s[i] );
+		len = 6;
+		s[7] = 0;
+		for( i = 0 ; i < 7 ; i ++ )
+			s[i] = ' ';
+		s[len] = '0';
+		while( cur && len >= 0 )
+		{
+			s[len--] = g( cur % b );
+			cur /= b;
 		}
-		cout<<m<<endl;
+		if( cur )
+			puts( "  ERROR" );
+		else
+			puts( s );
 	}
 	return 0;
 }
