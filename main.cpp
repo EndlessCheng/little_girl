@@ -1,70 +1,59 @@
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <cctype>
-#include <cmath>
-#include <cstring>
-#include <algorithm>
-#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <stack>
+#include <queue>
 #include <map>
-#include <iomanip>
-#include <utility>
-
+#include <algorithm>
 using namespace std;
 
-const int SZ = 111;
-const int INF = 0x3f;
+typedef struct List{
+    double x,y,z,r;
+}LIST;
+LIST a[110];
+double s[110][110];
 
-int dis[SZ][SZ];
-map<int, int> mp;
-int main(int arc, char const *argv[])
+int main()
 {
-    ios::sync_with_stdio(false);
-    int u, v, nxt, kase, i, j, k;
-    double sum;
-    kase=nxt=0;
-    while(cin>>u>>v and (u+v)) {
-        nxt=0;
-        memset(dis,INF,sizeof(dis));
-        mp.clear();
-        for(i=0; i<SZ; ++i) dis[i][i] = 0;
-        if(mp.find(u)==mp.end()) {
-            mp.insert(pair<int, int>(u,nxt));
-            nxt++;
-        }
-        if(mp.find(v)==mp.end()) {
-            mp.insert(pair<int, int>(v,nxt));
-            nxt++;
-        }
-        dis[mp[u]][mp[v]]= 1;
-        cout<<"Case "<<++kase<<":";
-        while(cin>>u>>v and (u+v)) {
-            if(mp.find(u)==mp.end()) {
-                mp.insert(pair<int, int>(u,nxt));
-                nxt++;
-            }
-            if(mp.find(v)==mp.end()) {
-                mp.insert(pair<int, int>(v,nxt));
-                nxt++;
-            }
-            dis[mp[u]][mp[v]] = 1;
-        }
+    freopen("in.txt","r",stdin);
+    freopen("out.txt","w",stdout);
 
-        for (i=0; i<nxt; ++i) {
-            for (j=0; j<nxt; ++j) {
-                for (k=0; k<nxt; ++k) {
-                    dis[j][k] = min(dis[j][k], dis[j][i]+dis[i][k]);
-                }
+    int N,n,i,j,cnt=1,k;
+    while(scanf(" %d",&N)==1 && N!=-1){
+        for(n=0;n<N;n++)
+            scanf(" %lf %lf %lf %lf",&a[n].x,&a[n].y,&a[n].z,&a[n].r);
+        scanf(" %lf %lf %lf",&a[N].x,&a[N].y,&a[N].z);
+        scanf(" %lf %lf %lf",&a[N+1].x,&a[N+1].y,&a[N+1].z);
+        a[N].r = 0;
+        a[N+1].r = 0;
+        N += 2;
+        //for(n=0;n<N;n++)
+            //printf("%.0lf %.0lf %.0lf %.0lf\n",a[n].x,a[n].y,a[n].z,a[n].r);
+        for(i=0;i<N;i++){
+            for(j=0;j<N;j++){
+                if(i==j)
+                    continue;
+                double dx = a[i].x-a[j].x;
+                double dy = a[i].y-a[j].y;
+                double dz = a[i].z-a[j].z;
+                double dis = sqrt(dx*dx+dy*dy+dz*dz);
+                dis -= a[i].r;
+                dis -= a[j].r;
+                if(dis<=0)
+                    s[i][j] = 0;
+                else
+                    s[i][j] = dis;
             }
+            s[i][i] = 0;
         }
-        sum = 0.0;
-        for(i=0; i<nxt; ++i) {
-            for(j=0; j<nxt; ++j) {
-                    sum+=dis[i][j];
-            }
-        }
-        sum/=(double)((nxt-1)*nxt);
-        cout<<" average length between pages = "<<fixed<<setprecision(3)<<sum<<" clicks"<<endl;
+        for(k=0;k<N;k++)
+            for(i=0;i<N;i++)
+                for(j=0;j<N;j++)
+                    s[i][j] = min(s[i][j],s[i][k]+s[k][j]);
+        printf("Cheese %d: Travel time = %.0lf sec\n",cnt++,(s[N-1][N-2]*10));
     }
+
     return 0;
 }
