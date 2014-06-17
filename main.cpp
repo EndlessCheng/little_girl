@@ -1,43 +1,96 @@
+#define EPS 1e-15
+#define NMAX
 #include <stdio.h>
+#include <math.h>
+#include <algorithm>
 #include <string.h>
+using namespace std;
 
-int f( char x )
+
+int n,a;
+struct Figure
 {
-	if( '0' <= x && x <= '9' )
-		return x-'0';
-	return x-'A'+10;
+	char type;
+	double p[6];
+};
+
+inline bool incir(double cx,double cy,double r,double x,double y)
+{
+	double t=(x-cx)*(x-cx)+(y-cy)*(y-cy);
+	double tt=double(r*r);
+	return t-tt<-EPS;
 }
-char g( int x )
+inline bool inrect(double ax,double ay,double bx,double by,double x,double y)
 {
-	if( x < 10 )
-		return '0'+x;
-	else
-		return 'A'+x-10;
+
+	return x-ax>EPS && bx-x>EPS && y-by>EPS && ay-y>EPS;
 }
 
+inline double crossproduct(double x1,double y1,double x2,double y2)
+{
+	return x1*y2-x2*y1;
+}
+inline bool intri(double x1,double y1,double x2,double y2,double x3,double y3,double x,double y)
+{
+	double abx,aby,bcx,bcy,cax,cay;
+	double tax,tay,tbx,tby,tcx,tcy;
+	abx=x2-x1;aby=y2-y1;
+	bcx=x3-x2;bcy=y3-y2;
+	cax=x1-x3;cay=y1-y3;
+	tax=x-x1;tay=y-y1;
+	tbx=x-x2;tby=y-y2;
+	tcx=x-x3;tcy=y-y3;
+	double ca,cb,cc;
+	ca=crossproduct(tax,tay,abx,aby);
+	cb=crossproduct(tbx,tby,bcx,bcy);
+	cc=crossproduct(tcx,tcy,cax,cay);
+	return (ca>EPS && cb>EPS &&cc>EPS)||(ca<-EPS && cb<-EPS &&cc<-EPS);
+}
+bool infig(Figure f,double x,double y)
+{
+	switch(f.type)
+	{
+		case 'r':return inrect(f.p[0],f.p[1],f.p[2],f.p[3],x,y);
+		case 'c':return incir(f.p[0],f.p[1],f.p[2],x,y);
+		case 't':return intri(f.p[0],f.p[1],f.p[2],f.p[3],f.p[4],f.p[5],x,y);
+	}
+}
+
+
+
+
+Figure fig[100];
+int figcnt=1,pcnt=1;
+double tx,ty;
 int main()
 {
-	char s[10];
-	int a, b, i;
-	while( scanf( "%s %d %d" , s , &a , &b ) > 0 )
+	#ifndef ONLINE_JUDGE
+	freopen("f.txt","r",stdin);
+	#endif
+	char c;
+	while(scanf(" %c ",&c) && c!='*')
 	{
-		int len = strlen( s ), cur = 0;
-		for( i = 0 ; i < len ; i ++ )
-			cur = cur * a + f( s[i] );
-		len = 6;
-		s[7] = 0;
-		for( i = 0 ; i < 7 ; i ++ )
-			s[i] = ' ';
-		s[len] = '0';
-		while( cur && len >= 0 )
+		fig[figcnt].type=c;
+		switch(c)
 		{
-			s[len--] = g( cur % b );
-			cur /= b;
+			case 'r':scanf("%lf %lf %lf %lf",&fig[figcnt].p[0],&fig[figcnt].p[1],&fig[figcnt].p[2],&fig[figcnt].p[3]);break;
+			case 'c':scanf("%lf %lf %lf",&fig[figcnt].p[0],&fig[figcnt].p[1],&fig[figcnt].p[2]);break;
+			case 't':scanf("%lf %lf %lf %lf %lf %lf",&fig[figcnt].p[0],&fig[figcnt].p[1],&fig[figcnt].p[2],&fig[figcnt].p[3],&fig[figcnt].p[4],&fig[figcnt].p[5]);break;
 		}
-		if( cur )
-			puts( "  ERROR" );
-		else
-			puts( s );
+		figcnt++;
 	}
-	return 0;
+	while(scanf("%lf %lf",&tx,&ty) && fabs(tx-9999.9)>EPS && fabs(ty-9999.9)>EPS)
+	{
+		int ok=0;
+		for(int i=1;i<figcnt;i++)
+		{
+			if(infig(fig[i],tx,ty))
+			{
+				ok=1;
+				printf("Point %d is contained in figure %d\n",pcnt,i);
+			}
+		}
+		if(!ok) printf("Point %d is not contained in any figure\n",pcnt);
+		pcnt++;
+	}
 }
