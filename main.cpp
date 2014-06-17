@@ -163,27 +163,31 @@ typedef pair<int, pair<int, int> > pi3;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
+
+#include<bits/stdc++.h>
+using namespace std;
+
+const int inf = 0x3f3f3f3f;
 const int mx = int(1e5) + 5;
 
 int a[mx], dp[mx], pos[mx], fa[mx];
 vector<int> ans;
 
-int get_lis(int n) /// O(nlog n)，打印路径
+int get_lis(int n)
 {
-	mem(dp, 0x3f);
-	int i, lpos;
+	memset(dp, 0x3f, sizeof(dp));
 	pos[0] = -1;
-	For(i, n)
+	int i, lpos;
+	for (i = 0, i < n; ++i)
 	{
-		dp[lpos = Lowpos(dp, n, a[i])] = a[i];
+		dp[lpos = (lower_bound(dp, n, a[i]) - dp)] = a[i];
 		pos[lpos] = i; /// *靠后打印
 		fa[i] = (lpos ? pos[lpos - 1] : -1);
 	}
-	n = Lowpos(dp, n, inf);
+	n = (lower_bound(dp, n, inf) - dp);
 	for (i = pos[n - 1]; ~fa[i]; i = fa[i]) ans.PB(a[i]);
-	ans.PB(a[i]);
+	ans.PB(a[i]); /// 最后逆序打印ans即可
 	return n;
-	//rPAn(ans, i, n);
 }
 
 int main()
