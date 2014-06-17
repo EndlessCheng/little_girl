@@ -1,41 +1,45 @@
-#include<iostream>
-#include<string>
-
+#include<cstdio>
+#include<algorithm>
 using namespace std;
-
-int main()
-{
-	string line;
-	string vowels = "aeiouy";
-	getline(cin, line);
-	while (line != "e/o/i")
-	{
-		int tam = line.size();
-		int syllables[3] = {0};
-		int pos = 0;
-		for (int i = 0; i < tam; i++)
-		{
-			if (line[i] == '/') {pos++;}
-			else
-			{
-				size_t found;
-				found = vowels.find_first_of(line[i]);
-				if (found != string::npos)
-				{
-					syllables[pos]++;
-					found = vowels.find_first_of(line[i + 1]);
-					while (found != string::npos)
-					{
-						i++;
-						found = vowels.find_first_of(line[i + 1]);
-					}
+struct N{
+	int value;
+	int state;
+};
+N a[21];
+int main(){
+	int n,m,c;
+	int tt=0;
+	while(scanf("%d%d%d",&n,&m,&c)!=-1){
+		if(n==0&&m==0&&c==0)
+			break;
+		for(int i=1;i<=n;i++){
+			scanf("%d",&a[i].value);
+			a[i].state=0;
+		}
+		int Max=-1;
+		bool flag=true;
+		while(m--){
+			int id;
+			int sum=0;
+			scanf("%d",&id);
+			a[id].state^=1;
+			for(int i=1;i<=n;i++){
+				if(a[i].state){
+					sum+=a[i].value;
 				}
+				if(sum>c)
+					flag=false;
+				Max=max(Max,sum);
 			}
 		}
-		if (syllables[0] != 5) {cout << 1 << endl;}
-		else if (syllables[1] != 7) {cout << 2 << endl;}
-		else if (syllables[2] != 5) {cout << 3 << endl;}
-		else {cout << "Y" << endl;}
-		getline(cin, line);
+		printf("Sequence %d\n",++tt);
+		if(flag){
+			puts("Fuse was not blown.");
+			printf("Maximal power consumption was %d amperes.\n",Max);
+		}
+		else
+			puts("Fuse was blown.");
+		puts("");
 	}
+	return 0;
 }
