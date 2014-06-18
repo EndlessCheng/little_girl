@@ -3,7 +3,7 @@
 #include <algorithm>
 
 using namespace std;
-const int N = 1e6+5;
+const int N = int(1e6)+5;
 const int INF = 0x3f3f3f3f;
 
 struct state {
