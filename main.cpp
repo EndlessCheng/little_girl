@@ -1,64 +1,58 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <ctype.h>
+#include<stdio.h>
+#include<string.h>
+#include<stdio.h>
+#include<math.h>
 
-int main(void)
+#define MAX 32000
 
-{
-    char a[10000],dump[10];
+char table [MAX];
 
-    int n,i,j,k,l,c,x,count= 0,sum = 0 ,hand,b[10000],s=0,r=0,t=0;
+void seive (void){
+    int i,j;
+    int k = sqrt(MAX);
 
-    scanf("%d",&n);
-    gets(dump);
-
-    for(l=1;l<=n;l++)
-    {
-        count = 0;
-        sum = 0;
-        r = 0;
-        t = 0;
-        s = 0;
-
-        gets(a);
-
-        for(i=0,j=0;i<strlen(a);i++,j++)
-        {
-            if(a[i]>='0' && a[i]<='9')
-            {
-                b[j] = (a[i]-'0');
-            }
-            else if(a[i]==' ')
-            {
-                j--;
-                continue;
+    memset(table, 0, sizeof(table));
+    table[0]=table[1]=1;
+    for (i=2;i<=k;i++){
+        if(table[i]==0){
+            for(j=i+i;j<=MAX;j+=i){
+                table[j]=1;
             }
         }
-
-        for(i=0;i<=j;i++)
-        {
-            if(i%2==0)
-            {
-                x = b[i]*2;
-                s = x/10;
-                r = x%10;
-                t = s+r;
-                sum = sum + t;
-            }
-            else if(i%2!=0)
-            {
-                count = count + b[i];
+    }
+    /*for(i=0;i<=MAX;i++){
+        if(!table[i])printf("%d ",i);
+    }*/
+}
+int totient(int m){
+    int res = m;
+    int i;
+    if(!(m&1)){
+        res = res- (res>>1);
+        while(!(m&1)){
+            m>>=1;
+        }
+    }
+    for(i=3;i*i<=m;i+=2){
+        if(!table[i] && !(m%i)){
+            res = res - (res/i);
+            while(!(m%i)){
+                m/=i;
             }
         }
-        if((count+sum)%10==0)
-        {
-            printf("Valid\n");
-        }
-        else
-        {
-            printf("Invalid\n");
+    }
+    if(m>1)res = res - (res/m);
+    return res ;
+}
+int main(){
+    seive();
+    int n;
+    while(scanf("%d",&n)==1 && n){
+        if(n==1){
+            puts("0");
+            continue;
+        }else{
+            printf("%d\n",totient(n));
         }
     }
     return 0;
