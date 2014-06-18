@@ -1,117 +1,103 @@
-#include<iostream>
-#include<cstdio>
-#include<string>
-#include<cstdlib>
-#include<cmath>
-#include<queue>
-#include<stack>
-#include<vector>
-#include<algorithm>
-#include<iomanip>
-using namespace std;
+#include <stdio.h>
 
-#define lim 9
-#define PI 3.1415926535
-#define Len sizeof(struct node)
-
-int xx[8]={-1, 0 , 1,-1, 1,-1, 0, 1};
-int yy[8]={ 1, 1 , 1, 0, 0,-1,-1,-1};
-int min(int x,int y){return x>y?y:x;}
-int max(int x,int y){return x>y?x:y;}
-
-typedef struct node
-{
-	int num;
-}node;
-
-
-int main()
-{
-    int i,j,k,n,t,x,y,hl,vl,pos,m;
-    char ch;
-    t=0;
-    while(scanf("%d",&n)!=EOF)
-    {
-        int hlines[lim+1][lim+1]={0},vlines[lim+1][lim+1]={0};
-		int hspan[lim+1][lim+1]={0},vspan[lim+1][lim+1]={0};
-		int square[lim+1]={0};
-        scanf("%d",&m);
-        for(k=0;k<m;k++)
-        {
-            scanf(" %c %d %d",&ch,&x,&y);
-            if(ch=='H')
-            {
-                hlines[x-1][y-1]=1;
-            }
-            else
-            {
-                vlines[y-1][x-1]=1;
-            }
-        }
-
-        for(i=n-1;i>=0;i--)
-        {
-            hl=vl=0;
-            for(j=n-1;j>=0;j--)
-            {
-                if(hlines[i][j]==1)
-                {
-                    hl++;
-                }
-                else
-                {
-                    hl=0;
-                }
-                hspan[i][j]=hl;
-                if(vlines[j][i]==1)
-                {
-                    vl++;
-                }
-                else
-                {
-                    vl=0;
-                }
-                vspan[j][i]=vl;
-            }
-        }
-        for(i=0;i<n-1;i++)
-        {
-            for(j=0;j<n-1;j++)
-            {
-                for(k=min(vspan[i][j],hspan[i][j]);k>0;k--)
-                {
-                    if((vspan[i][j+k]>=k)&&(hspan[i+k][j]>=k))
-                    {
-                        square[k-1]++;
+int main() {
+    int testcase;
+    char g[10][10], s[10];
+    int i, j, k;
+    scanf("%d", &testcase);
+    while(testcase--) {
+        for(i = 1; i <= 8; i++)
+            scanf("%s", g[i]+1);
+        scanf("%s", s);
+        int turn = 0;
+        if(s[0] == 'W') turn = 0;
+        else            turn = 1;
+        int dx[] = {0,0,1,1,1,-1,-1,-1};
+        int dy[] = {1,-1,0,1,-1,0,1,-1};
+        while(scanf("%s", s) == 1) {
+            if(s[0] == 'Q')
+                break;
+            if(s[0] == 'L') {
+                int first = 0;
+                for(i = 1; i <= 8; i++) {
+                    for(j = 1; j <= 8; j++) {
+                        if(g[i][j] != '-')  continue;
+                        for(k = 0; k < 8; k++) {
+                            int x = i + dx[k], y = j + dy[k];
+                            int ok = 0;
+                            while(x >= 1 && x <= 8 && y >= 1 && y <= 8) {
+                                if(g[x][y] == '-')
+                                    break;
+                                if(g[x][y] == 'W' && turn == 0)
+                                    {ok |= 2;break;}
+                                if(g[x][y] == 'B' && turn == 1)
+                                    {ok |= 2;break;}
+                                ok |= 1;
+                                x += dx[k], y += dy[k];
+                            }
+                            if(ok == 3) break;
+                        }
+                        if(k != 8) {
+                            if(first)   putchar(' ');
+                            first = 1;
+                            printf("(%d,%d)", i, j);
+                        }
                     }
                 }
+                if(!first)  puts("No legal move.");
+                else        puts("");
+            }
+            if(s[0] == 'M') {
+                again:
+                int x = s[1]-'0', y = s[2]-'0';
+                g[x][y] = turn ? 'B' : 'W';
+                int valid = 0;
+                for(i = 0; i < 8; i++) {
+                    int tx = x + dx[i], ty = y + dy[i];
+                    int ok = 0;
+                    while(tx >= 1 && tx <= 8 && ty >= 1 && ty <= 8) {
+                        if(g[tx][ty] == '-')
+                            break;
+                        if(g[tx][ty] == 'W' && turn == 0)
+                            {ok |= 2;break;}
+                        if(g[tx][ty] == 'B' && turn == 1)
+                            {ok |= 2;break;}
+                        ok |= 1;
+                        tx += dx[i], ty += dy[i];
+                    }
+                    if(ok == 3) {
+                        valid = 1;
+                        tx = x + dx[i], ty = y + dy[i];
+                        while(tx >= 1 && tx <= 8 && ty >= 1 && ty <= 8) {
+                            if(g[tx][ty] == '-')
+                                break;
+                            if(g[tx][ty] == 'W' && turn == 0)
+                                {break;}
+                            if(g[tx][ty] == 'B' && turn == 1)
+                                {break;}
+                            g[tx][ty] = turn ? 'B' : 'W';
+                            tx += dx[i], ty += dy[i];
+                        }
+                    }
+                }
+                turn = !turn;
+                if(valid == 0)
+                    goto again;
+                int W = 0, B = 0;
+                for(i = 1; i <= 8; i++) {
+                    for(j = 1; j <= 8; j++) {
+                        if(g[i][j] == 'B')  B++;
+                        if(g[i][j] == 'W')  W++;
+                    }
+                }
+                printf("Black -%3d White -%3d\n", B, W);
             }
         }
-        pos=-1;
-        for(i=0;i<n;i++)
-        {
-            if(square[i])
-            {
-                pos=i;
-                break;
-            }
-        }
-        if(t>0)
-        {
-            printf("\n");
-            printf("**********************************\n\n");
-        }
-        printf("Problem #%d\n\n",++t);
-        if(pos!=-1)
-        {
-			for(i=pos;i<n;i++)
-				if(square[i])
-					printf("%d square (s) of size %d\n",square[i],i+1);
-        }
-        else
-        {
-            printf("No completed squares can be found.\n");
-        }
+        for(i = 1; i <= 8; i++, puts(""))
+            for(j = 1; j <= 8; j++)
+                putchar(g[i][j]);
+        if(testcase)
+            puts("");
     }
     return 0;
 }
