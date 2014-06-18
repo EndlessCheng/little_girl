@@ -1,68 +1,84 @@
-#include <algorithm>
-#include <iostream>
-#include <string.h>
 #include <stdio.h>
-#include <vector>
-#include <queue>
-#include <list>
-using namespace std;
+#include <string.h>
+#include <ctype.h>
 
-const int INF = 0x3B9ACA00;//1000000000 decimal
-const int maxn = 0x69;//105 decimal
+typedef struct { int r, s; } card;
 
-typedef pair <int,int> ii;
+int eval(card c[])
+{
+	int i, j, fl, st, ki, no[16];
 
-int dis[maxn][maxn],n;
-bool vis[maxn][maxn];
-char mat[maxn][maxn];
-int dx[]={-1,+1, 0, 0};
-int dy[]={ 0, 0,+1,-1};
+	for (i = 0; i < 16; i++)
+		no[i] = 0;
 
-inline bool correct_pos(int r,int c){
-   return r>=0 && r<n && c>=0 && c<n;
+	for (i = 0; i < 5; i++)
+		no[c[i].r]++;
+
+	for (i = 1; i < 5 && c[i].s == c[0].s; i++);
+	fl = (i == 5);
+
+	st = 0;
+	for (i = 0; st == 0 && i < 13; i++) {
+		for (j = 0; j < 5; j++)
+			if (no[(i + j) % 13] != 1) break;
+		if (j == 5) st = 1;
+	}
+
+	for (ki = 0, i = 0; i < 13; i++)
+		if (no[i] > ki) ki = no[i];
+
+	if (st && fl) return 9;
+	if (ki == 4) return 8;
+	if (ki == 3) for (i = 0; i < 13; i++) if (no[i] == 2) return 7;
+	if (fl) return 6;
+	if (st) return 5;
+	if (ki == 3) return 4;
+
+	for (i = 0, j = 0; i < 13; i++)
+		if (no[i] == 2) j++;
+	if (j == 2) return 3;
+
+	if (ki == 2) return 2;
+	return 1;
 }
 
-int bfs(ii source){
-   memset(vis,0,sizeof vis);
-   memset(dis,-1,sizeof dis);
-   vis[source.first][source.second]=1;
-   dis[source.first][source.second]=0;
-   queue <ii> q;
-   q.push(source);
+card get()
+{
+	char s[] = "A23456789XJQK";
+	card a;
+	int c;
 
-   while(!q.empty())
-   {
-      ii cur=q.front();
-      q.pop();
+	while ((c = getchar()) != EOF && !isalnum(c));
+	a.r = strchr(s, toupper(c)) - s;
 
-      if(mat[cur.first][cur.second]=='3')return dis[cur.first][cur.second];
-      int r,c;
-      for(int i=0;i<4;i++){
-         r=dx[i]+cur.first;
-         c=dy[i]+cur.second;
-         if(correct_pos(r,c) && !vis[r][c]){
-            vis[r][c]=true;
-            dis[r][c]=dis[cur.first][cur.second]+1;
-            q.push(make_pair(r,c));
-         }
-      }
-   }
+	while ((c = getchar()) != EOF && !isalnum(c));
+	a.s = toupper(c);
+
+	return a;
 }
 
-int main(){
-   while(scanf("%d",&n)==1){
-      getchar();
-      for(int i=0;i<n;i++){
-         gets(mat[i]);
-      }
-      int ans=-1;
-      for(int i=0;i<n;i++){
-         for(int j=0;j<n;j++){
-            if(mat[i][j]=='1')
-               ans=max(ans,bfs(make_pair(i,j)));
-         }
-      }
-      printf("%d\n",ans);
-   }
-   return 0;
+int main()
+{
+	card a[8][8], b[8][8];
+	int i, j, t, c[16];
+
+	for (scanf("%d", &t); t-- > 0;) {
+		for (i = 0; i < 5; i++)
+			for (j = 0; j < 5; j++)
+				a[i][j] = b[j][i] = get();
+
+		for (i = 1; i <= 9; i++)
+			c[i] = 0;
+
+		for (i = 0; i < 5; i++) {
+			c[eval(&a[i][0])]++;
+			c[eval(&b[i][0])]++;
+		}
+
+		for (i = 1; i <= 9; i++)
+			printf((i < 9) ? "%d, " : "%d\n", c[i]);
+		if (t) printf("\n");
+	}
+
+	return 0;
 }
