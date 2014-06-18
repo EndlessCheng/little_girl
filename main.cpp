@@ -1,59 +1,68 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdio.h>
-#include<math.h>
+#include <algorithm>
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <list>
+using namespace std;
 
-#define MAX 32000
+const int INF = 0x3B9ACA00;//1000000000 decimal
+const int maxn = 0x69;//105 decimal
 
-char table [MAX];
+typedef pair <int,int> ii;
 
-void seive (void){
-    int i,j;
-    int k = sqrt(MAX);
+int dis[maxn][maxn],n;
+bool vis[maxn][maxn];
+char mat[maxn][maxn];
+int dx[]={-1,+1, 0, 0};
+int dy[]={ 0, 0,+1,-1};
 
-    memset(table, 0, sizeof(table));
-    table[0]=table[1]=1;
-    for (i=2;i<=k;i++){
-        if(table[i]==0){
-            for(j=i+i;j<=MAX;j+=i){
-                table[j]=1;
-            }
-        }
-    }
-    /*for(i=0;i<=MAX;i++){
-        if(!table[i])printf("%d ",i);
-    }*/
+inline bool correct_pos(int r,int c){
+   return r>=0 && r<n && c>=0 && c<n;
 }
-int totient(int m){
-    int res = m;
-    int i;
-    if(!(m&1)){
-        res = res- (res>>1);
-        while(!(m&1)){
-            m>>=1;
-        }
-    }
-    for(i=3;i*i<=m;i+=2){
-        if(!table[i] && !(m%i)){
-            res = res - (res/i);
-            while(!(m%i)){
-                m/=i;
-            }
-        }
-    }
-    if(m>1)res = res - (res/m);
-    return res ;
+
+int bfs(ii source){
+   memset(vis,0,sizeof vis);
+   memset(dis,-1,sizeof dis);
+   vis[source.first][source.second]=1;
+   dis[source.first][source.second]=0;
+   queue <ii> q;
+   q.push(source);
+
+   while(!q.empty())
+   {
+      ii cur=q.front();
+      q.pop();
+
+      if(mat[cur.first][cur.second]=='3')return dis[cur.first][cur.second];
+      int r,c;
+      for(int i=0;i<4;i++){
+         r=dx[i]+cur.first;
+         c=dy[i]+cur.second;
+         if(correct_pos(r,c) && !vis[r][c]){
+            vis[r][c]=true;
+            dis[r][c]=dis[cur.first][cur.second]+1;
+            q.push(make_pair(r,c));
+         }
+      }
+   }
 }
+
 int main(){
-    seive();
-    int n;
-    while(scanf("%d",&n)==1 && n){
-        if(n==1){
-            puts("0");
-            continue;
-        }else{
-            printf("%d\n",totient(n));
-        }
-    }
-    return 0;
+   while(scanf("%d",&n)==1){
+      getchar();
+      for(int i=0;i<n;i++){
+         gets(mat[i]);
+      }
+      int ans=-1;
+      for(int i=0;i<n;i++){
+         for(int j=0;j<n;j++){
+            if(mat[i][j]=='1')
+               ans=max(ans,bfs(make_pair(i,j)));
+         }
+      }
+      printf("%d\n",ans);
+   }
+   return 0;
 }
