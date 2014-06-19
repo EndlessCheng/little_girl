@@ -239,7 +239,7 @@ struct SPFA
 int main()
 {
 #ifdef IO
-	Fin("in.txt");
+	//Fin("in.txt");
 #endif
 	SPFA sp;
 	edge e;
