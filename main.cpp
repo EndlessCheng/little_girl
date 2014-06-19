@@ -1,64 +1,46 @@
-#include <iostream>
-#include <string.h>
-#include <queue>
-#include <stdio.h>
-#define max 10000
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+#include<stdio.h>
+#include<string>
+#include<string>
+#include<vector>
+#include<map>
 using namespace std;
-int path[max];
-bool vis[max];
-int start,end;
-int bfs(int start,int end)
-{
-    int w,h,k;
-    bool r=false;
-    queue<int>q;
-    q.push(start);
-    while(!q.empty())
-    {
-        w=q.front();
-        q.pop();
-        if(w==end)  return path[end];
-        for(int i=1000;i>0;i/=10)
-        {
-            h=w/i%10;
-            k=w-w/i%10*i+(h+1)%10*i;
-            if(vis[k])
-            {
-                q.push(k);
-                path[k]=path[w]+1;
-                vis[k]=false;
-            }
-            k=w-w/i%10*i+(h-1+10)%10*i;
-            if(vis[k])
-            {
-                q.push(k);
-                path[k]=path[w]+1;
-                vis[k]=false;
-            }
-        }
-    }
-    return -1;
-}
-int Getinput()
-{
-    int a,b;
-    b=0;
-    for(int i=0;i<4;i++)    cin>>a,b=b*10+a;
-    return b;
-}
+
+#define M 10010;
+
+int dp[110010][100];
+
 int main()
 {
-    int T;
-    cin>>T;
-    while(T--)
-    {
-        start=Getinput();
-        end=Getinput();
-        memset(path,0,sizeof(path));
-        memset(vis,true,max);
-        int n;
-        cin>>n;
-        for(int i=0;i<n;i++)    vis[Getinput()]=false;
-        cout<<bfs(start,end)<<endl;
-    }
+	bool flag = 0;
+	int row = 1, i, j, num;
+	dp[row][1] = 1;
+	while(1)
+	{
+		for(i = row; i>=1; i--)
+		{
+			for(j = 1; j<70; j++)
+			{
+				dp[i][j] += dp[i-1][j];
+				dp[i][j+1] += dp[i][j]/10;
+				dp[i][j] %= 10;
+			}
+		}
+
+		for(i = 1; i<=row; i++)
+		{
+			for(num = 70; ; num--) if(dp[i][num]) break;
+			if(num > 60) flag = 1;
+			for(; num>=1; num--)
+				cout<<dp[i][num];
+			if(i!=row) cout<<" ";
+			else cout<<"\n";
+		}
+		row++;
+		if(flag) break;
+	//	system("pause");
+	}
 }
