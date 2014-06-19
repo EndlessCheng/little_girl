@@ -167,95 +167,51 @@ typedef pair<int, pair<int, int> > pi3;
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
-const int mx = int(1e3) + 5;
+const int mx = int(1e2) + 5;
 
-struct edge
+vector<int> G[mx];
+int dfs_clock, intime[mx];
+bool iscut[mx];
+
+int dfs(int u, int fa)
 {
-	int from, to, cost; /// 只需两个
-	edge() {}
-	edge(int from, int to, int cost): from(from), to(to), cost(cost) {}
-	void read() {SIII(from, to, cost);}
-};
-
-struct SPFA
-{
-	int n, m;
-	vector<edge> edges;
-	vector<int> id[mx];
-	int disTo[mx], cnt[mx]; /// 进队次数
-	bool inq[mx]; /// 是否在queue中
-
-	void init(int n)
+	int child = 0, min_subtree_fatime_u = intime[u] = ++dfs_clock, min_subtree_fatime_v, i, v;
+	For(i, G[u].size())
 	{
-		this->n = n;
-		int i;
-		For(i, n) id[i].clear();
-		edges.clear();
-	}
-
-	void add(edge &e) /// 调用前在main()中edge e; e.read();
-	{
-		id[e.from].PB(edges.size());
-		edges.PB(e);
-	}
-
-	void add(int from, int to, int cost) /// 适用于「修改式」建图
-	{
-		id[from].PB(edges.size());
-		edges.PB(edge(from, to, cost));
-	}
-
-	bool spfa(int st) /// 有负圈就返回false
-	{
-		mem(cnt, 0);
-		mem(disTo, 0x3f), disTo[st] = 0;
-		int u, i;
-		queue<int> q;
-		q.push(st), mem(inq, 0), inq[st] = true;
-		while (!q.empty())
+		v = G[u][i];
+		if (!intime[v]) /// 如果没访问过v
 		{
-			/// 只有上一轮中的disTo[]值发生变化的顶点指出的边才能够改变其他disTo[]元素的值
-			u = q.front(), q.pop(), inq[u] = false;
-			For(i, id[u].size())
+			++child;
+			min_subtree_fatime_v = dfs(v, u);
+			//PII(v,min_subtree_fatime_v);
+			Qmin(min_subtree_fatime_u, min_subtree_fatime_v); /// 用后代的low更新u的low
+			if (min_subtree_fatime_v >= intime[u]) /// u的一颗以v为根的子树无法(通过反向边)连到u的祖先
 			{
-				edge &e = edges[id[u][i]];
-				if (disTo[u] != inf && disTo[u] + e.cost < disTo[e.to])
-				{
-					disTo[e.to] = disTo[u] + e.cost;
-					//pre[e.to] = u;
-					if (!inq[e.to])
-					{
-						q.push(e.to), inq[e.to] = true;
-						if (++cnt[e.to] >= n) return false;
-					}
-				}
+				iscut[u] = true;
+				// if (min_subtree_fatime_v > intime[u]) isbridge[u][v] = isbridge[v][u] = true;
 			}
 		}
-		return true;
+		else if (intime[v] < intime[u] && v != fa) /// 如果访问过v，且由入口时间判断出这是反向边，那么就更新low (此外因为u-fa是树边，所以v!=fa)
+			Qmin(min_subtree_fatime_u, intime[v]);
 	}
-};
+	if (fa == -1 && child == 1) iscut[u] = 0;
+	return min_subtree_fatime_u;
+}
 
 #define IO /// *别忘了删掉!
 int main()
 {
 #ifdef IO
-	//Fin("in.txt");
+//	Fin("in.txt");
 #endif
-	SPFA sp;
-	edge e;
-	int t, n, m;
-	SI(t);
-	while (t--)
+	int n, i, u, v;
+	while (SI(n), n)
 	{
-		SII(n, m);
-		sp.init(n);
-		while (m--)
-		{
-			e.read();
-			sp.add(e);
-		}
-		//puts("ok");
-		puts(sp.spfa(0) ? "not possible" : "possible");
+		Forr(i, 1, n + 1) G[i].clear();
+		while (SI(u), u) while (GCn() != 10) SI(v), G[u].PB(v), G[v].PB(u);
+		mem(intime, 0), mem(iscut, 0);
+		Forr(i, 1, n + 1) if (!intime[i]) dfs(i, -1);
+		PI(Acc(iscut + 1, n));
 	}
 	return 0;
 }
