@@ -1,84 +1,103 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+const int maxn = 8000;
 
-typedef struct { int r, s; } card;
-
-int eval(card c[])
+struct segment
 {
-	int i, j, fl, st, ki, no[16];
-
-	for (i = 0; i < 16; i++)
-		no[i] = 0;
-
-	for (i = 0; i < 5; i++)
-		no[c[i].r]++;
-
-	for (i = 1; i < 5 && c[i].s == c[0].s; i++);
-	fl = (i == 5);
-
-	st = 0;
-	for (i = 0; st == 0 && i < 13; i++) {
-		for (j = 0; j < 5; j++)
-			if (no[(i + j) % 13] != 1) break;
-		if (j == 5) st = 1;
+	int a, b, x;
+	bool operator < (const segment& temp) const
+	{
+		return x < temp.x||x==temp.x&&a<temp.a;
 	}
+} a[maxn + 10];
 
-	for (ki = 0, i = 0; i < 13; i++)
-		if (no[i] > ki) ki = no[i];
+int set[maxn << 3];
+bool map[maxn + 10][maxn + 10];
 
-	if (st && fl) return 9;
-	if (ki == 4) return 8;
-	if (ki == 3) for (i = 0; i < 13; i++) if (no[i] == 2) return 7;
-	if (fl) return 6;
-	if (st) return 5;
-	if (ki == 3) return 4;
-
-	for (i = 0, j = 0; i < 13; i++)
-		if (no[i] == 2) j++;
-	if (j == 2) return 3;
-
-	if (ki == 2) return 2;
-	return 1;
+void push_down(int o)
+{
+	if (set[o] != -1)
+	{
+		set[o << 1] = set[o];
+		set[o << 1 | 1] = set[o];
+		set[o] = -1;
+	}
 }
 
-card get()
+void query(int o, int L, int R, int i)
 {
-	char s[] = "A23456789XJQK";
-	card a;
-	int c;
+	if (set[o] != -1)
+	{
+		map[i][set[o]] = map[set[o]][i] = 1; /// 表示二者相邻
+		return;
+	}
+	if (L == R) return;
+	int m = (L + R) >> 1;
+	if (a[i].a <= m) query(o << 1, L, m, i);
+	if (a[i].b > m) query(o << 1 | 1, m + 1, R, i);
+}
 
-	while ((c = getchar()) != EOF && !isalnum(c));
-	a.r = strchr(s, toupper(c)) - s;
-
-	while ((c = getchar()) != EOF && !isalnum(c));
-	a.s = toupper(c);
-
-	return a;
+void insert(int o, int L, int R, int i)
+{
+	if (a[i].a <= L && a[i].b >= R)
+	{
+		set[o] = i;
+		return;
+	}
+	push_down(o);
+	int m = (L + R) >> 1;
+	if (a[i].a <= m) insert(o << 1, L, m, i);
+	if (a[i].b > m) insert(o << 1 | 1, m + 1, R, i);
 }
 
 int main()
 {
-	card a[8][8], b[8][8];
-	int i, j, t, c[16];
-
-	for (scanf("%d", &t); t-- > 0;) {
-		for (i = 0; i < 5; i++)
-			for (j = 0; j < 5; j++)
-				a[i][j] = b[j][i] = get();
-
-		for (i = 1; i <= 9; i++)
-			c[i] = 0;
-
-		for (i = 0; i < 5; i++) {
-			c[eval(&a[i][0])]++;
-			c[eval(&b[i][0])]++;
+	freopen("in.txt", "r", stdin);
+	int T, n;
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d", &n);
+		memset(set, -1, sizeof(set));
+		memset(map, false, sizeof(map));
+		int L = (1 << 31) - 1, R = -1;
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d%d%d", &a[i].a, &a[i].b, &a[i].x);
+			a[i].a *= 2;
+			a[i].b *= 2;
+			L = min(L, a[i].a);
+			R = max(R, a[i].b);
 		}
-
-		for (i = 1; i <= 9; i++)
-			printf((i < 9) ? "%d, " : "%d\n", c[i]);
-		if (t) printf("\n");
+		sort(a, a + n);
+		for (int i = 0; i < n; i++)
+		{
+			query(1, L, R, i);
+			insert(1, L, R, i);
+		}
+		int ans = 0;
+		for (int i = 0; i < n - 2; i++)
+		{
+			for (int j = i + 1; j < n - 1; j++)
+			{
+				if (map[i][j])
+				{
+					printf("%d %d\n", i, j);
+					for (int k = j + 1; k < n; k++)
+					{
+						printf(" %d %d %d\n",k, map[i][k], map[j][k]);
+						if (map[i][k] && map[j][k])
+						{
+							ans++;
+						}
+					}
+				}
+			}
+		}
+		printf("%d\n", ans);
 	}
-
 	return 0;
 }
