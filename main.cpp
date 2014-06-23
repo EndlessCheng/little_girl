@@ -1,49 +1,10 @@
-#include <iostream>
-#include <vector>
+#include <stdio.h>
 
-using namespace std;
-class Animal
-{
-	public:
-		virtual void eat() const { cout << "I eat like a generic Animal." << endl; }
-		virtual ~Animal() {}
-};
-
-class Wolf : public Animal
-{
-	public:
-		void eat() const { cout << "I eat like a wolf!" << endl; }
-};
-
-class Fish : public Animal
-{
-	public:
-		void eat() const { cout << "I eat like a fish!" << endl; }
-};
-
-class GoldFish : public Fish
-{
-	public:
-		void eat() const { cout << "I eat like a goldfish!" << endl; }
-};
-
-
-class OtherAnimal : public Animal
-{
-};
-
+long a = 10000, b = 0, c = 2800, d, e, f[2801], g;
 int main()
 {
-	std::vector<Animal*> animals;
-	animals.push_back(new Animal());
-	animals.push_back(new Wolf());
-	animals.push_back(new Fish());
-	animals.push_back(new GoldFish());
-	animals.push_back(new OtherAnimal());
-	for (std::vector<Animal*>::const_iterator it = animals.begin(); it != animals.end(); ++it)
-	{
-		(*it)->eat();
-		delete *it;
-	}
-	return 0;
+	for (; b - c;)
+		f[b++] = a / 5;
+	for (; d = 0, g = c * 2; c -= 14, printf("%04d", e + d / a), e = d % a)
+		for (b = c; d += f[b] * a, f[b] = d % --g, d /= g--, --b; d *= b);
 }
