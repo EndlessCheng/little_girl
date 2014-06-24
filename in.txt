@@ -1,11 +1,10 @@
 import urllib2  
 
-USERNAME = 'EndlessCheng'
-response = urllib2.urlopen('https://github.com/' + USERNAME + '?tab=repositories')  
+response = urllib2.urlopen('http://www.bilibili.com/online.html')  
 html = response.read()  
 
 STEP = 20
-cnt = next = 0
+cnt = next = 1
 while True:
     end = html.find('</h3>', next, len(html)) #获取repolist-name尾位置
     if(end == -1):
