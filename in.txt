@@ -1,3 +1,4 @@
-import os
-res = os.listdir('D:/blog')
-print len(res)
+import urllib2  
+response = urllib2.urlopen('http://www.baidu.com/')  
+html = response.read()  
+print html
