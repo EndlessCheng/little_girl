@@ -1,5 +1,7 @@
 import urllib2  
-response = urllib2.urlopen('https://github.com/EndlessCheng?tab=repositories')  
+
+USERNAME = 'EndlessCheng'
+response = urllib2.urlopen('https://github.com/' + USERNAME + '?tab=repositories')  
 html = response.read()  
 
 STEP = 20
