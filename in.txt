@@ -1,9 +1,5 @@
-file = open('D:\\source.txt')
-s = file.read()
+s = '0123456789'
+print s[-5:-len(s):-1]
 
-ans = [0] * 127
-
-for c in s:
-    ans[ord(c)] += 1
-for i in range(127):
-    print i,ans[i]
+for i in range(len(s), 0, -1):
+    print s[:i]
