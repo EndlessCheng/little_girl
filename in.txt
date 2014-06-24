@@ -2,12 +2,14 @@ import urllib2
 response = urllib2.urlopen('https://github.com/EndlessCheng?tab=repositories')  
 html = response.read()  
 
-next = 0
+STEP = 20
+cnt = next = 0
 while True:
     end = html.find('</h3>', next, len(html)) #获取repolist-name尾位置
     if(end == -1):
         break
-	next = end + 4
+    next = end + STEP
     end = html.rfind('</a>', 0, end) 
     begin = html.rfind('>', 0, end) + 1
-    print html[begin:end]
+    print "%3d  %s" % (cnt, html[begin:end])
+    cnt += 1
