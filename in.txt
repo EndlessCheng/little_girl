@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-number = 1
-print(number, "is even")
-=======
-ok, ok.
->>>>>>> parent of 4be4250... Revert "Update in.txt"
-that's cool!!
+1
+A
+A
