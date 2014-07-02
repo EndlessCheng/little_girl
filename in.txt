@@ -1,5 +1,7 @@
-1
-A
-A
-
-
+number = input("Enter an integer: ")
+max = number
+while number != 0:
+      number = input("Enter an integer: ")
+      if number > max:
+          max = number
+print "number", number

@@ -4,7 +4,6 @@ using namespace std;
 #define Fin(f) freopen(f, "r", stdin)
 #define Fout(f) freopen(f, "w", stdout)
 #define SR() srand((unsigned)time(NULL))
-#define random(m) ((rand() << 16 | rand()) % m) /// [0,m)之间的伪随机数
 
 #define all(a) a.begin(), a.end()
 
@@ -196,7 +195,7 @@ inline int U(int pos, int p)
 
 int f(int i, int j, int cnt)
 {
-    PIII(i,j,cnt);
+	PIII(i, j, cnt);
 	if (i == 0 && j == 0) return 0;
 	if (~dp[i][j]) return dp[i][j];
 	if (i == 0) return dp[i][j] = cnt + f(i, j - 1, cnt + U(j, 1));
@@ -204,21 +203,26 @@ int f(int i, int j, int cnt)
 	return dp[i][j] = min(cnt + f(i, j - 1, cnt + U(j, 1)), cnt + f(i - 1, j, cnt + U(i, 0)));
 }
 
+
+
+
+
 #define IO /// *别忘了删掉!
 int main()
 {
 #ifdef IO
-	Fin("in.txt");
+	//Fin("in.txt");
 #endif
-	int t, n, m;
-	SI(t);
-	while (t--)
-	{
-		mem(st, 0x3f), mem(en, 0);
-		SS(s[0]+1), n = getpos(s[0], 0);
-		SS(s[1]+1), m = getpos(s[1], 1);
-		mem(dp, -1);
-		PI(f(n - 1, m - 1, 0));
-	}
+int t, n, m;
+SI(t);
+while (t--)
+ 	{
+ 		mem(st, 0x3f), mem(en, 0);
+ 		SS(s[0]+1), n = getpos(s[0], 0);
+ 		SS(s[1]+1), m = getpos(s[1], 1);
+
+ 		mem(dp, -1);
+ 		PI(f(n - 1, m - 1, 0));
+ 	}
 	return 0;
 }
