@@ -169,9 +169,6 @@ typedef pair<int, pair<int, int> > pi3;
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
 const int mx = int(5e3) + 1;
 
-#define xx //\\
-3
-
 char s[2][mx];
 int st[27], en[27];
 bool vis[27];
@@ -210,7 +207,7 @@ int f(int i, int j, int cnt)
 int main()
 {
 #ifdef IO
-	//Fin("in.txt");
+	Fin("in.txt");
 #endif
 	int t, n, m;
 	SI(t);
