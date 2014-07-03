@@ -1,6 +1,12 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+#define Fin(f) freopen(f, "r", stdin)
+#define Fout(f) freopen(f, "w", stdout)
+#define SR() srand((unsigned)time(NULL))
+
+#define all(a) a.begin(), a.end()
+
 #define Inter(v, a, n, b, m) v.resize(set_intersection(a, a + (n), b, b + (m), v.begin()) - v.begin())
 #define SInter(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Inter(v, a, n, b, m)
 #define Union(v, a, n, b, m) v.resize(set_union(a, a + (n), b, b + (m), v.begin()) - v.begin());
@@ -10,7 +16,15 @@ using namespace std;
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
 
-typedef long long ll;
+#define PB push_back
+#define MP make_pair
+#define Cnt1(n) (__builtin_popcount(n))
+#define Cntt1(n) (__builtin_popcountll(n)) /// ��������Ϊull����
+#define cb(n) (32 - __builtin_clz(n))
+#define cbb(n) (64 - __builtin_clzll(n)) /// ��������Ϊull����
+#define sq(x) ((x) * (x))
+#define Sqrt(n) (int)sqrt(0.5 + n)
+
 #define PB push_back
 #define MP make_pair
 #define all(a) a.begin(), a.end()
@@ -29,31 +43,13 @@ typedef long long ll;
 #define cpy(to, from) memcpy(to, from, sizeof(from))
 #define Rcpy(l, r, b) reverse_copy(l, r, b) /// ע��Ϊ�����ҿ�����
 
-typedef unsigned long long ull;
-#define gr() greater<int>()
-#define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *����Ҫ����--k
-#define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) /// *����Ҫ����--k
-#define Min(a, n) (*min_element(a, a + (n)))
-#define Max(a, n) (*max_element(a, a + (n)))
-#define Minpos(a, n) (min_element(a, a + (n)) - (a))
-#define Maxpos(a, n) (max_element(a, a + (n)) - (a))
-#define Lowpos(a, n, x) (lower_bound(a, a + (n), x) - (a))
-#define Upppos(a, n, x) (upper_bound(a, a + (n), x) - (a))
-#define BS(a, n, x) binary_search(a, a + (n), x) /// ����boolֵ
-#define Range(a, n, x) equal_range(a, a + (n), x) /// ����pair
-#define Fpos(a, n, x) (find(a, a + (n), x) - (a))
-
-typedef vector<int>::iterator viter;
 #define For(i, n) for (i = 0; i < (n); ++i)
 #define Forr(i, start, n) for (i = start; i < (n); ++i)
 #define Forrr(i, start, n, step) for (i = start; i < (n); i += (step))
 #define rFor(i, n) for (i = (n); i >= 0; --i)
 #define rForr(i, n, end) for (i = n; i >= (end); --i)
 #define rForrr(i, n, end, step) for (i = n; i >= (end); i -= (step))
-#define loop(a) for (it = a.begin(); it != a.end(); ++it)
 
-typedef set<int>::iterator siter;
-typedef map<int, int>::iterator miter;
 #define SI(a) scanf("%d", &a)
 #define SII(a, b) scanf("%d%d", &a, &b)
 #define SIII(a, b, c) scanf("%d%d%d", &a, &b, &c)
@@ -75,13 +71,13 @@ typedef map<int, int>::iterator miter;
 #define UC(c) ungetc(c, stdin)
 #define SS(s) scanf("%s", s)
 #define SSS(s, s2) scanf("%s%s", s, s2)
+#define SC(c) scanf(" %c", &c)
 
-typedef multiset<int>::iterator msiter;
-typedef multimap<int, int>::iterator mmter;
 #define PI(a) printf("%d\n", a)
 #define PII(a, b) printf("%d %d\n", a, b)
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
+#define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
 #define PL(a) printf("%lld\n", a)
 #define PLL(a, b) printf("%lld %lld\n", a, b)
 #define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
@@ -98,14 +94,34 @@ typedef multimap<int, int>::iterator mmter;
 #define Pn() putchar(10)
 #define Ps() putchar(32)
 
-#define FI freopen("in.txt", "r", stdin)
-#define FO freopen("out.txt", "w", stdout)
-#define Fin(f) freopen(f, "r", stdin) /// ���ֶ���.in
-#define Fout(f) freopen(f, "w", stdout) /// ���ֶ���.out
-#define random(m) ((rand() << 16 | rand()) % m) /// [0,m)֮����α������
-#define SR() srand((unsigned)time(NULL))
+#define Uni(a) a.resize(unique(all(a)) - a.begin()) /// STLר��
+#define SUni(a) sort(all(a)); Uni(a) /// STLר��
+#define Unii(a, n) (unique(a, a + (n)) - a)
+#define SUnii(a, n) sort(a, a + n); Unii(a, n)
+#define Acc(a, n) (accumulate(a, a + (n), 0)) /// ע��0LL!!!!!�Լ�0.0!!!
+#define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *���Ļ��͸�ΪFor(i, n) a[i] += b[i](ע����int i)
+#define mem(a, num) memset(a, num, sizeof(a))
+#define cpy(to, from) memcpy(to, from, sizeof(from))
+#define Rcpy(l, r, b) reverse_copy(l, r, b) /// ע��Ϊ�����ҿ�����
+#define kTo10(ans, str, s, m, k) strncpy(str, s, m), str[m] = 0, ans = strtol(str, NULL, k)
 
-typedef long double ld;
+#define gr() greater<int>()
+#define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *����Ҫ����--k
+#define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) /// *����Ҫ����--k
+#define Min(a, n) (*min_element(a, a + (n)))
+#define Max(a, n) (*max_element(a, a + (n)))
+#define Minpos(a, n) (min_element(a, a + (n)) - (a))
+#define Maxpos(a, n) (max_element(a, a + (n)) - (a))
+#define Lowpos(a, n, x) (lower_bound(a, a + (n), x) - (a)) /// *�Ӹ�gr()����<=
+#define Upppos(a, n, x) (upper_bound(a, a + (n), x) - (a)) /// *�Ӹ�gr()����<
+#define BS(a, n, x) binary_search(a, a + (n), x) /// ����boolֵ
+#define Range(a, n, x) equal_range(a, a + (n), x) /// ����pair
+#define Fpos(a, n, x) (find(a, a + (n), x) - (a))
+#define Fd(a, x) (find(all(a), x) != a.end())
+template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
+template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;}
+template<class T> inline T ceil(T x, T y) {return (x - 1) / y + 1;}
+
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAXΪ2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAXΪ9.22e18)
 const double pi = acos(-1.0);
@@ -116,29 +132,109 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-/*0.012s*/
+/// ����ʹ�����¼��ӱ����֣�rank, tm,time, write, j0,j1,jn,y0,y1,yn
+/// ������gets(s), GC(ch)����WA�Ļ�������SS(s), scanf(" %c ", &ch)����
+/// ��main()�д�����ʼ��STL������������
+/// ע��strncpy������β0�����ֶ�����
+/// ����λ�ò���������stable_sort(a, a + n);
+/// C++��������������ת������G++����
+/*G++��ջ
+int __size__ = 256 << 20; // 256MB
+char *__p__ = (char*)malloc(__size__) + __size__;
+__asm__("movl %0, %%esp\n" :: "r"(__p__));
+*/
+//ios_base::sync_with_stdio(false);
 
-const double eps = 1e-6;
-const double LOG2_10 = log2(10.0);
+typedef unsigned int ui;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef vector<int>::iterator viter;
+typedef set<int>::iterator siter; /// *�뼴ʱ�޸�ģ������
+typedef map<int, int>::iterator miter; /// *�뼴ʱ�޸�ģ������
+typedef multiset<int>::iterator msiter;
+typedef multimap<int, int>::iterator mmter;
+typedef priority_queue<int> pqi; /// *�뼴ʱ�޸�ģ������
+typedef priority_queue<int, vector<int>, greater<int> > spqi; /// С����top  *�뼴ʱ�޸�ģ������
+typedef pair<int, int> p2; /// ��ֵʱֱ��SII(a[i].x, a[i].y)����, ��ʱ����LL
+typedef pair<pair<int, int>, int> p3;
+typedef pair<int, pair<int, int> > pi3;
+//#define x first
+//#define y second
+//#define MT(a, b, c) make_pair(make_pair(a, b), c)
+#define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
-char s[100];
+const int mx = int(5e3) + 1;
 
+char s[2][mx];
+int st[2][27], en[2][27];
+bool vis[27];
+
+int getpos(char *ss, int p)
+{
+	mem(vis, 0);
+	int i, len;
+	for (i = 1; ss[i]; ++i) if (!vis[ss[i] & 31]) vis[ss[i] & 31] = true, st[p][ss[i] & 31] = i;
+	mem(vis, 0), len = i - 1;
+	rForr(i, len, 1) if (!vis[ss[i] & 31]) vis[ss[i] & 31] = true, en[p][ss[i] & 31] = i;
+	return len;
+}
+
+int dp[mx][mx];
+
+inline int U(int pos, int pos2, int p)
+{
+	int cnt = 0, c = s[p][pos] & 31;
+	if (!vis[c] && pos == en[p][c])
+	{
+		++cnt;
+		vis[c] = true;
+		//PI(cnt);
+	}
+	if (pos == st[p][c] && pos2 < st[p ^ 1][c]) --cnt;//PI(cnt);
+	return cnt;
+}
+
+int f(int i, int j, int cnt)
+{
+	PIII(i, j, cnt);
+	if (i == 0 && j == 0) return 0;
+	if (~dp[i][j]) return dp[i][j];
+	if (i == 0)
+	{
+		dp[i][j] = cnt + f(i, j - 1, cnt + U(j, i, 1));
+		vis[s[1][j] & 31] = false;
+	}
+	else if (j == 0)
+	{
+		dp[i][j] = cnt + f(i - 1, j, cnt + U(i, j, 0));
+		vis[s[0][i] & 31] = false;
+	}
+	else
+	{
+		dp[i][j] = cnt + f(i, j - 1, cnt + U(j, i, 1));
+		vis[s[1][j] & 31] = false;
+		Qmin(dp[i][j], cnt + f(i - 1, j, cnt + U(i, j, 0)));
+		vis[s[0][i] & 31] = false;
+	}
+	return dp[i][j];
+}
+
+#define IO
 int main()
 {
-	ull M, E, b;
-	double a, A, tmp, diff;
-	while (scanf("%s", s), strcmp(s, "0e0"))
+#ifdef IO
+	Fin("in.txt");
+#endif
+	int t, n, m;
+	SI(t);
+	while (t--)
 	{
-		*strchr(s, 'e') = 32;
-		sscanf(s, "%lf%llu", &a, &b);
-		A = log2(a) + b * LOG2_10;
-		For(M, 10)
-		{
-			tmp = log2(1 - 1.0 / (1 << (M + 1)));
-			E = (ull)round(log2(A - tmp + 1));
-			if (fabs(A - ((1 << E) - 1) - tmp) < eps) break;
-		}
-		printf("%llu %llu\n", M, E);
+		mem(st, 0x3f), mem(en, -1);
+		SS(s[0] + 1), n = getpos(s[0], 0);
+		SS(s[1] + 1), m = getpos(s[1], 1);
+		mem(dp, -1), mem(vis, 0);
+		PI(f(n, m, 0));
 	}
 	return 0;
 }
