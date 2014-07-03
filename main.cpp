@@ -169,6 +169,9 @@ typedef pair<int, pair<int, int> > pi3;
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
 const int mx = int(5e3) + 1;
 
+#define xx //\\
+3
+
 char s[2][mx];
 int st[27], en[27];
 bool vis[27];
@@ -203,26 +206,21 @@ int f(int i, int j, int cnt)
 	return dp[i][j] = min(cnt + f(i, j - 1, cnt + U(j, 1)), cnt + f(i - 1, j, cnt + U(i, 0)));
 }
 
-
-
-
-
 #define IO /// *别忘了删掉!
 int main()
 {
 #ifdef IO
 	//Fin("in.txt");
 #endif
-int t, n, m;
-SI(t);
-while (t--)
- 	{
- 		mem(st, 0x3f), mem(en, 0);
- 		SS(s[0]+1), n = getpos(s[0], 0);
- 		SS(s[1]+1), m = getpos(s[1], 1);
-
- 		mem(dp, -1);
- 		PI(f(n - 1, m - 1, 0));
- 	}
+	int t, n, m;
+	SI(t);
+	while (t--)
+	{
+		mem(st, 0x3f), mem(en, 0);
+		SS(s[0] + 1), n = getpos(s[0], 0);
+		SS(s[1] + 1), m = getpos(s[1], 1);
+		mem(dp, -1);
+		PI(f(n - 1, m - 1, 0));
+	}
 	return 0;
 }
