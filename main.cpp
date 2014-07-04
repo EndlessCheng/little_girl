@@ -68,7 +68,7 @@ using namespace std;
 #define SA(a, i, n) For(i, n) scanf("%d", a + i) /// 便于扩展 *不要在后面加逗号！
 #define SAA(a, i, n, j, m) For(i, n) For(j, m) SI(a[i][j]) /// *不要在后面加逗号！
 #define GC(c) (c = getchar())
-#define GCn() getchar()
+#define Gn() getchar()
 #define UC(c) ungetc(c, stdin)
 #define SS(s) scanf("%s", s)
 #define SSS(s, s2) scanf("%s%s", s, s2)
@@ -133,6 +133,7 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
+/// INT_MAX = -1u >> 1
 /// 不可使用如下间接保留字：rank, tm,time, write, j0,j1,jn,y0,y1,yn
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
@@ -160,39 +161,77 @@ typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *请
 typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-#define x first
-#define y second
+//#define x first
+//#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %d: ", ++cas)
+#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
+const int mx = 100;
 
-int w[55], dp[10000];
-p2 ans;
 
-void _01pack(int n, int maxw)
+
+char s[mx];
+int dp[mx][mx];///最小添加个数
+int divide_pos[mx][mx];///满足最小添加个数的添加括号的位置
+
+void interval_DP(int len)
 {
-	mem(dp, -1), dp[0] = 0;
-	int i, j;
-	For(i, n) rForr(j, maxw, w[i]) if (~dp[j - w[i]]) Qmax(dp[j], dp[j - w[i]] + 1);
-	ans.x = 0;
-	rFor(j, maxw) if (dp[j] > ans.x) ans.x = dp[j], ans.y = j;
-	if (ans.x == 0) ans.y = 0;
+	int l, i, j, k;
+	for (i = 0; i < len; ++i) dp[i][i] = 1;
+	for (l = 1; l < len; ++l)
+		for (i = 0; i < len - l; i++)
+		{
+			j = i + l;
+			dp[i][j] = mx;
+			if ((s[i] == '(' && s[j] == ')') || (s[i] == '[' && s[j] == ']'))
+				dp[i][j] = dp[i + 1][j - 1], divide_pos[i][j] = -1;
+			for (k = i; k < j; ++k)
+				if (dp[i][k] + dp[k + 1][j] < dp[i][j])
+					dp[i][j] = dp[i][k] + dp[k + 1][j], divide_pos[i][j] = k;
+		}
 }
 
+void print(int i, int j)
+{
+	if (i > j) return;
+	if (i == j)
+	{
+		if (s[i] == '(' || s[i] == ')') printf("()");
+		else printf("[]");
+		return;
+	}
+	if (divide_pos[i][j] == -1)///说明这段无需添加括号
+	{
+		putchar(s[i]);
+		print(i + 1, j - 1);
+		putchar(s[j]);
+		return;
+	}
+	print(i, divide_pos[i][j]);
+	print(divide_pos[i][j] + 1, j);
+}
+
+#define IO /// *别忘了删掉!
 int main()
 {
-	int t, n, W, i, cas = 0;
-	SI(t);
+#ifdef IO
+	//Fin("in.txt");
+#endif
+int t;
+	SI(t), Gn();
 	while (t--)
 	{
-		Pcas();
-		SII(n, W);
-		SA(w, i, n);
-		_01pack(n, W - 1);
-		PII(ans.x + 1, ans.y + 678);
+
+		Gn(), gets(s);
+		scanf("%s", s);
+		int len = strlen(s);
+		interval_DP(len);
+		print(0, len - 1);
+		Pn();
+		if(t) Pn();
 	}
 	return 0;
 }
