@@ -51,21 +51,21 @@ using namespace std;
 #define rForr(i, n, end) for (i = n; i >= (end); --i)
 #define rForrr(i, n, end, step) for (i = n; i >= (end); i -= (step))
 
-#define SI(a) scanf("%dp", &a)
-#define SII(a, b) scanf("%dp%dp", &a, &b)
-#define SIII(a, b, c) scanf("%dp%dp%dp", &a, &b, &c)
-#define SIIII(a, b, c, dp) scanf("%dp%dp%dp%dp", &a, &b, &c, &dp)
-#define SIIIII(a, b, c, dp, e) scanf("%dp%dp%dp%dp%dp", &a, &b, &c, &dp, &e)
-#define SIIIIII(a, b, c, dp, e, f) scanf("%dp%dp%dp%dp%dp%dp", &a, &b, &c, &dp, &e, &f)
+#define SI(a) scanf("%d", &a)
+#define SII(a, b) scanf("%d%d", &a, &b)
+#define SIII(a, b, c) scanf("%d%d%d", &a, &b, &c)
+#define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
+#define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
+#define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
 #define SL(a) scanf("%lld", &a)
 #define SLL(a, b) scanf("%lld%lld", &a, &b)
 #define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, dp) scanf("%lld%lld%lld%lld", &a, &b, &c, &dp)
+#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
-#define SDDDD(a, b, c, dp) scanf("%lf%lf%lf%lf", &a, &b, &c, &dp)
-#define SA(a, i, n) For(i, n) scanf("%dp", a + i) /// 便于扩展 *不要在后面加逗号！
+#define SDDDD(a, b, c, d) scanf("%lf%lf%lf%lf", &a, &b, &c, &d)
+#define SA(a, i, n) For(i, n) scanf("%d", a + i) /// 便于扩展 *不要在后面加逗号！
 #define SAA(a, i, n, j, m) For(i, n) For(j, m) SI(a[i][j]) /// *不要在后面加逗号！
 #define GC(c) (c = getchar())
 #define GCn() getchar()
@@ -74,22 +74,22 @@ using namespace std;
 #define SSS(s, s2) scanf("%s%s", s, s2)
 #define SC(c) scanf(" %c", &c)
 
-#define PI(a) printf("%dp\n", a)
-#define PII(a, b) printf("%dp %dp\n", a, b)
-#define PIII(a, b, c) printf("%dp %dp %dp\n", a, b, c)
-#define PIIII(a, b, c, dp) printf("%dp %dp %dp %dp\n", a, b, c, dp)
-#define PIIIII(a, b, c, dp, e) printf("%dp %dp %dp %dp %dp\n", a, b, c, dp, e)
+#define PI(a) printf("%d\n", a)
+#define PII(a, b) printf("%d %d\n", a, b)
+#define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
+#define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
+#define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
 #define PL(a) printf("%lld\n", a)
 #define PLL(a, b) printf("%lld %lld\n", a, b)
 #define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
-#define PA(a, i, n) For(i, (n) - 1) printf("%dp ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
-#define PAA(a, i, n, j, m) For(i, n) {For(j, (m) - 1) printf("%dp ", a[i][j]); PI(a[i][(m) - 1]);}
+#define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
+#define PAA(a, i, n, j, m) For(i, n) {For(j, (m) - 1) printf("%d ", a[i][j]); PI(a[i][(m) - 1]);}
 #define PAn(a, i, n) For(i, n) PI(a[i])
 #define PiA(a, i, n) For(i, n) PII(i, a[i]) /// debug用
-#define rPA(a, i, n) rForr(i, n - 1, 1) printf("%dp ", a[i]); PI(a[0]) /// *(有时要在前面加花括号)
+#define rPA(a, i, n) rForr(i, n - 1, 1) printf("%d ", a[i]); PI(a[0]) /// *(有时要在前面加花括号)
 #define rPAn(a, i, n) rFor(i, n - 1) PI(a[i])
 #define PC(c) putchar(c)
 #define Pn() putchar(10)
@@ -160,70 +160,44 @@ typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *请
 typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
+#define x first
+#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %dp: ", ++cas) /// *注意C的大小写
+#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
+const int mx = int(1e4) + 5;
 
+int w[mx], dp[mx];
+p2 ans;
 
-
-const int mx = 5005;
-
-char p[mx], q[mx];
-int sp[26], sq[26], ep[26], eq[26];
-int dp[2][mx], c[2][mx]; /// 用c[i][j]表示进行到i,j位置时，还剩下多少未匹配的颜色
-
-int solve(int n, int m)
+void _01pack(int n, int maxw)
 {
-	int t = 0;
-	memset(c, 0, sizeof(c));
-	memset(dp, 0, sizeof(dp));
-	for (int i = 0; i <= n; i++)
-	{
-		for (int j = 0; j <= m; j++)
-		{
-			if (i == 0 && j == 0) continue;
-			int v1 = inf, v2 = inf;
-			if (i) v1 = dp[t ^ 1][j] + c[t ^ 1][j]; // 请把 t^1 视作 i-1，t 视作 i
-			if (j) v2 = dp[t][j - 1] + c[t][j - 1];
-			dp[t][j] = min(v1, v2);
-			if (i)
-			{
-				c[t][j] = c[t ^ 1][j];
-				if (sp[p[i]] == i && sq[p[i]] > j) c[t][j]++;
-				if (ep[p[i]] == i && eq[p[i]] <= j) c[t][j]--;
-			}
-			else if (j)
-			{
-				c[t][j] = c[t][j - 1];
-				if (sq[q[j]] == j && sp[q[j]] > i) c[t][j]++;
-				if (eq[q[j]] == j && ep[q[j]] <= i) c[t][j]--;
-			}
-		}
-		t ^= 1;
-	}
-	return dp[t ^ 1][m];
+	mem(dp, 0);
+	int i, j;
+	For(i, n) dp[w[i]] = 1;
+	For(i, n) rForr(j, maxw, w[i]) if (dp[j - w[i]]) dp[j] = dp[j - w[i]] + 1;
+	ans.x = -1;
+	rFor(j, maxw) if (dp[j] > ans.x) ans.x = dp[j], ans.y = j;
 }
 
+#define IO
 int main()
 {
-	int T;
-	scanf("%d", &T);
-	while (T--)
+#ifdef IO
+	//Fin("in.txt");
+#endif
+	int t, n, W, i, cas = 0;
+	SI(t);
+	while (t--)
 	{
-		scanf("%s%s", p + 1, q + 1);
-		int n = strlen(p + 1);
-		int m = strlen(q + 1);
-		for (int i = 1; i <= n; i++) p[i] -= 'A';
-		for (int i = 1; i <= m; i++) q[i] -= 'A';
-		for (int i = 0; i < 26; i++) sp[i] = sq[i] = inf, ep[i] = eq[i] = 0;
-		for (int i = 1; i <= n; i++) Qmin(sp[p[i]], i), ep[p[i]] = i;
-		for (int i = 1; i <= m; i++) Qmin(sq[q[i]], i), eq[q[i]] = i;
-		printf("%d\n", solve(n, m));
+		Pcas();
+		SII(n, W);
+		SA(w, i, n);
+		_01pack(n, W - 1);
+		PII(ans.x + 1, ans.y + 678);
 	}
 	return 0;
 }
