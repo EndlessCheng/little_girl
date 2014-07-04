@@ -167,28 +167,23 @@ typedef pair<int, pair<int, int> > pi3;
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
-const int mx = int(1e4) + 5;
+#define Pcas() printf("Case %d: ", ++cas)
 
-int w[mx], dp[mx];
+int w[55], dp[10000];
 p2 ans;
 
 void _01pack(int n, int maxw)
 {
-	mem(dp, 0);
+	mem(dp, -1), dp[0] = 0;
 	int i, j;
-	For(i, n) dp[w[i]] = 1;
-	For(i, n) rForr(j, maxw, w[i]) if (dp[j - w[i]]) dp[j] = dp[j - w[i]] + 1;
-	ans.x = -1;
+	For(i, n) rForr(j, maxw, w[i]) if (~dp[j - w[i]]) Qmax(dp[j], dp[j - w[i]] + 1);
+	ans.x = 0;
 	rFor(j, maxw) if (dp[j] > ans.x) ans.x = dp[j], ans.y = j;
+	if (ans.x == 0) ans.y = 0;
 }
 
-#define IO
 int main()
 {
-#ifdef IO
-	//Fin("in.txt");
-#endif
 	int t, n, W, i, cas = 0;
 	SI(t);
 	while (t--)
