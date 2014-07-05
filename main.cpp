@@ -82,7 +82,7 @@ using namespace std;
 #define PL(a) printf("%lld\n", a)
 #define PLL(a, b) printf("%lld %lld\n", a, b)
 #define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
-#define PD(a) printf("%f\n", a)
+#define PD(a) printf("%.3f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
@@ -126,7 +126,7 @@ template<class T> inline T ceil(T x, T y) {return (x - 1) / y + 1;}
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
 const double pi = acos(-1.0);
-//const double tens[11] = {0.0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
+const double tens[11] = {1e0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
 //double fgcd(double a, double b) {return fabs(b) > eps ? fgcd(b, fmod(a, b)) : a;}
 
 //const int dir[4][2] = {1, 0, 0, 1, -1, 0, 0, -1};
@@ -166,72 +166,55 @@ typedef pair<int, pair<int, int> > pi3;
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
-//const double eps = 1e-8;
+const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写
-const int mx = 100;
+#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
 
 
+/*1712 ms, 3240 KB*/
+const int mx = int(1e5) + 5;
 
-char s[mx];
-int dp[mx][mx];///最小添加个数
-int divide_pos[mx][mx];///满足最小添加个数的添加括号的位置
+int n;
+double ans, f, vm, s[mx], b[mx];
 
-void interval_DP(int len)
+bool ok(double v)
 {
-	int l, i, j, k;
-	for (i = 0; i < len; ++i) dp[i][i] = 1;
-	for (l = 1; l < len; ++l)
-		for (i = 0; i < len - l; i++)
+	int i;
+	double tmp, cost = 0.0, t = 0.0;
+	For(i, n)
+	{
+		tmp = 0.5 * v + b[i];
+		if (tmp > eps)
 		{
-			j = i + l;
-			dp[i][j] = mx;
-			if ((s[i] == '(' && s[j] == ')') || (s[i] == '[' && s[j] == ']'))
-				dp[i][j] = dp[i + 1][j - 1], divide_pos[i][j] = -1;
-			for (k = i; k < j; ++k)
-				if (dp[i][k] + dp[k + 1][j] < dp[i][j])
-					dp[i][j] = dp[i][k] + dp[k + 1][j], divide_pos[i][j] = k;
+			cost += tmp * s[i], t += s[i] / v;
+			if (cost > f + eps) return false;
 		}
+		else t += s[i] / min(vm, -2 * b[i]);
+	}
+	return ans = t, true;
 }
 
-void print(int i, int j)
+void solve(double l, double r)
 {
-	if (i > j) return;
-	if (i == j)
-	{
-		if (s[i] == '(' || s[i] == ')') printf("()");
-		else printf("[]");
-		return;
+	double m;
+	int i;
+	For(i, 100) /// 最好可以开到32
+	   {
+		m = (l + r) / 2;
+		ok(m) ? l = m : r = m;
 	}
-	if (divide_pos[i][j] == -1)///说明这段无需添加括号
-	{
-		putchar(s[i]);
-		print(i + 1, j - 1);
-		putchar(s[j]);
-		return;
-	}
-	print(i, divide_pos[i][j]);
-	print(divide_pos[i][j] + 1, j);
 }
 
-#define IO /// *别忘了删掉!
 int main()
 {
-#ifdef IO
-	//Fin("in.txt");
-#endif
-int t;
-	SI(t), Gn();
-	while (t--)
+	int i;
+	while (~SI(n))
 	{
-
-		Gn(), gets(s);
-		scanf("%s", s);
-		int len = strlen(s);
-		interval_DP(len);
-		print(0, len - 1);
-		Pn();
-		if(t) Pn();
+		SDD(f, vm);
+		For(i, n) SDD(s[i], b[i]);
+		ans = 1e100;
+		solve(0, vm + eps);
+		ans == 1e100 ? puts("Bad Luck!") : PD(ans);
 	}
 	return 0;
 }
