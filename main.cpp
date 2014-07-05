@@ -1,4 +1,25 @@
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define Fin(f) freopen(f, "r", stdin)
@@ -26,24 +47,6 @@ using namespace std;
 #define sq(x) ((x) * (x))
 #define Sqrt(n) (int)sqrt(0.5 + n)
 
-#define PB push_back
-#define MP make_pair
-#define all(a) a.begin(), a.end()
-#define Uni(a) a.resize(unique(all(a)) - a.begin()) /// STL专用
-#define SUni(a) sort(all(a)); Uni(a) /// STL专用
-#define Unii(a, n) (unique(a, a + (n)) - a) /// 使用前请sort
-#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 注意0LL!!!!!以及0.0!!!
-#define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
-#define Cnt1(n) (__builtin_popcount(n))
-#define Cntt1(n) (__builtin_popcountll(n)) /// 参数必须为ull类型
-#define cb(n) (32 - __builtin_clz(n))
-#define cbb(n) (64 - __builtin_clzll(n)) /// 参数必须为ull类型
-#define sq(x) ((x) * (x))
-#define Sqrt(n) (int)sqrt(0.5 + n)
-#define mem(a, num) memset(a, num, sizeof(a))
-#define cpy(to, from) memcpy(to, from, sizeof(from))
-#define Rcpy(l, r, b) reverse_copy(l, r, b) /// 注意为左闭右开区间
-
 #define For(i, n) for (i = 0; i < (n); ++i)
 #define Forr(i, start, n) for (i = start; i < (n); ++i)
 #define Forrr(i, start, n, step) for (i = start; i < (n); i += (step))
@@ -57,10 +60,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%lld", &a)
-#define SLL(a, b) scanf("%lld%lld", &a, &b)
-#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -79,10 +82,10 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%lld\n", a)
-#define PLL(a, b) printf("%lld %lld\n", a, b)
-#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
-#define PD(a) printf("%.3f\n", a)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
+#define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
@@ -126,12 +129,14 @@ template<class T> inline T ceil(T x, T y) {return (x - 1) / y + 1;}
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
 const double pi = acos(-1.0);
-const double tens[11] = {1e0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
+//const double tens[11] = {0.0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
 //double fgcd(double a, double b) {return fabs(b) > eps ? fgcd(b, fmod(a, b)) : a;}
 
 //const int dir[4][2] = {1, 0, 0, 1, -1, 0, 0, -1};
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
+
+int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
 
 /// INT_MAX = -1u >> 1
 /// 不可使用如下间接保留字：rank, tm,time, write, j0,j1,jn,y0,y1,yn
@@ -139,12 +144,7 @@ const double tens[11] = {1e0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e
 /// 在main()中大量初始化STL类型容易死机
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-/// C++会帮你往上类型转换，但G++不会
-/*G++扩栈
-int __size__ = 256 << 20; // 256MB
-char *__p__ = (char*)malloc(__size__) + __size__;
-__asm__("movl %0, %%esp\n" :: "r"(__p__));
-*/
+//#pragma comment(linker, "/STACK:102400000,102400000")
 //ios_base::sync_with_stdio(false);
 
 typedef unsigned int ui;
@@ -158,63 +158,98 @@ typedef multiset<int>::iterator msiter;
 typedef multimap<int, int>::iterator mmter;
 typedef priority_queue<int> pqi; /// *请即时修改模板参数
 typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *请即时修改模板参数
-typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
+typedef pair<double, double> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
+#define x first
+#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7; /// *或int
+//const ll mod = ll(1e9) + 7;
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
-
-
-/*1712 ms, 3240 KB*/
 const int mx = int(1e5) + 5;
 
-int n;
-double ans, f, vm, s[mx], b[mx];
-
-bool ok(double v)
+struct P3
 {
-	int i;
-	double tmp, cost = 0.0, t = 0.0;
-	For(i, n)
+	double x, y, z;
+	P3(double x = 0, double y = 0, double z = 0): x(x), y(y), z(z) {}
+	double input()
 	{
-		tmp = 0.5 * v + b[i];
-		if (tmp > eps)
-		{
-			cost += tmp * s[i], t += s[i] / v;
-			if (cost > f + eps) return false;
-		}
-		else t += s[i] / min(vm, -2 * b[i]);
+		int x;
+		char c;
+		while ((c = getchar()) != '-' && !isdigit(c)) ;
+		bool neg = false;
+		if (c == '-') x = 0, neg = true;
+		else x = c & 15;
+		while (isdigit(c = getchar())) x = x * 10 + (c & 15);
+		if (neg) x = -x;
+		return x;
 	}
-	return ans = t, true;
-}
+	void read()
+	{
+		x = input(), y = input(), z = input();
+	}
+	void output()
+	{
+		PDDD(x, y, z);
+	}
+};
+typedef P3 V3;
 
-void solve(double l, double r)
+vector<double> LineSphereIntersect(P3 &p, V3 &v, double R)
 {
-	double m;
-	int i;
-	For(i, 100) /// 最好可以开到32
-	   {
-		m = (l + r) / 2;
-		ok(m) ? l = m : r = m;
-	}
+	vector<double> ans;
+	double A = sq(v.x) + sq(v.y) + sq(v.z);
+	double B = 2 * (v.x * p.x + v.y * p.y + v.z * p.z);
+	double C = sq(p.x) + sq(p.y) + sq(p.z) - sq(R);
+	double delta = B * B - 4 * A * C;
+	if (delta < -eps) return ans;
+	if (fabs(delta) < eps) return ans.PB(-B / (2 * A)), ans;
+	double t1 = (-B - sqrt(delta)) / (2 * A);
+	double t2 = (-B + sqrt(delta)) / (2 * A);
+	if (t1 > t2) swap(t1, t2);
+	if (t1 > -eps) return ans.PB(t1), ans.PB(t2), ans; /// *射线包含出发点
+	if (t2 > -eps) ans.PB(t2); /// *射线包含出发点
+	return ans;
 }
 
+int SegUnionCover(vector<p2> seg)
+{
+	double right = -1e100;
+	int cnt = 0, i;
+	sort(all(seg));
+	For(i, seg.size()) if (right + eps < seg[i].x) right = seg[i].y, ++cnt;
+	else Qmin(right, seg[i].y);
+	return cnt;
+}
+
+vector<p2> ans;
+
+#define IO /// *别忘了删掉!
 int main()
 {
-	int i;
-	while (~SI(n))
+#ifdef IO
+	Fin("in.txt");
+#endif
+	int t, cas = 0, n;
+	double r;
+	P3 p, v;
+	vector<double> tmp;
+	SI(t);
+	while (t--)
 	{
-		SDD(f, vm);
-		For(i, n) SDD(s[i], b[i]);
-		ans = 1e100;
-		solve(0, vm + eps);
-		ans == 1e100 ? puts("Bad Luck!") : PD(ans);
+		Pcas();
+		SI(n), SD(r);
+		ans.clear();
+		while (n--)
+		{
+			p.read(), v.read();
+			tmp = LineSphereIntersect(p, v, r);
+			if (!tmp.empty()) ans.PB(tmp.size() == 1 ? MP(0.0, tmp[0]) : MP(tmp[0], tmp[1]));
+		}
+		PII(ans.size(), SegUnionCover(ans));
 	}
 	return 0;
 }
