@@ -45,6 +45,7 @@ using namespace std;
 #define Rcpy(l, r, b) reverse_copy(l, r, b) /// 注意为左闭右开区间
 
 #define For(i, n) for (i = 0; i < (n); ++i)
+//#define For(i, n) for (int i = 0, _ = (n); i < _; ++i)
 #define Forr(i, start, n) for (i = start; i < (n); ++i)
 #define Forrr(i, start, n, step) for (i = start; i < (n); i += (step))
 #define rFor(i, n) for (i = (n); i >= 0; --i)
@@ -161,41 +162,53 @@ typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *请
 typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
+#define x first
+#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
+#define Pcas() printf("Case #%d: ", ++cas) /// *注意C的大小写，空输出注意去空格
+const int mx = 35;
 
-/*0.228s*/
-const int mx = 41;
+char a[mx], b[mx];
+int dp[mx][mx], way[mx][mx];
 
-int color[4][mx], dp[mx][mx][mx][mx];
-
-int f(int a, int b, int c, int d, int mask)
+p2 Lcs(char *x, char *y)
 {
-	if (__builtin_popcount(mask) == 5) return 0;
-	int &DP = dp[a][b][c][d], cnt;
-	if (~DP) return DP;
-	DP = 0;
-	if (a) cnt = (mask >> color[0][a]) & 1, Qmax(DP, cnt + f(a - 1, b, c, d, mask ^ (1 << color[0][a])));
-	if (b) cnt = (mask >> color[1][b]) & 1, Qmax(DP, cnt + f(a, b - 1, c, d, mask ^ (1 << color[1][b])));
-	if (c) cnt = (mask >> color[2][c]) & 1, Qmax(DP, cnt + f(a, b, c - 1, d, mask ^ (1 << color[2][c])));
-	if (d) cnt = (mask >> color[3][d]) & 1, Qmax(DP, cnt + f(a, b, c, d - 1, mask ^ (1 << color[3][d])));
-	return DP;
+	int i, j, len1 = strlen(x + 1), len2 = strlen(y + 1);
+	mem(dp, 0);
+	//For(j,len2+1) way[0][j]=1;
+	Forr(i, 1, len1 + 1)
+	{
+		way[i][0] = 1; //??
+		Forr(j, 1, len2 + 1)
+		{
+			if (x[i] == y[j]) dp[i][j] = dp[i - 1][j - 1] + 1, way[i][j] = way[i - 1][j - 1];
+			else if (dp[i - 1][j] > dp[i][j - 1])  dp[i][j] = dp[i - 1][j], way[i][j] = way[i - 1][j];
+			else dp[i][j] = dp[i][j - 1], way[i][j] = (dp[i][j - 1] == dp[i][j - 1] ? way[i - 1][j] + way[i][j - 1] : way[i][j - 1]);
+		}
+		PA(way[i],j,len2+1);
+	}
+	return MP(len1 + len2 - dp[len1][len2], way[len1][len2]);
 }
 
+#define IO /// *别忘了删掉!
 int main()
 {
-	int n, i, j;
-	while (SI(n), n)
+#ifdef IO
+	Fin("in.txt");
+#endif
+	int t, cas = 0;
+	p2 ans;
+	SI(t);
+	while (t--)
 	{
-		rForr(j, n, 1) For(i, 4) SI(color[i][j]);
-		mem(dp, -1);
-		PI(f(n, n, n, n, 0));
+		Pcas();
+		SSS(a + 1, b + 1);
+		ans = Lcs(a, b);
+		PII(ans.x, ans.y);
 	}
 	return 0;
 }
