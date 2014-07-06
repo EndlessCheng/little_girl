@@ -158,60 +158,44 @@ typedef multiset<int>::iterator msiter;
 typedef multimap<int, int>::iterator mmter;
 typedef priority_queue<int> pqi; /// *请即时修改模板参数
 typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *请即时修改模板参数
-typedef pair<ll, ll> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
+typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-#define x first
-#define y second
+//#define x first
+//#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
-const int mx = int(1e5) + 5;
 
-struct Point
+/*0.228s*/
+const int mx = 41;
+
+int color[4][mx], dp[mx][mx][mx][mx];
+
+int f(int a, int b, int c, int d, int mask)
 {
-	ll x, y;
-	Point(ll x = 0, ll y = 0): x(x), y(y) {} /// *必要时请手动改int
-	void read() {SLL(x, y);}
-};
-typedef Point Vec;
+	if (__builtin_popcount(mask) == 5) return 0;
+	int &DP = dp[a][b][c][d], cnt;
+	if (~DP) return DP;
+	DP = 0;
+	if (a) cnt = (mask >> color[0][a]) & 1, Qmax(DP, cnt + f(a - 1, b, c, d, mask ^ (1 << color[0][a])));
+	if (b) cnt = (mask >> color[1][b]) & 1, Qmax(DP, cnt + f(a, b - 1, c, d, mask ^ (1 << color[1][b])));
+	if (c) cnt = (mask >> color[2][c]) & 1, Qmax(DP, cnt + f(a, b, c - 1, d, mask ^ (1 << color[2][c])));
+	if (d) cnt = (mask >> color[3][d]) & 1, Qmax(DP, cnt + f(a, b, c, d - 1, mask ^ (1 << color[3][d])));
+	return DP;
+}
 
-Vec operator - (const Point &a, const Point &b) {return Vec(a.x - b.x, a.y - b.y);}
-inline ll Len2(const Vec &a) {return sq(a.x) + sq(a.y);}
-
-p3 q[mx];
-p2 d[mx];
-set<ll> s;
-int ans[mx];
-
-void solve()
-{
-	s.clear();
-	int i = 0, j = 0;
-	while (d[i] < q[])
-	}
-
-#define IO /// *别忘了删掉!
 int main()
 {
-#ifdef IO
-	Fin("in.txt");
-#endif
-	Point p1, p2, p;
-	int n, m, i;
-	while (SIIII(p1.x, p1.y, p2.x, p2.y) == 4)
+	int n, i, j;
+	while (SI(n), n)
 	{
-		SI(n);
-		For(i, n) p.read(), d[i].x = Len2(p - p1), d[i].y = Len2(p - p2);
-		sort(d, d + n);
-		SI(m);
-		For(i, m) SII(q[i].x.x, q[i].x.y), q[i].y = i;
-		sort(q, q + m);
-		solve();
-		PAn(ans, i, m);
+		rForr(j, n, 1) For(i, 4) SI(color[i][j]);
+		mem(dp, -1);
+		PI(f(n, n, n, n, 0));
 	}
 	return 0;
 }
