@@ -8,6 +8,7 @@ using namespace std;
 #define y0 yyyyyyy
 #define y1 yyyyyyyy
 #define yn yyyyyyyyy
+#define arg aaaaaaa
 
 #define Fin(f) freopen(f, "r", stdin)
 #define Fout(f) freopen(f, "w", stdout)
@@ -159,34 +160,51 @@ typedef pair<int, pair<int, int> > pi3;
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
-const int mx = 11;
+#define Pcas() printf("Case %d:", ++cas)
+const int mx = 55;
 
-struct window
-{
-	int x1, y1, x2, y2, id;
-	void read() {SIIII(x1, y1, x2, y2);}
-	bool in(int x, int y) {return x >= x1 && x <= x2 && y >= y1 && y <= y2;}
-} w[mx];
+char format[55], com[260], arg[27][260], line[260];
+int type[27];
+bool vis[27];
 
-void toTop(int i, int n)
+void solve()
 {
-	window tmp = w[i];
-	int j;
-	Forr(j, i, n) w[j] = w[j + 1];
-	w[n] = tmp;
+	char ch;
+	int c;
+	mem(vis, 0);
+	while (GC(ch) == ' ')
+	{
+		SS(com);
+		if (com[0] != '-' || strlen(com) != 2 || !islower(com[1])) break;
+		c = com[1] & 31;
+		if (type[c] == 0) break;
+		if (type[c] == 2)
+		{
+			if (GC(ch) != ' ') break;
+			SS(arg[c]);
+		}
+		vis[c] = true;
+	}
+	if (ch == ' ') gets(line);
 }
 
 int main()
 {
-	int n, m, i, x, y;
-	SII(n, m);
-	Forr(i, 1, n + 1) w[i].read(), w[i].id = i;
-	while (m--)
+	int i, n, cas = 0, c;
+	gets(format);
+	for (i = 0; format[i]; ++i) c = format[i] & 31, type[c] = (format[i + 1] == ':' ? (++i, 2) : 1);
+	SI(n), Gn();
+	while (n--)
 	{
-		SII(x, y);
-		rForr(i, n, 1) if (w[i].in(x, y)) {PI(w[i].id), toTop(i, n); break;}
-		if (i == 0) puts("IGNORED");
+		Pcas();
+		scanf("%*s");
+		solve();
+		Forr(i, 1, 27) if (vis[i])
+		{
+			printf(" -%c", 'a' + i - 1);
+			if (type[i] == 2) printf(" %s", arg[i]);
+		}
+		Pn();
 	}
 	return 0;
 }
