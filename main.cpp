@@ -1,26 +1,4 @@
-#include<cstdio>
-#include<cctype>
-#include<cstring>
-#include<cmath>
-#include<cstdlib>
-#include<climits>
-#include<cassert>
-#include<iostream>
-#include<sstream>
-#include<algorithm>
-#include<functional>
-#include<numeric>
-#include<utility>
-#include<vector>
-#include<string>
-#include<bitset>
-#include<list>
-#include<deque>
-#include<stack>
-#include<queue>
-#include<set>
-#include<map>
-//#include<bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -71,10 +49,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%I64d", &a)
-#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
-#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
+#define SL(a) scanf("%lld", &a)
+#define SLL(a, b) scanf("%lld%lld", &a, &b)
+#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -93,9 +71,9 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%I64d\n", a)
-#define PLL(a, b) printf("%I64d %I64d\n", a, b)
-#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
+#define PL(a) printf("%lld\n", a)
+#define PLL(a, b) printf("%lld %lld\n", a, b)
+#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -147,14 +125,17 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
-
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-//#pragma comment(linker, "/STACK:102400000,102400000")
+/// C++会帮你往上类型转换，但G++不会
+/*G++扩栈
+int __size__ = 256 << 20; // 256MB
+char *__p__ = (char*)malloc(__size__) + __size__;
+__asm__("movl %0, %%esp\n" :: "r"(__p__));
+*/
 //ios_base::sync_with_stdio(false);
 
 typedef unsigned int ui;
@@ -177,17 +158,35 @@ typedef pair<int, pair<int, int> > pi3;
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7;
+//const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
-const int mx = int(1e3) + 5;
+const int mx = 11;
 
-bool vis[mx];
+struct window
+{
+	int x1, y1, x2, y2, id;
+	void read() {SIIII(x1, y1, x2, y2);}
+	bool in(int x, int y) {return x >= x1 && x <= x2 && y >= y1 && y <= y2;}
+} w[mx];
+
+void toTop(int i, int n)
+{
+	window tmp = w[i];
+	int j;
+	Forr(j, i, n) w[j] = w[j + 1];
+	w[n] = tmp;
+}
 
 int main()
 {
-	int n, x, cnt = 0;
-	SI(n);
-	while (n--) SI(x), x = abs(x), vis[x] ? ++cnt : vis[x] = true;
-	PI(cnt);
+	int n, m, i, x, y;
+	SII(n, m);
+	Forr(i, 1, n + 1) w[i].read(), w[i].id = i;
+	while (m--)
+	{
+		SII(x, y);
+		rForr(i, n, 1) if (w[i].in(x, y)) {PI(w[i].id), toTop(i, n); break;}
+		if (i == 0) puts("IGNORED");
+	}
 	return 0;
 }
