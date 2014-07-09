@@ -151,7 +151,7 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-
+int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
 
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
@@ -182,47 +182,52 @@ typedef pair<int, pair<int, int> > pi3;
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7;
+const ll mod = ll(1e9) + 7;
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
 int cas;
+
+/*249 ms, 1276 KB*/
 const int mx = int(1e5) + 5;
 
-int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
+int fa[mx], people[mx], sz[mx];
+bool uni[mx]; /// 该集合是否唯一确定
 
-int g, mina, maxa, minb, maxb, a0;
+int find(int x) {return ~fa[x] ? fa[x] = find(fa[x]) : x;}
 
-inline bool ok()
+inline bool merge(int x, int y)
 {
-	if (maxa <= minb || maxb <= mina) return true;
-	if (g == 1 || g == 2 && (a0 & 1)) return false;
-	return true;
+	if (x == y) uni[find(x)] = true;
+	x = find(x), y = find(y);
+	x == y ? ++people[x] : (fa[y] = x, people[x] += people[y] + 1, sz[x] += sz[y], uni[x] |= uni[y]);
+	return people[x] <= sz[x];
+}
+
+int solve(int n, int m)
+{
+	int x, y, i;
+	while (n--)
+	{
+		SII(x, y);
+		if (!merge(x, y))
+		{
+			while (n--) SII(x, y);
+			return 0;
+		}
+	}
+	ll ans = 1LL;
+	//For(i, m) find(i);
+	For(i, m) if (fa[i] == -1) ans = ans * (people[i] < sz[i] ? sz[i] : (uni[i] ? 1LL : 2LL)) % mod;
+	return ans;
 }
 
 int main()
 {
-	int n, m, ai, b0, bi;
+	int n, m;
 	while (SII(n, m), n)
 	{
 		Pcas();
-		g = 0;
-		SI(a0);
-		maxa = mina = a0;
-		while (--n)
-		{
-			SI(ai);
-			g = gcd(abs(ai - a0), g);
-			Qmin(mina, ai), Qmax(maxa, ai);
-		}
-		SI(b0);
-		maxb = minb = b0;
-		while (--m)
-		{
-			SI(bi);
-			g = gcd(abs(bi - b0), g);
-			Qmin(minb, bi), Qmax(maxb, bi);
-		}
-		g = gcd(abs(a0 - b0), g);
-		puts(ok() ? "YES" : "NO");
+		mem(fa, -1), mem(people, 0), fill(sz, sz + m, 1), mem(uni, 0);
+		PI(solve(n, m));
 	}
 	return 0;
 }
