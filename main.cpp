@@ -92,8 +92,8 @@ using namespace std;
 #define SUni(a) sort(all(a)); Uni(a) /// STL专用
 #define Unii(a, n) (unique(a, a + (n)) - a)
 #define SUnii(a, n) sort(a, a + n); Unii(a, n)
-#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 注意0LL!!!!!以及0.0!!!
-#define Accv(a) (accumulate(a.begin(), a.begin() + (n), 0)) /// 注意0LL!!!!!以及0.0!!!
+#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 可以Acc(a.begin(), k);    *注意0LL以及0.0！
+#define Accv(a) (accumulate(all(a), 0)) /// *注意0LL以及0.0！
 #define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
@@ -155,27 +155,62 @@ typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *修
 typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
+#define x first
+#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
-const int mx = int(1e5) + 5;
+int cas;
+const int mx = 25;
 
-map<string,int> m;
+vector<p2> red, blue;
+bool ok[mx];
+int xmin, xmax, ymin, ymax;
+
+inline bool in()
+{
+	int i;
+	For(i, blue.size()) if (blue[i].x >= xmin && blue[i].x <= xmax && blue[i].y >= ymin && blue[i].y <= ymax) return true;
+	return false;
+}
+
+int solve()
+{
+	int n = red.size(), m = n >> 1, i, ans = inf;
+	//PI(m);
+	For(i, m) ok[i] = true;
+	Forr(i, m, n) ok[i] = false;
+	do
+	{
+		xmin = ymin = inf, xmax = ymax = -inf;
+		For(i, n) if (ok[i])
+		{
+			Qmin(xmin, red[i].x), Qmax(xmax, red[i].x);
+			Qmin(ymin, red[i].y), Qmax(ymax, red[i].y);
+			//PIIII(xmin,xmax,ymin,ymax);
+		}
+		if (!in()) Qmin(ans, (xmax - xmin) * (ymax - ymin));
+	}
+	while (prev_permutation(ok, ok + n));
+	return ans == inf ? -1 : ans;
+}
 
 #define IO /// *别忘了删掉!
 int main()
 {
 #ifdef IO
-    Fin("in.txt");
+	//Fin("in.txt");
 #endif
-    while(SI(n),n)
-    {
-
-    }
-    return 0;
+	int n, x0, y0, c;
+	while (SI(n), n)
+	{
+		Pcas();
+		red.clear(), blue.clear();
+		while (n--) SIII(x0, y0, c), c ? blue.PB(MP(x0, y0)) : red.PB(MP(x0, y0));
+		PI(solve());
+	}
+	return 0;
 }
