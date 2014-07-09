@@ -1,4 +1,26 @@
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<cassert>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -50,10 +72,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%lld", &a)
-#define SLL(a, b) scanf("%lld%lld", &a, &b)
-#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -72,9 +94,9 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%lld\n", a)
-#define PLL(a, b) printf("%lld %lld\n", a, b)
-#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -107,8 +129,10 @@ using namespace std;
 #define Max(a, n) (*max_element(a, a + (n)))
 #define Minpos(a, n) (min_element(a, a + (n)) - (a))
 #define Maxpos(a, n) (max_element(a, a + (n)) - (a))
-#define Lowpos(a, n, x) (lower_bound(a, a + (n), x) - (a)) /// *加个gr()变成<=
-#define Upppos(a, n, x) (upper_bound(a, a + (n), x) - (a)) /// *加个gr()变成<
+#define Lval(a, n, x) (*lower_bound(a, a + (n), x))
+#define Uval(a, n, x) (*upper_bound(a, a + (n), x))
+#define Lpos(a, n, x) (lower_bound(a, a + (n), x) - (a)) /// *加个gr()变成<=
+#define Upos(a, n, x) (upper_bound(a, a + (n), x) - (a)) /// *加个gr()变成<
 #define BS(a, n, x) binary_search(a, a + (n), x) /// 返回bool值
 #define Range(a, n, x) equal_range(a, a + (n), x) /// 返回pair
 #define Fpos(a, n, x) (find(a, a + (n), x) - (a))
@@ -127,18 +151,15 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
+int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
+
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
 /// 不要出现 val[i] = ++i 这样的行为！
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-/// C++会帮你往上类型转换，但G++不会
-/*G++扩栈
-int __size__ = 256 << 20; // 256MB
-char *__p__ = (char*)malloc(__size__) + __size__;
-__asm__("movl %0, %%esp\n" :: "r"(__p__));
-*/
+//#pragma comment(linker, "/STACK:102400000,102400000")
 //ios_base::sync_with_stdio(false);
 
 typedef unsigned int ui;
@@ -161,56 +182,66 @@ typedef pair<int, pair<int, int> > pi3;
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
+//const ll mod = ll(1e9) + 7;
+#define Pcas() printf("Case %d:", ++cas) /// *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 25;
+const int mx = int(2e3);
 
-vector<p2> red, blue;
-bool ok[mx];
-int xmin, xmax, ymin, ymax;
+p2 p[mx];
+vector<pair<double, int> > angle;
+int G[mx][mx];
 
-inline bool in()
+void init(int n)
 {
-	int i;
-	For(i, blue.size()) if (blue[i].x >= xmin && blue[i].x <= xmax && blue[i].y >= ymin && blue[i].y <= ymax) return true;
-	return false;
-}
-
-int solve()
-{
-	int n = red.size(), m = n >> 1, i, ans = inf;
-	//PI(m);
-	For(i, m) ok[i] = true;
-	Forr(i, m, n) ok[i] = false;
-	do
+	int i, j;
+	double tmp;
+	For(i, n)
 	{
-		xmin = ymin = inf, xmax = ymax = -inf;
-		For(i, n) if (ok[i])
+		angle.clear();
+		For(j, n) if (j != i)
 		{
-			Qmin(xmin, red[i].x), Qmax(xmax, red[i].x);
-			Qmin(ymin, red[i].y), Qmax(ymax, red[i].y);
-			//PIIII(xmin,xmax,ymin,ymax);
+			tmp = atan2(p[j].y - p[i].y, p[j].x - p[i].x);
+			if (tmp < 0.0) tmp += pi;
+			angle.PB(MP(tmp, j));
 		}
-		if (!in()) Qmin(ans, (xmax - xmin) * (ymax - ymin));
+		sort(all(angle)), angle.PB(angle[0]);
+		For(j, n - 1) G[i][angle[j].y] = angle[j + 1].y;
 	}
-	while (prev_permutation(ok, ok + n));
-	return ans == inf ? -1 : ans;
 }
 
-#define IO /// *别忘了删掉!
+set<int> ans;
+bool vis[mx][mx];
+
+void dfs(int i, int j, int deep)
+{
+	if (vis[i][j])
+	{
+		ans.insert(deep);
+		return;
+	}
+	vis[i][j] = true;
+	dfs(G[i][j], i, ++deep);
+}
+
+void findcircle(int n)
+{
+	ans.clear(), mem(vis, 0);
+	int i, j;
+	For(i, n) For(j, n) if (i != j && !vis[i][j]) dfs(i, j, 0);
+	siter it;
+	loop(it, ans) printf(" %d", *it);
+	Pn();
+}
+
 int main()
 {
-#ifdef IO
-	//Fin("in.txt");
-#endif
-	int n, x0, y0, c;
+	int n,i, j;
 	while (SI(n), n)
 	{
 		Pcas();
-		red.clear(), blue.clear();
-		while (n--) SIII(x0, y0, c), c ? blue.PB(MP(x0, y0)) : red.PB(MP(x0, y0));
-		PI(solve());
+		For(i, n) SII(p[i].x, p[i].y);
+		init(n);
+		findcircle(n);
 	}
 	return 0;
 }
