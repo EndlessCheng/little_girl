@@ -151,7 +151,7 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
+
 
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
@@ -176,72 +176,53 @@ typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *修
 typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-#define x first
-#define y second
+//#define x first
+//#define y second
 //#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7;
-#define Pcas() printf("Case %d:", ++cas) /// *注意C的大小写，空输出注意去空格
+#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = int(2e3);
+const int mx = int(1e5) + 5;
 
-p2 p[mx];
-vector<pair<double, int> > angle;
-int G[mx][mx];
+int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
 
-void init(int n)
+int g, mina, maxa, minb, maxb, a0;
+
+inline bool ok()
 {
-	int i, j;
-	double tmp;
-	For(i, n)
-	{
-		angle.clear();
-		For(j, n) if (j != i)
-		{
-			tmp = atan2(p[j].y - p[i].y, p[j].x - p[i].x);
-			if (tmp < 0.0) tmp += pi;
-			angle.PB(MP(tmp, j));
-		}
-		sort(all(angle)), angle.PB(angle[0]);
-		For(j, n - 1) G[i][angle[j].y] = angle[j + 1].y;
-	}
-}
-
-set<int> ans;
-bool vis[mx][mx];
-
-void dfs(int i, int j, int deep)
-{
-	if (vis[i][j])
-	{
-		ans.insert(deep);
-		return;
-	}
-	vis[i][j] = true;
-	dfs(G[i][j], i, ++deep);
-}
-
-void findcircle(int n)
-{
-	ans.clear(), mem(vis, 0);
-	int i, j;
-	For(i, n) For(j, n) if (i != j && !vis[i][j]) dfs(i, j, 0);
-	siter it;
-	loop(it, ans) printf(" %d", *it);
-	Pn();
+	if (maxa <= minb || maxb <= mina) return true;
+	if (g == 1 || g == 2 && (a0 & 1)) return false;
+	return true;
 }
 
 int main()
 {
-	int n,i, j;
-	while (SI(n), n)
+	int n, m, ai, b0, bi;
+	while (SII(n, m), n)
 	{
 		Pcas();
-		For(i, n) SII(p[i].x, p[i].y);
-		init(n);
-		findcircle(n);
+		g = 0;
+		SI(a0);
+		maxa = mina = a0;
+		while (--n)
+		{
+			SI(ai);
+			g = gcd(abs(ai - a0), g);
+			Qmin(mina, ai), Qmax(maxa, ai);
+		}
+		SI(b0);
+		maxb = minb = b0;
+		while (--m)
+		{
+			SI(bi);
+			g = gcd(abs(bi - b0), g);
+			Qmin(minb, bi), Qmax(maxb, bi);
+		}
+		g = gcd(abs(a0 - b0), g);
+		puts(ok() ? "YES" : "NO");
 	}
 	return 0;
 }
