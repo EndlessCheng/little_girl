@@ -93,6 +93,7 @@ using namespace std;
 #define Unii(a, n) (unique(a, a + (n)) - a)
 #define SUnii(a, n) sort(a, a + n); Unii(a, n)
 #define Acc(a, n) (accumulate(a, a + (n), 0)) /// 注意0LL!!!!!以及0.0!!!
+#define Accv(a) (accumulate(a.begin(), a.begin() + (n), 0)) /// 注意0LL!!!!!以及0.0!!!
 #define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) /// *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
@@ -114,7 +115,7 @@ using namespace std;
 #define Fd(a, x) (find(all(a), x) != a.end())
 template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
 template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} /// *若考虑位置，加上等号
-template<class T> inline T ceil(T x, T y) {return (x - 1) / y + 1;}
+inline int Qceil(int x, int y) {return (x - 1) / y + 1;} /// *注意类型。快速上取整
 
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
@@ -129,6 +130,7 @@ const double pi = acos(-1.0);
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
+/// 不要出现 val[i] = ++i 这样的行为！
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
 /// C++会帮你往上类型转换，但G++不会
@@ -160,51 +162,20 @@ typedef pair<int, pair<int, int> > pi3;
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
-#define Pcas() printf("Case %d:", ++cas)
-const int mx = 55;
+#define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
+const int mx = int(1e5) + 5;
 
-char format[55], com[260], arg[27][260], line[260];
-int type[27];
-bool vis[27];
+map<string,int> m;
 
-void solve()
-{
-	char ch;
-	int c;
-	mem(vis, 0);
-	while (GC(ch) == ' ')
-	{
-		SS(com);
-		if (com[0] != '-' || strlen(com) != 2 || !islower(com[1])) break;
-		c = com[1] & 31;
-		if (type[c] == 0) break;
-		if (type[c] == 2)
-		{
-			if (GC(ch) != ' ') break;
-			SS(arg[c]);
-		}
-		vis[c] = true;
-	}
-	if (ch == ' ') gets(line);
-}
-
+#define IO /// *别忘了删掉!
 int main()
 {
-	int i, n, cas = 0, c;
-	gets(format);
-	for (i = 0; format[i]; ++i) c = format[i] & 31, type[c] = (format[i + 1] == ':' ? (++i, 2) : 1);
-	SI(n), Gn();
-	while (n--)
-	{
-		Pcas();
-		scanf("%*s");
-		solve();
-		Forr(i, 1, 27) if (vis[i])
-		{
-			printf(" -%c", 'a' + i - 1);
-			if (type[i] == 2) printf(" %s", arg[i]);
-		}
-		Pn();
-	}
-	return 0;
+#ifdef IO
+    Fin("in.txt");
+#endif
+    while(SI(n),n)
+    {
+
+    }
+    return 0;
 }

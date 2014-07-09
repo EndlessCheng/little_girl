@@ -1,6 +1,11 @@
-albw:x
-4
-ls -a -l -a documents -b
-ls
-ls -w 10 -x -w 15
-ls -a -b -c -d -e -l
+test = 1
+def set_test_value_one():
+        test = 5
+        test = test + 1
+def set_test_value_two():
+        global test
+        test = 10
+set_test_value_one()
+print test
+set_test_value_two()
+print test
