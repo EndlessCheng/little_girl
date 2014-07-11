@@ -165,30 +165,29 @@ typedef pair<int, pair<int, int> > pi3;
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; /// *或int
+#define TT int tttt; SI(tttt); while(tttt--)
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = int(1e3) + 5;
+const int mx = 105;
 
-char s[mx];
+char s[mx],ans[mx];
 
 int main()
 {
 #ifndef ONLINE_JUDGE
-    Fin("in.txt"); /// *别忘了删掉!
+	//Fin("in.txt"); /// *别忘了删掉!
 #endif
-    while(~SI(n))
-    {
-        sum=0LL;
-        For(i,n)
+    int i;
+	TT
+	{
+        SS(s);
+        mem(ans,0);
+        For(i,mx)
         {
-            scanf("%s",s);
-            For(j,n)
-            {
-                sum+=(s[i]&15)*(j+i);
-                sum+=powsum(s[j]&15,n-j)+powsum(s[j]&15,n-i);
-            }
+            ans[i]='A';
+            if(!strstr(s,ans)) break;
         }
-        PL(sum);
-    }
-    return 0;
+        puts(ans);
+	}
+	return 0;
 }
