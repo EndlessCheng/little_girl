@@ -171,29 +171,53 @@ typedef pair<int, pair<int, int> > pi3;
 int cas;
 const int mx = 105;
 
-char s[100];
+const char name[mx] = "xyzw";
+
+int num[mx];
+
+void solve(int *num, const char *name, int n)
+{
+	int i;
+	bool head = true;
+	For(i, n - 1)
+	{
+		if (num[i])
+		{
+			if (head)
+			{
+				if (abs(num[i]) == 1)
+				{
+					if (num[i] < 0) PC('-');
+				}
+				else printf("%d", num[i]);
+				head = false;
+			}
+			else
+			{
+				if (abs(num[i]) == 1)
+				{
+					PC(num[i] < 0 ? '-' : '+');
+				}
+				else printf("%+d", num[i]);
+			}
+			PC(name[i]);
+		}
+	}
+	if (num[i] || head) printf(head ? "%d" : "%+d", num[i]);
+	Pn();
+}
+/// 合并问号表达式？？
 
 int main()
 {
 #ifndef ONLINE_JUDGE
 	Fin("in.txt"); /// *别忘了删掉!
 #endif
-	int t;
-	char tmp;
-	scanf("%d%*c%*c", &t);
-	while (t--)
+	int i;
+	TT
 	{
-		Pcas();
-		while (okC(s[0]))
-		{
-			SS(s + 1);
-			puts(s);
-			while (okC(tmp))
-			{
-				SS(s);
-				puts(s);
-			}
-		}
+		SA(num, i, 5);
+		solve(num, name, 5);
 	}
 	return 0;
 }
