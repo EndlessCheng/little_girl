@@ -179,34 +179,18 @@ void solve(int *num, const char *name, int n)
 {
 	int i;
 	bool head = true;
-	For(i, n - 1)
+	For(i, n)
 	{
-		if (num[i])
+		if (num[i] || i == n - 1 && head) /// 可以输出啦
 		{
-			if (head)
-			{
-				if (abs(num[i]) == 1)
-				{
-					if (num[i] < 0) PC('-');
-				}
-				else printf("%d", num[i]);
-				head = false;
-			}
-			else
-			{
-				if (abs(num[i]) == 1)
-				{
-					PC(num[i] < 0 ? '-' : '+');
-				}
-				else printf("%+d", num[i]);
-			}
-			PC(name[i]);
+			if (i < n - 1 && abs(num[i]) == 1) {if (num[i] < 0) PC('-'); else if (!head) PC('+');} /// 不需输出数字
+			else printf(head ? "%d" : "%+d", num[i]); /// 根据是否为头部判断'+'的输出
+			if (i < n - 1) PC(name[i]);
+			if (head) head = false;
 		}
 	}
-	if (num[i] || head) printf(head ? "%d" : "%+d", num[i]);
 	Pn();
 }
-/// 合并问号表达式？？
 
 int main()
 {
