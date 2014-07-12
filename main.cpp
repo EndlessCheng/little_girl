@@ -61,12 +61,12 @@ using namespace std;
 #define SA(a, i, n) For(i, n) scanf("%d", a + i) /// 便于扩展 *不要在后面加逗号！
 #define SAA(a, i, n, j, m) For(i, n) For(j, m) SI(a[i][j]) /// *不要在后面加逗号！
 #define SAA1(a, i, n, j, m) Forr(i, 1, n + 1) Forr(j, 1, m + 1) SI(a[i][j]) /// *不要在后面加逗号！
-#define GC(c) (c = getchar())
-#define Gn() getchar()
-#define UC(c) ungetc(c, stdin)
 #define SS(s) scanf("%s", s)
 #define SSS(s, s2) scanf("%s%s", s, s2)
 #define SC(c) scanf(" %c", &c)
+#define GC(c) (c = getchar())
+#define Gn() getchar()
+#define UC(c) ungetc(c, stdin)
 
 #define PI(a) printf("%d\n", a)
 #define PII(a, b) printf("%d %d\n", a, b)
@@ -119,6 +119,7 @@ using namespace std;
 template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
 template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} /// *若考虑位置，加上等号
 inline int Qceil(int x, int y) {return (x - 1) / y + 1;} /// *注意类型。快速上取整
+inline bool okC(char &c) {return c = Gn(), c != 10 && ~c;}
 
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
@@ -170,24 +171,29 @@ typedef pair<int, pair<int, int> > pi3;
 int cas;
 const int mx = 105;
 
-char s[mx],ans[mx];
+char s[100];
 
 int main()
 {
 #ifndef ONLINE_JUDGE
-	//Fin("in.txt"); /// *别忘了删掉!
+	Fin("in.txt"); /// *别忘了删掉!
 #endif
-    int i;
-	TT
+	int t;
+	char tmp;
+	scanf("%d%*c%*c", &t);
+	while (t--)
 	{
-        SS(s);
-        mem(ans,0);
-        For(i,mx)
-        {
-            ans[i]='A';
-            if(!strstr(s,ans)) break;
-        }
-        puts(ans);
+		Pcas();
+		while (okC(s[0]))
+		{
+			SS(s + 1);
+			puts(s);
+			while (okC(tmp))
+			{
+				SS(s);
+				puts(s);
+			}
+		}
 	}
 	return 0;
 }
