@@ -1,26 +1,4 @@
-#include<cstdio>
-#include<cctype>
-#include<cstring>
-#include<cmath>
-#include<cstdlib>
-#include<climits>
-#include<cassert>
-#include<iostream>
-#include<sstream>
-#include<algorithm>
-#include<functional>
-#include<numeric>
-#include<utility>
-#include<vector>
-#include<string>
-#include<bitset>
-#include<list>
-#include<deque>
-#include<stack>
-#include<queue>
-#include<set>
-#include<map>
-//#include<bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -39,6 +17,9 @@ using namespace std;
 #define AS(a) assert(a)
 
 #define all(a) a.begin(), a.end()
+#define PB push_back
+#define sq(x) ((x) * (x))
+#define Sqrt(n) (int)sqrt(0.5 + n)
 
 #define Inter(v, a, n, b, m) v.resize(set_intersection(a, a + (n), b, b + (m), v.begin()) - v.begin())
 #define SInter(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Inter(v, a, n, b, m)
@@ -49,14 +30,11 @@ using namespace std;
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
 
-#define PB push_back
-#define MP make_pair
-#define Cnt1(n) (__builtin_popcount(n))
-#define Cntt1(n) (__builtin_popcountll(n)) /// 参数必须为ull类型
-#define cb(n) (32 - __builtin_clz(n))
-#define cbb(n) (64 - __builtin_clzll(n)) /// 参数必须为ull类型
-#define sq(x) ((x) * (x))
-#define Sqrt(n) (int)sqrt(0.5 + n)
+#define Cnt1 __builtin_popcount /// Cnt1ll就是ull的了
+#define LBpos(n) (31 - __builtin_clz(n))
+#define LBposll(n) (63 - __builtin_clzll(n))
+#define RBpos(n) (__builtin_ffs(n) - 1)
+#define RBposll(n) (__builtin_ffsll(n) - 1)
 
 #define For(i, n) for (i = 0; i < (n); ++i)
 //#define For(i, n) for (int i = 0, _ = (n); i < _; ++i)
@@ -72,10 +50,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%I64d", &a)
-#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
-#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
+#define SL(a) scanf("%lld", &a)
+#define SLL(a, b) scanf("%lld%lld", &a, &b)
+#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -95,10 +73,10 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%I64d\n", a)
-#define PLL(a, b) printf("%I64d %I64d\n", a, b)
-#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
-#define PD(a) printf("%f\n", a)
+#define PL(a) printf("%lld\n", a)
+#define PLL(a, b) printf("%lld %lld\n", a, b)
+#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
+#define PD(a) printf("%.15f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) /// *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
@@ -152,15 +130,18 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
-
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
 /// 不要出现 val[i] = ++i 这样的行为！
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-//#pragma comment(linker, "/STACK:102400000,102400000")
+/// C++会帮你往上类型转换，但G++不会
+/*G++扩栈
+int __size__ = 256 << 20; // 256MB
+char *__p__ = (char*)malloc(__size__) + __size__;
+__asm__("movl %0, %%esp\n" :: "r"(__p__));
+*/
 //ios_base::sync_with_stdio(false);
 
 typedef unsigned int ui;
@@ -174,45 +155,74 @@ typedef multiset<int>::iterator msiter;
 typedef multimap<int, int>::iterator mmter;
 typedef priority_queue<int> pqi; /// *修改模板参数
 typedef priority_queue<int, vector<int>, greater<int> > spqi; /// 小的在top  *修改模板参数
-typedef pair<int, int> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
+typedef pair<double, double> p2; /// 赋值时直接SII(a[i].x, a[i].y)就行, 有时候用LL
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
-//#define x first
-//#define y second
-//#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7;
+//const ll mod = ll(1e9) + 7; /// *或int
 
 inline bool okC(char &c) {return c = Gn(), c != 10 && ~c;}
 inline bool okS(char *s) {return s = gets(s), s && *s;}
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) /// TT{ ... }
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = int(1e5) + 5;
 
-ll ones[20];
+/* 0.019s */
+const int mx = 6;
 
-void makeones(int maxlen)
+bool vis[1 << mx];
+double maxl;
+int w[mx], sum[1 << mx];
+vector<p2> tree[1 << mx];
+#define l first
+#define r second
+
+void dfs(int subset)
 {
-	int i;
-	ones[0] = 0;
-	Forr(i, 1, maxlen + 1) ones[i] = ones[i - 1] * 10 + 1;
-}
-
-int dfs(long long n, int i) /// dfs(n, 16);
-{
-	int cnt = i * (n / ones[i]);
-	n %= ones[i];
-	return n ? cnt + min(i + dfs(ones[i] - n, i - 1), dfs(n, i - 1)) : cnt; /// min: 是否多减一个
+	if (vis[subset]) return;
+	vis[subset] = true;
+	bool have_children = false;
+	int left, right, i, j;
+	double d1, d2;
+	p2 t(0.0, 0.0);
+	for (left = (subset - 1) & subset; left; left = (left - 1) & subset) /// 枚举subset的非空真子集
+	{
+		have_children = true;
+		right = subset ^ left;
+		dfs(left), dfs(right);
+		d1 = (double)sum[right] / sum[subset];
+		d2 = (double)sum[left] / sum[subset]; /// 计算两边的长度
+		For(i, tree[left].size()) For(j, tree[right].size())
+		{
+			t.l = max(tree[left][i].l + d1, tree[right][j].l - d2);
+			t.r = max(tree[right][j].r + d2, tree[left][i].r - d1);
+			if (t.l + t.r < maxl) tree[subset].PB(t);
+		}
+	}
+	if (!have_children) tree[subset].PB(t);
 }
 
 int main()
 {
-	makeones(16);
-	ll n;
-	SL(n);
-	PI(dfs(n, 16));
+	int n, i, j, root;
+	double ans;
+	TT
+	{
+		SD(maxl), SI(n);
+		SA(w, i, n);
+		For(i, 1 << n)
+		{
+			sum[i] = 0;
+			For(j, n) if (i >> j & 1) sum[i] += w[j];
+			tree[i].clear();
+		}
+		mem(vis, 0);
+		dfs(root = (1 << n) - 1);
+		ans = -1;
+		For(i, tree[root].size()) Qmax(ans, tree[root][i].l + tree[root][i].r);
+		PD(ans);
+	}
 	return 0;
 }
