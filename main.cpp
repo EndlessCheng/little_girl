@@ -1,4 +1,26 @@
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<cassert>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -50,10 +72,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%lld", &a)
-#define SLL(a, b) scanf("%lld%lld", &a, &b)
-#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -73,9 +95,9 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%lld\n", a)
-#define PLL(a, b) printf("%lld %lld\n", a, b)
-#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -119,7 +141,6 @@ using namespace std;
 template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
 template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} /// *若考虑位置，加上等号
 inline int Qceil(int x, int y) {return (x - 1) / y + 1;} /// *注意类型。快速上取整
-inline bool okC(char &c) {return c = Gn(), c != 10 && ~c;}
 
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
@@ -131,18 +152,15 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
+int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
+
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
 /// 不要出现 val[i] = ++i 这样的行为！
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-/// C++会帮你往上类型转换，但G++不会
-/*G++扩栈
-int __size__ = 256 << 20; // 256MB
-char *__p__ = (char*)malloc(__size__) + __size__;
-__asm__("movl %0, %%esp\n" :: "r"(__p__));
-*/
+//#pragma comment(linker, "/STACK:102400000,102400000")
 //ios_base::sync_with_stdio(false);
 
 typedef unsigned int ui;
@@ -165,43 +183,36 @@ typedef pair<int, pair<int, int> > pi3;
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7; /// *或int
-#define TT int tttt; SI(tttt); while(tttt--)
+//const ll mod = ll(1e9) + 7;
+
+inline bool okC(char &c) {return c = Gn(), c != 10 && ~c;}
+inline bool okS(char *s) {return s = gets(s), s && *s;}
+#define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) /// TT{ ... }
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 105;
+const int mx = int(1e5) + 5;
 
-const char name[mx] = "xyzw";
+ll ones[20];
 
-int num[mx];
-
-void solve(int *num, const char *name, int n)
+void makeones(int maxlen)
 {
 	int i;
-	bool head = true;
-	For(i, n)
-	{
-		if (num[i] || i == n - 1 && head) /// 可以输出啦
-		{
-			if (i < n - 1 && abs(num[i]) == 1) {if (num[i] < 0) PC('-'); else if (!head) PC('+');} /// 不需输出数字
-			else printf(head ? "%d" : "%+d", num[i]); /// 根据是否为头部判断'+'的输出
-			if (i < n - 1) PC(name[i]);
-			if (head) head = false;
-		}
-	}
-	Pn();
+	ones[0] = 0;
+	Forr(i, 1, maxlen + 1) ones[i] = ones[i - 1] * 10 + 1;
+}
+
+int dfs(long long n, int i) /// dfs(n, 16);
+{
+	int cnt = i * (n / ones[i]);
+	n %= ones[i];
+	return n ? cnt + min(i + dfs(ones[i] - n, i - 1), dfs(n, i - 1)) : cnt; /// min: 是否多减一个
 }
 
 int main()
 {
-#ifndef ONLINE_JUDGE
-	Fin("in.txt"); /// *别忘了删掉!
-#endif
-	int i;
-	TT
-	{
-		SA(num, i, 5);
-		solve(num, name, 5);
-	}
+	makeones(16);
+	ll n;
+	SL(n);
+	PI(dfs(n, 16));
 	return 0;
 }
