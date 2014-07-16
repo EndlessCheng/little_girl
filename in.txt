@@ -1,1 +1,11 @@
-print len(set(raw_input() + ', ')) - 4
+6
+Jason
+Jack Jason
+Joe Jack
+Jill Jason
+John Jack
+Jim Jill
+2
+Ming
+Cho Ming
+0
