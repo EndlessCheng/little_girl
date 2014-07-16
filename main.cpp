@@ -1,4 +1,26 @@
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<cassert>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -17,9 +39,6 @@ using namespace std;
 #define AS(a) assert(a)
 
 #define all(a) a.begin(), a.end()
-#define PB push_back
-#define sq(x) ((x) * (x))
-#define Sqrt(n) (int)sqrt(0.5 + n)
 
 #define Inter(v, a, n, b, m) v.resize(set_intersection(a, a + (n), b, b + (m), v.begin()) - v.begin())
 #define SInter(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Inter(v, a, n, b, m)
@@ -30,11 +49,14 @@ using namespace std;
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
 
-#define Cnt1 __builtin_popcount /// Cnt1ll就是ull的了
-#define LBpos(n) (31 - __builtin_clz(n))
-#define LBposll(n) (63 - __builtin_clzll(n))
-#define RBpos(n) (__builtin_ffs(n) - 1)
-#define RBposll(n) (__builtin_ffsll(n) - 1)
+#define PB push_back
+#define MP make_pair
+#define Cnt1(n) (__builtin_popcount(n))
+#define Cntt1(n) (__builtin_popcountll(n)) /// 参数必须为ull类型
+#define cb(n) (32 - __builtin_clz(n))
+#define cbb(n) (64 - __builtin_clzll(n)) /// 参数必须为ull类型
+#define sq(x) ((x) * (x))
+#define Sqrt(n) (int)sqrt(0.5 + n)
 
 #define For(i, n) for (i = 0; i < (n); ++i)
 //#define For(i, n) for (int i = 0, _ = (n); i < _; ++i)
@@ -50,10 +72,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%lld", &a)
-#define SLL(a, b) scanf("%lld%lld", &a, &b)
-#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -73,9 +95,9 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%lld\n", a)
-#define PLL(a, b) printf("%lld %lld\n", a, b)
-#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -130,18 +152,15 @@ const double pi = acos(-1.0);
 //const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 //const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
+int gcd(int a, int b) {return b ? gcd(b, a % b) : a;}
+
 /// INT_MAX = -1u >> 1
 /// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), scanf(" %c ", &ch)代替
 /// 在main()中大量初始化STL类型容易死机
 /// 不要出现 val[i] = ++i 这样的行为！
 /// 注意strncpy不会加尾0，请手动添加
 /// 相对位置不变的排序stable_sort(a, a + n);
-/// C++会帮你往上类型转换，但G++不会
-/*G++扩栈
-int __size__ = 256 << 20; // 256MB
-char *__p__ = (char*)malloc(__size__) + __size__;
-__asm__("movl %0, %%esp\n" :: "r"(__p__));
-*/
+//#pragma comment(linker, "/STACK:102400000,102400000")
 //ios_base::sync_with_stdio(false);
 
 typedef unsigned int ui;
@@ -160,78 +179,42 @@ typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
 //#define x first
 //#define y second
-//p2 operator + (const p2 &a, const p2 &b) {return p2(a.x + b.x, a.y + b.y);}
-//p2 operator += (p2 &a, const p2 &b) {return a = a + b;}
+//#define MT(a, b, c) make_pair(make_pair(a, b), c)
 #define loop(it, a) for (it = a.begin(); it != a.end(); ++it)
 
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7; /// *或int
+//const ll mod = ll(1e9) + 7;
 
-inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;}
+inline bool okC(char &c) {return c = Gn(), c != 10 && ~c;}
 inline bool okS(char *s) {return s = gets(s), s && *s;}
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) /// TT{ ... }
 #define Pcas() printf("Case %d: ", ++cas) /// *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 205;
+const int mx = int(1e5) + 5;
 
-vector<int> g[mx];
-map<string, int> m;
-char s[105], s2[105];
-int dp[mx][2];
-bool uni[mx][2];
+ll ones[20];
 
-inline int id(char *name)
+void makeones(int maxlen)
 {
-	return m[name] ? m[name] : m[name] = m.size();
+	int i;
+	ones[0] = 0;
+	Forr(i, 1, maxlen + 1) ones[i] = ones[i - 1] * 10 + 1;
 }
 
-inline bool ok(int v)
+int dfs(long long n, int i) /// dfs(n, 16);
 {
-  //  if(v==1) PII(dp[v][0],dp[v][1]);
-	return dp[v][0] != dp[v][1] ? uni[v][dp[v][0] < dp[v][1]] : false;
-}
-
-void f(int u)
-{
-	// PI(u);
-	if (g[u].empty())
-	{
-		dp[u][0] = 0, dp[u][1] = 1;
-		uni[u][0] = uni[u][1] = true;
-		return;
-	}
-	int i, v;
-	dp[u][0] = 0, dp[u][1] = 1;
-	uni[u][1] = true;
-	For(i, g[u].size())
-	{
-		v = g[u][i];
-		f(v);
-		dp[u][0] += max(dp[v][0], dp[v][1]);
-		uni[u][0] = ok(v);
-		dp[u][1] += dp[v][0];
-		uni[u][1] &= uni[v][0];
-	}
+	int cnt = i * (n / ones[i]);
+	n %= ones[i];
+	if (n == 0) return cnt;
+	return cnt + min(i + dfs(ones[i] - n, i - 1), dfs(n, i - 1));
+	/// min: 是否多减一个
 }
 
 int main()
 {
-#ifndef ONLINE_JUDGE
-	Fin("in.txt"); /// *别忘了删掉!
-#endif
-	int n, i, x, y;
-	while (SI(n), n)
-	{
-		Forr(i, 1, n + 1) g[i].clear();
-		m.clear();
-		SS(s), m[s] = m.size();
-		//PI(m[s]);
-		while (--n) SSS(s, s2), x = id(s), y = id(s2), g[y].PB(x);
-		//PI(111);
-		f(1);
-		printf("%d ", max(dp[1][0], dp[1][1]));
-
-		puts(ok(1) ? "Yes" : "No");
-	}
+	makeones(16);
+	ll n;
+	SL(n);
+	PI(dfs(n, 16));
 	return 0;
 }
