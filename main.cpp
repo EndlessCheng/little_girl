@@ -203,46 +203,32 @@ const int mx = int(2e3) + 5;
 #define Lpos(a, n, x) (lower_bound(a, a + (n), x, comp()) - (a))
 
 double alpha[mx];
-int n, fa[mx];
+int n;
 bool vis[mx];
-
-int find(int x) {return ~fa[x] ? fa[x] = find(fa[x]) : x;}
 
 int solve(int k)
 {
-	//mem(fa, -1);
-	mem(vis,0);
-	int i, j, ans = 0, last, pos;
+	mem(vis, 0);
+	int i, j, ans = 0, pos;
 	double alp, d = 2 * pi / k; // 不推荐用d，还好误差不是很大
-	bool ok;
 	for (i = 0; i + k <= n; ++i)
 	{
-	    if(vis[i]) continue;
-		ok = true;
-		pos = i;
-		do
+		if (vis[i]) continue;
+		alp = alpha[i];
+		Forr(j, 1, k)
 		{
-			//last = find(pos);
-			vis[i]=true;
-			alp = alpha[i] + (last - i + 1) * d;
-			pos = Lpos(alpha, n, alp); ///???
-			//DI(pos);
-			if (pos == n || fabs(alp - alpha[pos]) > eps) {ok = false; break;} // 未找到
-			//fa[last] = pos;
+			alp += d;
+			pos = Lpos(alpha, n, alp);
+			if (pos == n || fabs(alp - alpha[pos]) > eps) break; // 未找到
+			vis[pos] = true;
 		}
-		while ((2 * pi - alpha[pos] + alpha[i]) * k + eps < 2 * pi);
-		if (ok && (2 * pi - alpha[pos] + alpha[i]) * k + eps > 2 * pi) ++ans;
-		//DI(pos);
-		Pn();
+		if (j == k) ++ans;
 	}
 	return ans;
 }
 
 int main()
 {
-#ifndef ONLINE_JUDGE
-	Fin("in.txt"); // *
-#endif
 	int i, k, ans;
 	double x, y;
 	while (SI(n), n)
