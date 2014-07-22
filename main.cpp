@@ -204,24 +204,36 @@ const int mx = int(2e3) + 5;
 
 double alpha[mx];
 int n, fa[mx];
+bool vis[mx];
 
 int find(int x) {return ~fa[x] ? fa[x] = find(fa[x]) : x;}
 
 int solve(int k)
 {
-	mem(fa, -1);
-	int i, j, ans = 0, pos;
+	//mem(fa, -1);
+	mem(vis,0);
+	int i, j, ans = 0, last, pos;
 	double alp, d = 2 * pi / k; // 不推荐用d，还好误差不是很大
+	bool ok;
 	for (i = 0; i + k <= n; ++i)
 	{
-		alp = alpha[i];
-		Forr(j, 1, k)
+	    if(vis[i]) continue;
+		ok = true;
+		pos = i;
+		do
 		{
-			alp += d;
-			pos = Lpos(alpha, n, alp);
-			if (pos == n || fabs(alp - alpha[pos]) > eps) break; // 未找到
+			//last = find(pos);
+			vis[i]=true;
+			alp = alpha[i] + (last - i + 1) * d;
+			pos = Lpos(alpha, n, alp); ///???
+			//DI(pos);
+			if (pos == n || fabs(alp - alpha[pos]) > eps) {ok = false; break;} // 未找到
+			//fa[last] = pos;
 		}
-		if (j == k) ++ans;
+		while ((2 * pi - alpha[pos] + alpha[i]) * k + eps < 2 * pi);
+		if (ok && (2 * pi - alpha[pos] + alpha[i]) * k + eps > 2 * pi) ++ans;
+		//DI(pos);
+		Pn();
 	}
 	return ans;
 }
@@ -229,7 +241,7 @@ int solve(int k)
 int main()
 {
 #ifndef ONLINE_JUDGE
-	//Fin("in.txt"); // *
+	Fin("in.txt"); // *
 #endif
 	int i, k, ans;
 	double x, y;
