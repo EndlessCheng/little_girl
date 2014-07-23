@@ -1,19 +1,38 @@
-#include <stdio.h>
-#include <math.h>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+const int N = 100000000;
+bool notprime[ N+1 ];
+int all[ 5770000 ], size = 0, in;
+
 int main()
 {
-    int n, i, j, flag = 0;
-    while(scanf("%d", &n)!=EOF)
-    {
-        if(flag)    puts("");
-        flag = 1;
-        int t = 0;
-        double r = n-0.5, r1, r2;//r=(2n-1)/2;
-        for(i = 1; i <= n; i++)
-            for(j = 1; j <= n; j++)
-                if(i*i + j*j < r*r) t++;
-        printf("In the case n = %d, %d cells contain segments of the circle.\n", n, n*8-4);
-        printf("There are %d cells completely contained in the circle.\n", t*4);
-    }
-    return 0;
+	notprime[ 0 ] = notprime[ 1 ] = true;
+	for( int i = 4; i <= N; i += 2 )
+		notprime[ i ] = true;
+	for( int i = 3; i < 10000; i += 2 )
+		if( !notprime[ i ] )
+			for( int j = i*i; j <= N; j += i << 1 )
+				notprime[ j ] = true;
+	for( int i = 0; i <= N; ++i )
+		if( !notprime[ i ] )
+			all[ size++ ] = i;
+
+	while( scanf( "%d", &in ) == 1 )
+	{
+		int *pos = lower_bound( all, all+size, in/2 ) - 1;
+		if( in % 2 == 1 )
+			if( in > 1 && !notprime[ in-2 ] )
+				printf( "%d is the sum of %d and %d.\n", in, 2, in-2 );
+			else
+				printf( "%d is not the sum of two primes!\n", in );
+		else
+		{
+			for( ; pos >= all && ( notprime[ *pos ] || notprime[ in - *pos ] ); --pos );
+			if( pos <= all )
+				printf( "%d is not the sum of two primes!\n", in );
+			else
+				printf( "%d is the sum of %d and %d.\n", in, *pos, in - *pos );
+		}
+	}
 }
