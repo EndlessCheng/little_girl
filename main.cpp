@@ -1,61 +1,91 @@
-
-/*This is by Technical Bangla from University of Dhaka*/
-#include <stdio.h>
-#include <math.h>
-#define max 500100
-
-int pr[max],prime[41600],f_count[1000002];
-
-void PrimeGen()
-{
-    int i,j,k,l;pr[0]=pr[1]=1;for(i=4;i<max;i+=2) pr[i]=1;
-    for(i=3;i<710;i+=2)
-    {
-        if(!pr[i]) for(j=i*i,k=i<<1;j<max;j+=k) pr[j]=1;
-    }
-    for(i=j=0;i<max;i++) if(!pr[i]) prime[j++]=i;
-}
-
-int Factors_Count(int n)
-{
-    int i,p,count;
-    for(i=count=0;(p=prime[i])<=n&&p<1007;)
-    {
-        if(n<500100)
-        {
-            if(!pr[n])
-            {
-                count++;
-                break;
-            }
-        }
-        if(n%p) i++;
-        else
-        {
-            while(n%p==0)
-            {
-                n/=p;
-                count++;
-            }
-            i++;
-        }
-    }
-    if(count) return count;
-    return 1;
-
-}
-
-void Factorial_Factors()
-{
-    int i;
-    for(i=1,f_count[i]=0;i<1000000;i++) f_count[i+1]=f_count[i]+Factors_Count(i+1);
-}
-
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <map>
+#include <cstdio>
+#include <vector>
+#include <queue>
+using namespace std;
 int main()
 {
-    int n;
-    PrimeGen();
-    Factorial_Factors();
-    while(scanf("%d",&n)==1) printf("%d\n",f_count[n]);
+    int n,i,k,f=1;
+    while(scanf("%d",&n)==1)
+    {
+        if(!f) printf("\n");
+        f=0;
+        vector<int>G[1000];
+        string s1, s2;
+        string s[1000];
+        int par[1000],taken[1000]={0};
+        map<string,int>mymap;
+        for(i=1,k=1;i<=n;i++)
+        {
+            cin>>s1>>s2;
+            int x,y;
+            if(!(x=mymap[s1]))
+            {
+                s[k]=s1;
+                x=mymap[s1]=k;
+                k++;
+            }
+            if(!(y=mymap[s2]))
+            {
+                s[k]=s2;
+                y=mymap[s2]=k++;
+            }
+            if(y!=x)
+            {
+                G[x].push_back(y);
+                G[y].push_back(x);
+            }
+        }
+        cin>>s1>>s2;
+        if(s1==s2)
+        {
+            cout<<s1<<" "<<s2<<endl;
+        }
+
+       else
+        {
+            int tar, src;
+            if(!(tar=mymap[s1])) tar=mymap[s1]=k++;
+            if(!(src=mymap[s2])) src=mymap[s2]=k++;
+            queue<int>Q;
+            if(src!=tar)
+            {
+                Q.push(src);
+                taken[src]=src;
+                while(!Q.empty())
+                {
+                    int u=Q.front();
+                    for(i=0;i<G[u].size();i++)
+                    {
+                        int v=G[u][i];
+                        if(v==tar)
+                        {
+                            taken[v]=u;
+                            if(v==tar) break;
+                        }
+                        if(!taken[v])
+                        {
+                            taken[v]=u;
+                            Q.push(v);
+                        }
+
+                    }
+                    if(i<G[u].size()) break;
+                    Q.pop();
+                }
+                if(!Q.empty())
+                while(tar!=src)
+                {
+                    cout<<s[tar]<<" "<<s[taken[tar]]<<endl;
+                    tar=taken[tar];
+                }
+                else printf("No route\n");
+            }
+        }
+
+    }
     return 0;
 }
