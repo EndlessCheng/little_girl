@@ -1,38 +1,67 @@
-#include<cstdio>
-#include<algorithm>
+#include <bits/stdc++.h>
 using namespace std;
-const int N = 100000000;
-bool notprime[ N+1 ];
-int all[ 5770000 ], size = 0, in;
 
-int main()
-{
-	notprime[ 0 ] = notprime[ 1 ] = true;
-	for( int i = 4; i <= N; i += 2 )
-		notprime[ i ] = true;
-	for( int i = 3; i < 10000; i += 2 )
-		if( !notprime[ i ] )
-			for( int j = i*i; j <= N; j += i << 1 )
-				notprime[ j ] = true;
-	for( int i = 0; i <= N; ++i )
-		if( !notprime[ i ] )
-			all[ size++ ] = i;
+int main (void) {
+	vector<string> cards;
+	string input;
+	stack<string> stacks[13];
+	map<char, int> m;
 
-	while( scanf( "%d", &in ) == 1 )
-	{
-		int *pos = lower_bound( all, all+size, in/2 ) - 1;
-		if( in % 2 == 1 )
-			if( in > 1 && !notprime[ in-2 ] )
-				printf( "%d is the sum of %d and %d.\n", in, 2, in-2 );
-			else
-				printf( "%d is not the sum of two primes!\n", in );
-		else
-		{
-			for( ; pos >= all && ( notprime[ *pos ] || notprime[ in - *pos ] ); --pos );
-			if( pos <= all )
-				printf( "%d is not the sum of two primes!\n", in );
-			else
-				printf( "%d is the sum of %d and %d.\n", in, *pos, in - *pos );
+	m['A'] = 0;
+	m['2'] = 1;
+	m['3'] = 2;
+	m['4'] = 3;
+	m['5'] = 4;
+	m['6'] = 5;
+	m['7'] = 6;
+	m['8'] = 7;
+	m['9'] = 8;
+	m['T'] = 9;
+	m['J'] = 10;
+	m['Q'] = 11;
+	m['K'] = 12;
+
+	while (cin >> input) {
+		if (input == "#") break;
+
+		cards.clear();
+		for (int i = 0; i < 13; i++) {
+			while (!stacks[i].empty())
+				stacks[i].pop();
 		}
+
+		cards.push_back(input);
+		for (int i = 0; i < 51; i++) {
+			cin >> input;
+			cards.push_back(input);
+		}
+
+		reverse (cards.begin(), cards.end());
+
+		for (int i = 0; i < 52; i++) {
+			stacks[i % 13].push(cards[i]);
+		}
+
+		int pos = 12;
+		bool found = false;
+		string res;
+
+		int counter = 0;
+
+		while (true) {
+			if (stacks[pos].empty())
+				break;
+
+			res = stacks[pos].top();
+			stacks[pos].pop();
+
+			pos = m[res[0]];
+			counter++;
+		}
+
+		if (counter < 10) cout << 0;
+		cout << counter << "," << res << endl;
 	}
+
+	return 0;
 }
