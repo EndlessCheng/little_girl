@@ -1,46 +1,30 @@
-#include<stdio.h>
-#include<string.h>
-#include<math.h>
-#include<algorithm>
 #include<iostream>
-#include<string>
+#include<vector>
+#include<stdio.h>
+#include<algorithm>
 using namespace std;
-
-struct node
+int main ()
 {
-	int x, y;
-} v[10005];
-
-bool cmp(node p, node q)
-{
-	if (p.x == q.x) return p.y < q.y;
-	return p.x < q.x;
-}
-
-int b[10005];
-
-int main()
-{
-	int n, i, j, t, k;
-	while (scanf("%d", &n), n)
-	{
-		for (i = 0; i < n; i++)
-			scanf("%d%d", &v[i].x, &v[i].y);
-		sort(v, v + n, cmp);
-		t = 1;
-		b[0] = v[0].y;
-		for (i = 1; i < n; i++)
-            if (v[i].y < b[t - 1])
-			{
-				for (j = 0; j < t; j++) if (b[j] > v[i].y)
-					{
-						b[j] = v[i].y;
-						break;
-					}
-			}
-			else b[t++] = v[i].y;
-		printf("%d\n", t);
-	}
-	printf("*\n");
-	return 0;
+    int i,j,k,l,a[50010],N,Q;
+    while(scanf("%d",&N)!=EOF){
+    for(i=0;i<N;i++)scanf("%d",&a[i]);
+    vector<int>v(a,a+N);
+    vector<int>::iterator low,up;
+    scanf("%d",&Q);
+    for(i=1;i<=Q;i++)
+    {
+        scanf("%d",&l);
+        low=lower_bound (v.begin(), v.end(), l);
+        int pos_l=low-v.begin();
+        int indx_l=pos_l-1;
+        up= upper_bound (v.begin(), v.end(), l);
+        int pos_u=up-v.begin();
+        int indx_u=pos_u-1;
+        if(indx_l<0)printf("X ");
+        else{printf("%d ",a[indx_l]);}
+        if(indx_u+1>N-1)printf("X\n");
+        else{printf("%d\n",a[indx_u+1]);}
+    }
+    }
+    return 0;
 }
