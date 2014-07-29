@@ -1,8 +1,43 @@
-ull judge(int n)
+
+#include <stdio.h>
+
+int main()
 {
-	if (n == 11 || n == 23 || n == 29)
-		return 0; // Given number is prime. But, NO perfect number is available.
-	if (n == 2 || n == 3 || n == 5 || n == 7 || n == 13 || n == 17 || n == 19 || n == 31)
-		return (1 << (n - 1)) * ((1 << n) - 1);
-	return -1; // Given number is NOT prime! NO perfect number is available.
+ int array[15][15];
+ int n,row,col,a,b,tot,i;
+ int  p = 1;
+ while(scanf("%d",&n)&&n!=0)
+ {
+
+     for(row=0;row<n;row++)
+       for(col=0;col<n;col++)
+         scanf("%d",&array[row][col]);
+         printf("Case %d:",p);
+         p++;
+      for(a=0,b=n-1;a<=b;a++,b--)
+      {
+          if(a==b)
+          {
+              printf(" %d",array[a][b]);
+              break;
+          }
+
+        tot = 0;
+        for(i=a;i<=b;i++)
+        {
+         tot += array[a][i]+array[i][a]+array[b][i]+array[i][b];
+        }
+        tot -= array[a][a]+array[a][b]+array[b][a]+array[b][b];
+        printf(" %d",tot);
+      }
+     printf("\n");
+
+
+ }
+
+
+
+
+
+
 }
