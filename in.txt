@@ -1,0 +1,10 @@
+import itertools
+for op in map(list, itertools.permutations('+-*/?', 3)): # + - * / ** 5种运算符
+ for num in map(list, itertools.permutations('2345', 4)): # 姑且只用这几种数字
+  s = '' + num[0]
+  for i in range(3):
+   if(op[i] == '?'):
+    op[i] = '**'
+   s += op[i] + num[i+1]
+  if(eval(s) == 24):
+   print s

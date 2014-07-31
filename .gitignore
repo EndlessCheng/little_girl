@@ -12,3 +12,5 @@ in.txt
 *.h
 *.o
 main.cpp.cbTemp
+bin/Debug/1.in
+bin/Debug/1.out
