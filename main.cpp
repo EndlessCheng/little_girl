@@ -1,3 +1,4 @@
+
 #include<cstdio>
 #include<cctype>
 #include<cstring>
@@ -34,9 +35,9 @@ using namespace std;
 
 #define Fin(f) freopen(f, "r", stdin)
 #define Fout(f) freopen(f, "w", stdout)
-#define SRid() srand((unsigned)time(NULidLid))
+#define SR() srand((unsigned)time(NULL))
 #define random(m) ((rand() << 16 | rand()) % m) // [0,m)之间的伪随机数
-#define randomP(a, n) srand((unsigned)time(NULidLid)), random_shuffle(a, a + (n))
+#define randomP(a, n) srand((unsigned)time(NULL)), random_shuffle(a, a + (n))
 #define AS(a) assert(a)
 
 #define all(a) a.begin(), a.end()
@@ -58,10 +59,10 @@ using namespace std;
 #define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin())) // 调用to.insert()
 
 #define Cnt1 __builtin_popcount // Cnt1ll就是ull的了
-#define LidBpos(n) (31 - __builtin_clz(n))
-#define LidBposll(n) (63 - __builtin_clzll(n))
-#define RidBpos(n) (__builtin_ffs(n) - 1)
-#define RidBposll(n) (__builtin_ffsll(n) - 1)
+#define LBpos(n) (31 - __builtin_clz(n))
+#define LBposll(n) (63 - __builtin_clzll(n))
+#define RBpos(n) (__builtin_ffs(n) - 1)
+#define RBposll(n) (__builtin_ffsll(n) - 1)
 
 #define For(i, n) for (i = 0; i < (n); ++i)
 //#define For(i, n) for (int i = 0, _ = (n); i < _; ++i)
@@ -79,10 +80,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SLid(a) scanf("%I64d", &a)
-#define SLidLid(a, b) scanf("%I64d%I64d", &a, &b)
-#define SLidLidLid(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
-#define SLidLidLidLid(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -102,13 +103,13 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PLid(a) printf("%I64d\n", a)
-#define PLidLid(a, b) printf("%I64d %I64d\n", a, b)
-#define PLidLidLid(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
-#define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) // *(有时要在前面加花括号)由于要支持STLid的数据类型，故不用+的形式，必要时请手动改成+
+#define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) // *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
 #define PAA(a, i, n, j, m) For(i, n) {For(j, (m) - 1) printf("%d ", a[i][j]); PI(a[i][(m) - 1]);}
 #define PAn(a, i, n) For(i, n) PI(a[i])
 #define rPA(a, i, n) rForr(i, n - 1, 1) printf("%d ", a[i]); PI(a[0]) // *(有时要在前面加花括号)
@@ -117,20 +118,20 @@ using namespace std;
 #define Pn() putchar(10)
 #define Ps() putchar(32)
 
-#define Uni(a) a.resize(unique(all(a)) - a.begin()) // STLid专用
-#define SUni(a) sort(all(a)); Uni(a) // STLid专用
+#define Uni(a) a.resize(unique(all(a)) - a.begin()) // STL专用
+#define SUni(a) sort(all(a)); Uni(a) // STL专用
 #define Unii(a, n) (unique(a, a + (n)) - a)
 #define SUnii(a, n) sort(a, a + n); Unii(a, n)
-#define Acc(a, n) (accumulate(a, a + (n), 0)) // 可以Acc(a.begin(), k);    *注意0LidLid以及0.0！
-#define Accv(a) (accumulate(all(a), 0)) /// *注意0LidLid以及0.0！
+#define Acc(a, n) (accumulate(a, a + (n), 0)) // 可以Acc(a.begin(), k);    *注意0LL以及0.0！
+#define Accv(a) (accumulate(all(a), 0)) /// *注意0LL以及0.0！
 #define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) // *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
-#define Ridcpy(l, r, b) reverse_copy(l, r, b) // 注意为左闭右开区间
-#define kTo10(ans, str, s, m, k) strncpy(str, s, m), str[m] = 0, ans = strtol(str, NULidLid, k)
+#define Rcpy(l, r, b) reverse_copy(l, r, b) // 注意为左闭右开区间
+#define kTo10(ans, str, s, m, k) strncpy(str, s, m), str[m] = 0, ans = strtol(str, NULL, k)
 
-#define LidE(T) less_equal<T>
-#define GRid(T) greater<T>
+#define LE(T) less_equal<T>
+#define GR(T) greater<T>
 #define GE(T) greater_equal<T>
 #define NET(T) not_equal_to<T>
 
@@ -140,12 +141,12 @@ using namespace std;
 #define Max(a, n) (*max_element(a, a + (n)))
 #define Minpos(a, n) (min_element(a, a + (n)) - (a))
 #define Maxpos(a, n) (max_element(a, a + (n)) - (a))
-#define Lidval(a, n, x) (*lower_bound(a, a + (n), x))
+#define Lval(a, n, x) (*lower_bound(a, a + (n), x))
 #define Uval(a, n, x) (*upper_bound(a, a + (n), x))
-#define Lidpos(a, n, x) (lower_bound(a, a + (n), x) - (a)) // *加个gr()变成<=
+#define Lpos(a, n, x) (lower_bound(a, a + (n), x) - (a)) // *加个gr()变成<=
 #define Upos(a, n, x) (upper_bound(a, a + (n), x) - (a)) // *加个gr()变成<
 //#define BS(a, n, x) binary_search(a, a + (n), x) // 返回bool值
-#define Ridange(a, n, x) equal_range(a, a + (n), x) // 返回pair
+#define Range(a, n, x) equal_range(a, a + (n), x) // 返回pair
 #define Fpos(a, n, x) (find(a, a + (n), x) - (a))
 #define Fd(a, x) (a.find(x) != a.end())
 #define Fdd(a, x) (find(all(a), x) != a.end())
@@ -154,7 +155,7 @@ template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} // *若考
 inline int Qceil(int x, int y) {return x ? (x - 1) / y + 1 : 0;} // *注意类型。y必须为正
 
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
-const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LidLidONG_MAX为9.22e18)
+const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
 const double pi = acos(-1.0);
 //const double tens[11] = {0.0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
 //double fgcd(double a, double b) {return fabs(b) > eps ? fgcd(b, fmod(a, b)) : a;}
@@ -165,7 +166,7 @@ const double pi = acos(-1.0);
 
 // INT_MAX = -1u >> 1
 // 如果用gets(s), GC(ch)读入WA的话，请用SS(s), SC(ch)代替
-// 在main()中大量初始化STLid类型容易死机
+// 在main()中大量初始化STL类型容易死机
 // 不要出现 val[i] = ++i 这样的未定义的行为！
 // 注意strncpy不会加尾0，请手动添加
 // 相对位置不变的排序stable_sort(a, a + n);
@@ -220,19 +221,66 @@ typedef priority_queue<int, vector<int>, greater<int> > spqi; // 小的在top
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-
 const int mx = int(1e2) + 5;
 
-int d[mx][mx], a[mx], x[mx], y[mx];
-int floyd(int n) {int i, j, k; For(k, n) For(i, n) For(j, n) Qmin(d[i][j], d[i][k] + d[k][j]); return d[0][n - 1];} // 从i到j过不过顶点k
+int a[mx], n;
+queue<vector<char> > q;
+vector<char> v;
+
+bool ok()
+{
+	int i, j;
+	For(i, n)
+	{
+		//  DI(i);
+		//  DI(v[i]);
+		if (a[i] + v[i] == 1) continue;
+		Forr(j, i + 1, n)
+		{
+			if (__gcd(a[i] + v[i], a[j] + v[j]) != 1) return false;
+		}
+	}
+	return true;
+}
+
+void bfs()
+{
+	int i, last;
+	bool okk;
+	v = vector<char>(n);
+	q.push(v);
+	while (!q.empty())
+	{
+		v = q.front(), q.pop();
+		if (ok()) break;
+		v = vector<char>(n);
+		okk = false;
+		For(i, n)
+		{
+			if (a[i] == 1) continue;
+			if (!okk)
+			{
+				okk = true;
+				v[i] = -1;
+				last = i;
+			}
+			else
+			{
+				v[last] = 0;
+				v[i] = -1;
+				last = i;
+			}
+		}
+		q.push(v);
+	}
+}
 
 int main()
 {
-	int n, c, i, j;
-	SII(n, c);
-	SA(a + 1, i, n - 2);
-	For(i, n) SII(x[i], y[i]);
-	For(i, n) For(j, n) if (j != i) d[i][j] = (abs(x[i] - x[j]) + abs(y[i] - y[j])) * c - a[i];
-	PI(floyd(n));
+	int i;
+	SI(n);
+	SA(a, i, n);
+	bfs();
+	For(i, n) printf("%d ", a[i] + v[i]);
 	return 0;
 }
