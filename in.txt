@@ -1,1 +1,0 @@
-print 'YNeos'[sum(map(lambda(j, i): (44 - ord(i)) * (1 - 2 * (j % 2)), enumerate(raw_input()))) != 0::2]
