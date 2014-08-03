@@ -1,48 +1,48 @@
-#include<bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-
-const int N = 1e5 + 10;
-int a[N];
-
-set<int> s[20];
-ll sum[20];
-
-void one(int p, int v)
+#include<cstdio>
+const int rotate[6][6] =
 {
-	s[p].erase(v);
-	set<int>::iterator low = --s[p].lower_bound(v);
-	set<int>::iterator up = s[p].upper_bound(v);
-	sum[p] += ll(v - *low) * (*up - v);
+	6, 7, 9, 10, 8, 11,
+	11, 10, 9, 7, 8, 6,
+	7, 11, 9, 6, 8, 10,
+	10, 6, 9, 11, 8, 7,
+	8, 11, 7, 6, 10, 9,
+	9, 6, 7, 11, 10, 8
+};
+char str[15];
+
+int judge(int a, int b, int c, int d, int e, int f)
+{
+	if (str[a] == str[0] && str[b] == str[5])
+	{
+		if (str[1] == str[c] && str[3] == str[d] && str[4] == str[e] && str[2] == str[f]) return 1;
+		if (str[1] == str[d] && str[3] == str[e] && str[4] == str[f] && str[2] == str[c]) return 1;
+		if (str[1] == str[e] && str[3] == str[f] && str[4] == str[c] && str[2] == str[d]) return 1;
+		if (str[1] == str[f] && str[3] == str[c] && str[4] == str[d] && str[2] == str[e]) return 1;
+		return 0;
+	}
+	return false;
 }
 
-void zero(int p, int v)
+bool ok()
 {
-	s[p].insert(v);
-	set<int>::iterator low = --s[p].lower_bound(v);
-	set<int>::iterator up = s[p].upper_bound(v);
-	sum[p] -= ll(v - *low) * (*up - v);
+	for (int i = 0; i < 6; ++i)
+	{
+		if (str[0] == str[rotate[i][0]] && str[5] == str[rotate[i][1]])
+			for (int j = 0; j < 4; ++j)
+			{
+			}
+	}
+	if (judge(6, 11, 7, 9, 10, 8)) return true;
+	if (judge(11, 6, 10, 9, 7, 8)) return true;
+	if (judge(7, 10, 11, 9, 6, 8)) return true;
+	if (judge(10, 7, 6, 9, 11, 8)) return true;
+	if (judge(8, 9, 11, 7, 6, 10)) return true;
+	if (judge(9, 8, 6, 7, 11, 10)) return true;
+	return false;
 }
 
 int main()
 {
-	int n, m;
-	cin >> n >> m;
-	for (int i = 0; i < 20; i++) for (int j = 0; j <= n + 1; j++) s[i].insert(j); // ÏÂ±ê
-	for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
-	for (int i = 0; i < 20; i++) for (int j = 0; j <= n + 1; j++) if (a[j] & (1 << i)) one(i, j);
-	while (m--)
-	{
-		int p, v;
-		scanf("%d%d", &p, &v);
-		ll ans = 0;
-		for (int i = 0; i < 20; i++)
-		{
-			if (v >> i & 1) {if (s[i].count(p)) one(i, p);}
-			else if (!s[i].count(p)) zero(i, p);
-		}
-		for (int i = 0; i < 20; i++) ans += sum[i] * (1 << i);
-		cout << ans << "\n";
-	}
+	while (scanf("%s", str)) ;
 	return 0;
 }
