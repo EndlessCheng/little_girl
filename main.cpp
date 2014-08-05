@@ -225,16 +225,15 @@ const int mx = 1e5 + 5;
 vector<int> edge[mx];
 int in[mx];
 int ans[mx]; /// *
-queue<int> q;
 
-void init_map(int n, int m) /// 点数，边数
+void init_map(int n, int m)
 {
     int i, a, b;
     Forr(i, 1, n + 1) edge[i].clear();
     mem(in, 0);
     while (m--)
     {
-        SII(a, b); /// *注意方向！！, 标号不含有0！！
+        SII(a, b);
         edge[b].push_back(a);
         ++in[a]; /// ++入度
     }
@@ -245,7 +244,7 @@ bool topo(int n)
 {
     pq q;
     int i, x, v, len = 0;
-    Forr(i, 1, n + 1) if (in[i] == 0) q.push(i);
+    Forr(i, 1, n + 1) if (in[i] ==   0) q.push(i);
     while (!q.empty())
     {
         ans[len++] = x = q.top(), q.pop();
