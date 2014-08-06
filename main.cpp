@@ -1,14 +1,24 @@
+/* 124 ms, 2324 KB */
 #include<cstdio>
-int m, x, y, ans = 1, fa[100005];
-int find(int x){return fa[x] ? fa[x] = find(fa[x]) : x;}
+
+int a[300005], w[300005];
+
 int main()
 {
-	scanf("%*d%d", &m);
-	for (int i = 0; i < m; i++)
+	int n, i, l, r, cnt = 0, maxd = 0;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) scanf("%d", &a[i]);
+	for (i = 0; i < n;)
 	{
-		scanf("%d%d", &x, &y);
-		if (find(x) == find(y)) ans = ans * 2 % 1000000009;
-		else fa[find(x)] = find(y);
-		printf("%d\n", ans - 1);
+		l = r = i;
+		while (l && a[l - 1] % a[i] == 0) l--;
+		while (r < n - 1 && a[r + 1] % a[i] == 0) r++;
+		i = r + 1; // 关键一步，保证算法是O(n)的，这样做是因为在[l,r]内的数的「边界」就是[l,r]（可用反证法思考）
+		r -= l;
+		if (r > maxd) cnt = 0, maxd = r;
+		if (r == maxd) w[cnt++] = l + 1;
 	}
+	printf("%d %d\n", cnt, maxd);
+	for (i = 0; i < cnt; ++i) printf("%d ", w[i]);
+	return 0;
 }
