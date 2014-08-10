@@ -1,4 +1,26 @@
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<cassert>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -187,13 +209,13 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; // *或int
-//inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
+inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
 //ll gcd(ll a, ll b){return b ? gcd(b, a % b) : a;}
 //int gcd(int a, int b){return b ? gcd(b, a % b) : a;}
 //ll lcm(ll a, ll b){return a / gcd(a, b) * b;}
-//template<class T> inline T _len(T x) {T cnt = 0; for (; x; ++cnt, x /= 10); return cnt;}
+template<class T> inline T _len(T x) {T cnt = 0; for (; x; cnt += x % 10, x /= 10); return cnt;}
 //template<class T> inline T isSQ(T n) {T tmp = Sqrt(n); return sq(tmp) == n ? tmp : 0;} // 参数应为正数
 //inline bool isint(double x) {return fabs(x - round(x)) < eps;}
 //inline int sign(double x) {return x < -eps ? -1 : x > eps;}
@@ -201,12 +223,44 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 1e5 + 5;
+const int mx = 1005;
 
+char l[mx], r[mx];
+int sum[mx];
+int g(int x)
+{
+	if (x < 10) return x;
+	if (x < 100)  return x / 10 - x % 10;
+	if (x < 1000) return x / 100 - x / 10 % 10 + x % 10;
+}
 
+int f(int x)
+{
+	if (x < 0)
+	{
+		x = (x % 9 + 9) % 9;
+		return f(x);
+	}
+	if (x < 10) return x;
+	return f(_len(x));
+}
 
 int main()
 {
-
-    return 0;
+	int i;
+	For(i, 500)
+	{
+		//DII();
+		if (i > 0)sum[i] = sum[i - 1] + g(i);
+		int tmp = -1, tmp2;
+		if (tmp2 = f(sum[i]))
+			tmp = (sum[i] % tmp2 + tmp2) % tmp2;
+		DII(i, tmp);
+	}
+//    TT
+//    {
+//        SSS(l,r);
+//        //Forr()
+//    }
+	return 0;
 }
