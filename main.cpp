@@ -1,4 +1,26 @@
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<cassert>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -32,10 +54,10 @@ using namespace std;
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
 
-#define setInter(a, b, to) set_intersection(all(a), all(b), inserter(to, to.begin()))
-#define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin()))
+#define setInter(a, b, to) set_intersection(all(a), all(b), inserter(to, to.begin())) // 调用to.insert()
+#define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin())) // 调用to.insert()
 
-#define Cnt1 __builtin_popcount /// Cnt1ll就是ull的了
+#define Cnt1 __builtin_popcount // Cnt1ll就是ull的了
 #define LBpos(n) (31 - __builtin_clz(n))
 #define LBposll(n) (63 - __builtin_clzll(n))
 #define RBpos(n) (__builtin_ffs(n) - 1)
@@ -57,10 +79,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%lld", &a)
-#define SLL(a, b) scanf("%lld%lld", &a, &b)
-#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -80,9 +102,9 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%lld\n", a)
-#define PLL(a, b) printf("%lld %lld\n", a, b)
-#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -99,8 +121,8 @@ using namespace std;
 #define SUni(a) sort(all(a)); Uni(a) // STL专用
 #define Unii(a, n) (unique(a, a + (n)) - a)
 #define SUnii(a, n) sort(a, a + n); Unii(a, n)
-#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 可以Acc(a.begin(), k); *注意0LL以及0.0！
-#define Accv(a) (accumulate(all(a), 0)) // *注意0LL以及0.0！
+#define Acc(a, n) (accumulate(a, a + (n), 0)) // 可以Acc(a.begin(), k);    *注意0LL以及0.0！
+#define Accv(a) (accumulate(all(a), 0)) /// *注意0LL以及0.0！
 #define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) // *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
@@ -112,7 +134,7 @@ using namespace std;
 #define GE(T) greater_equal<T>
 #define NET(T) not_equal_to<T>
 
-#define nth(a, k, n) nth_element(a + 0, a + k, a + n) // *可能要事先--k
+#define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *可能要事先--k
 #define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) // *可能要事先--k
 #define Min(a, n) (*min_element(a, a + (n)))
 #define Max(a, n) (*max_element(a, a + (n)))
@@ -131,8 +153,8 @@ template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
 template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} // *若考虑位置，加上等号
 inline int Qceil(int x, int y) {return x ? (x - 1) / y + 1 : 0;} // *注意类型。y必须为正
 
-const int inf = 0x3f3f3f3f; // 1.06e9 (INT_MAX为2.147e9)
-const long long llinf = 0x3f3f3f3f3f3f3f3fLL; // 4.56e18 (LLONG_MAX为9.22e18)
+const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
+const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
 const double pi = acos(-1.0);
 //const double tens[11] = {0.0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
 //double fgcd(double a, double b) {return fabs(b) > eps ? fgcd(b, fmod(a, b)) : a;}
@@ -150,11 +172,7 @@ const double pi = acos(-1.0);
 // advance(it, n); 相当于 For(i, n) ++it; 但是它是O(1)的
 // size()是ui类型的，应该(int)xx.size()
 
-/*G++扩栈
-int __size__ = 256 << 20; // 256MB
-char *__p__ = (char*)malloc(__size__) + __size__;
-__asm__("movl %0, %%esp\n" :: "r"(__p__));
-*/
+//#pragma comment(linker, "/STACK:102400000,102400000")
 
 //ios_base::sync_with_stdio(false);
 #define _set() cout.precision(15)//, cout.setf(ios::hex, ios::basefield), cout.setf(ios::showbase)
@@ -183,13 +201,15 @@ typedef priority_queue<int> pq;
 typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 #define MT(a, b, c) p3(p2(a, b), c)
 //#define MT(a, b, c) p3(a, p2(b, c))
-//#define x first
-//#define y second
+#define d first
+#define tt second
 //p2 operator + (const p2 &a, const p2 &b) {return p2(a.x + b.x, a.y + b.y);}
 //p2 operator += (p2 &a, const p2 &b) {return a = a + b;}
 
+
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; // *或int
+inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
 //ll gcd(ll a, ll b){return b ? gcd(b, a % b) : a;}
@@ -201,29 +221,51 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 //inline int sign(double x) {return x < -eps ? -1 : x > eps;}
 //struct comp {bool operator()(const double &a, const double &b)const {return a + eps < b;}};
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
-#define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
+#define Pcas() printf("Case #d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 1e6 + 5;
+const int mx = 1e5 + 5;
 
+p2 p[mx];
+vector<p2> ope;
+map<int,int> mpx,mpy;
+int xx,yy;
 
-int cnt[mx];
+void sw(map<int,int> &mp)
+{
+    if(mp.find(yy)!=mp.end()) yy
+    if(mp.find(xx)==mp.end())
+    {
+        mp[xx]=yy;
+        mp[yy]=xx;
+    }
+    else
+    {
+        tmp=mp[xx];
+        mp[xx]=yy;
+        mp[yy]=tmp;
+    }
+}
+
 int main()
 {
-	int n, k, i, x, s;
-	ll ans;
+	int i,op;
 	TT
 	{
-		s = 0;
-		SII(n, k);
-		mem(cnt, -1), cnt[0] = 0;
-		Forr(i, 1, n + 1)
+		Pcas();
+		SIII(n, m, k);
+		For(i, k) SII(p[i].x, p[i].y);
+		SI(q);
+		For(i, q)
 		{
-			SI(x);
-			++cnt[s = (s + x) % k];
+		    SIII(op,xx,yy);
+		    if(op==1) sw(mpx);
+            else if(op==2) sw(mpy);
+            else
+            {
+
+            }
 		}
-		ans = 0;
-		For(i, k) if (cnt[i] > 0) ans += ll(cnt[i]) * (cnt[i] + 1) / 2;
-		PL(ans);
+
 	}
 	return 0;
 }
