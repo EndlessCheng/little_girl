@@ -1,5 +1,26 @@
-
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<cassert>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -17,7 +38,8 @@ using namespace std;
 #define CO() fclose(stdout)
 #define SR() srand((unsigned)time(NULL))
 #define random(m) ((rand() << 16 | rand()) % m) // [0,m)之间的伪随机数
-#define randomP(a, n) srand((unsigned)time(NULL)), random_shuffle(a, a + (n));
+#define randomm(a, b) (a + ((rand() << 16 | rand()) % (b - a))) // [a,b)之间的伪随机数
+#define randomP(a, n) srand((unsigned)time(NULL)), random_shuffle(a, a + (n))
 #define AS(a) assert(a)
 
 #define all(a) a.begin(), a.end()
@@ -181,8 +203,8 @@ typedef priority_queue<int> pq;
 typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 #define MT(a, b, c) p3(p2(a, b), c)
 //#define MT(a, b, c) p3(a, p2(b, c))
-//#define x first
-//#define y second
+#define x first
+#define y second
 //p2 operator + (const p2 &a, const p2 &b) {return p2(a.x + b.x, a.y + b.y);}
 //p2 operator += (p2 &a, const p2 &b) {return a = a + b;}
 
@@ -201,88 +223,34 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //inline int sign(double x) {return x < -eps ? -1 : x > eps;}
 //struct comp {bool operator()(const double &a, const double &b)const {return a + eps < b;}};
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
+#define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
 const int mx = 1e5 + 5;
 
-//int getzero(int n)
-//{
-//    For()
-//    {
-//        For() if(..!=a[i][0]) break;
-//        if(i==) return ..;
-//    }
-//}
-
-
-void print_multiplication_table(int base)
-{
-	Fout("in.txt");
-	int i, j;
-	For(i, base)
-	{
-		For(j, base) printf("%2d %2d %02d ", i, j, i * j);
-		Pn();
-	}
-	CO();
-}
-
-void replace_number(int base)
-{
-	int i, j, k, a[base], tmp;
-	char s[base][base * 20];
-	For(i, base) a[i] = i;
-	randomP(a, base);
-	Fout("out.txt");
-	PA(a, i, base);
-	CO();
-	Fin("in.txt");
-	For(i, base) gets(s[i]);
-	CI();
-	For(i, base) for (j = 0; s[i][j]; ++j)
-	{
-		int tt = s[i][j] - '0';
-		if (tt >= 0 && tt < base) s[i][j] = 'a' + tt;
-	}
-	For(i, base) for (j = 0; s[i][j]; ++j)
-	{
-		int tt = s[i][j] - 'a';
-		if (tt >= 0 && tt < base) s[i][j] = '0' + a[tt];
-	}
-	Fout("in.txt");
-	For(i, base) puts(s[i]);
-	CO();
-}
-
-void make_input(int base)
-{
-	Fin("in.txt");
-	int ans[base][base << 1], i, j, x, y, z;
-	For(i, base) For(j, base)
-	{
-		scanf("%d%d%d", &x, &y, &z);
-		ans[x][y * 2] = z / base;
-		ans[x][y * 2 + 1] = z % base;
-	}
-	CI();
-	Fout("in.txt");
-	PI(base);
-	For(i, base)
-	{
-		For(j, base << 1) printf("%d ", ans[i][j]);
-		Pn();
-	}
-	PI(0);
-	CO();
-}
+vector<p2> e[mx];
+int n, m, u, v, w, maxw, dp[mx * 3][2], tmp[mx * 3], i, j, ans, now;
 
 int main()
 {
-	print_multiplication_table(10);
-	puts("ok");
-	//replace_number(10);
-	//puts("ok");
-	//make_input(10);
-    //puts("ok");
+	SII(n, m);
+	while (m--)
+	{
+		SIII(u, v, w);
+		e[w].PB(p2(u, v));
+		Qmax(maxw, w);
+	}
+	Forr(i, 1, maxw + 1)
+	{
+		now = i & 1;
+		For(j, e[i].size()) printf("%d ", dp[e[i][j].x][!now]);
+		Pn();
+		For(j, e[i].size()) Qmax(dp[e[i][j].y][now], dp[e[i][j].x][!now] + 1);
+	}
+//	Forr(i, 1, n + 1)
+//	{
+//		Qmax(ans, dp[i][now]);
+//	}
+//	PI(ans);
 	return 0;
 }
