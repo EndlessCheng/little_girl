@@ -16,7 +16,6 @@ using namespace std;
 #define CO() fclose(stdout)
 #define SR() srand((unsigned)time(NULL))
 #define random(m) ((rand() << 16 | rand()) % m) // [0,m)之间的伪随机数
-#define randomm(a, b) (a + ((rand() << 16 | rand()) % (b - a))) // [a,b)之间的伪随机数
 #define randomP(a, n) srand((unsigned)time(NULL)), random_shuffle(a, a + (n))
 #define AS(a) assert(a)
 
@@ -68,7 +67,7 @@ using namespace std;
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
 #define SDDDD(a, b, c, d) scanf("%lf%lf%lf%lf", &a, &b, &c, &d)
-#define SA(a, i, n) For(i, n) scanf("%lld", a + i) // 便于扩展 *不要在后面加逗号！
+#define SA(a, i, n) For(i, n) scanf("%d", a + i) // 便于扩展 *不要在后面加逗号！
 #define SAA(a, i, n, j, m) For(i, n) For(j, m) SI(a[i][j]) // *不要在后面加逗号！
 #define SAA1(a, i, n, j, m) Forr(i, 1, n + 1) Forr(j, 1, m + 1) SI(a[i][j]) // *不要在后面加逗号！
 #define SS(s) scanf("%s", s)
@@ -204,95 +203,184 @@ inline int Qceil(int x, int y) {return x ? (x - 1) / y + 1 : 0;} // *注意类型。y
 //inline int sign(double x) {return x < -eps ? -1 : x > eps;}
 //struct comp {bool operator()(const double &a, const double &b)const {return a + eps < b;}};
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
-#define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 2e5 + 5;
 
-ll a[mx];
 
-inline ll mul_mod(ll a, ll b, ll mod)
+
+const int mx = 5e4 + 5;
+const int mxo = mx << 2;
+
+char s[mx];
+int n;
+
+int sa[mx];
+int t[mx], t2[mx], c[mx]; /// 辅助数组
+
+void build_sa(int m = 123) /// 调用前先设置好n。m为最大字符值+1，*一般为127，仅小写时123('z'+1)，仅大写时91('Z'+1)
 {
-	b %= mod;
-	ll ret = 0;
-	for (; b; b >>= 1)
+	int i, *x = t, *y = t2, p;
+	For(i, m) c[i] = 0;
+	For(i, n) c[x[i] = s[i]]++;
+	Forr(i, 1, m) c[i] += c[i - 1];
+	rFor(i, n - 1) sa[--c[x[i]]] = i;
+	for (int k = 1; k <= n; k <<= 1)
 	{
-		if (b & 1) ret = (ret + a) % mod;
-		a = (a + a) % mod;
+		p = 0;
+		Forr(i, n - k, n) y[p++] = i;
+		For(i, n) if (sa[i] >= k) y[p++] = sa[i] - k;
+		For(i, m) c[i] = 0;
+		For(i, n) c[x[y[i]]]++;
+		Forr(i, 1, m) c[i] += c[i - 1];
+		rFor(i, n - 1) sa[--c[x[y[i]]]] = y[i];
+		swap(x, y);
+		p = 1;
+		x[sa[0]] = 0;
+		Forr(i, 1, n) x[sa[i]] = (y[sa[i - 1]] == y[sa[i]] && y[sa[i - 1] + k] == y[sa[i] + k] ? p - 1 : p++);
+		if (p >= n) break;
+		m = p;
 	}
-	return ret;
 }
 
-inline ll Pow(ll a, int r, ll mod)
+int rk[mx], h[mx];
+
+void build_h() /// 构造高度数组。在rk[i]<rk[j]的前提下，lcp(i, j)==RMQ(rk[i] + 1,rk[j])
 {
-	ll ans = 1LL;
-	for (; r; r >>= 1)
+	int i, j, hh = 0;
+	For(i, n) rk[sa[i]] = i;
+	For(i, n)
 	{
-		if (r & 1) ans = mul_mod(ans, a, mod);
-		a = mul_mod(a, a, mod);
+		if (hh) --hh;
+		j = sa[rk[i] - 1];
+		while (s[i + hh] == s[j + hh]) ++hh;
+		h[rk[i]] = hh;
+	}
+}
+
+int l[mx], r[mx], pos[mx]; // pos_stack
+
+/*
+
+ab
+ababcabcab
+abcab
+abcabcab
+b
+babcabcab
+bcab
+bcabcab
+cab
+cabcab
+
+i = 1, h[i] = 0, l[i] = 1, r[i] = 10
+i = 2, h[i] = 2, l[i] = 2, r[i] = 4
+i = 3, h[i] = 2, l[i] = 2, r[i] = 4
+i = 4, h[i] = 5, l[i] = 4, r[i] = 4
+i = 5, h[i] = 0, l[i] = 1, r[i] = 10
+i = 6, h[i] = 1, l[i] = 6, r[i] = 8
+i = 7, h[i] = 1, l[i] = 6, r[i] = 8
+i = 8, h[i] = 4, l[i] = 8->7, r[i] = 8
+//i = 9, h[i] = 0, l[i] = 1, r[i] = 10
+i = 10, h[i] = 3, l[i] = 10->9, r[i] = 10
+
+*/
+
+void get_lr()
+{
+	int top = 0, i;
+	Forr(i, 1, n)
+	{
+		while (top && h[pos[top - 1]] >= h[i]) --top; /// *最大单调栈，小元素往下面挤
+		l[i] = (top ? pos[top - 1] + 1 : 1); /// 非>=h的最近位置+1
+		pos[top++] = i;
+	}
+	top = 0;
+	rForr(i, n - 1, 1)
+	{
+		while (top && h[pos[top - 1]] >= h[i]) --top; /// *最大单调栈，小元素往下面挤
+		r[i] = (top ? pos[top - 1] - 1 : n - 1);
+		pos[top++] = i;
+	}
+	Forr(i, 1, n)  DIIII(i, h[i], l[i], r[i]);
+}
+
+struct RangeTree
+{
+
+#define mid ((l + r) >> 1)
+#define lo (o << 1)
+#define ro ((o << 1) | 1)
+#define lc lo, l, mid /// [l, mid], 长度为mid-l+1
+#define rc ro, mid + 1, r /// (mid, r], 长度为r-mid
+
+	vector<int> data[mxo];
+
+	void build(int o = 1, int l = 1, int r = n - 1) // tree.build();
+	{
+		if (l == r)
+		{
+			data[o].PB(sa[l]);
+			return;
+		}
+		build(lc);
+		build(rc);
+		data[o].resize(r - l + 1), merge(all(data[lo]), all(data[ro]), data[o].begin());
+	}
+
+	int ql, qr, x, _sum;
+
+	void Q(int o = 1, int l = 1, int r = n - 1)
+	{
+		if (qr < l || r < ql) return;
+		if (ql <= l && r <= qr)
+		{
+			_sum += upper_bound(all(data[o]), x) - data[o].begin();
+			return;
+		}
+		Q(lc);
+		Q(rc);
+	}
+
+	int sum(int xx)
+	{
+		x = xx, _sum = 0;
+		Q();
+		return _sum;
+	}
+
+	int sum(int l, int r)
+	{
+		if (l == r) return 0;
+		return sum(r) - sum(l - 1);
+	}
+} tree;
+
+int solve(int g)
+{
+	tree.build();
+	int ans = 0, i;
+	Forr(i, 1, n)
+	{
+		if (h[i] == 0) continue;
+		tree.ql = l[i], tree.qr = r[i];
+		ans += tree.sum(max(sa[i] - g - h[i], 0), max(sa[i] - g - 1, 0)) + tree.sum(min(sa[i] + g + 1, n - 1), min(sa[i] + g + h[i], n - 1));
 	}
 	return ans;
-}
-
-inline ll calc(ll a, ll r)
-{
-	if (a == 0) return 0;
-	if (a == 1 || r == 0) return 1;
-	ll ans = a;
-	while (r--)
-	{
-		if (ans > 55) break; // !
-		ans *= a;
-	}
-	return ans;
-}
-
-inline int get_exp(int l, int r)
-{
-	if (l > r) return 1;
-	if (l == r) return a[l];
-	Qmin(r, l + 3); // !
-	ll ans = a[r];
-	int i;
-	rForr(i, r - 1, l) ans = calc(a[i - 1], ans);
-	return ans;
-}
-
-inline bool ok(int l, int r, ll x)
-{
-	if (x == 1 || a[l] == 0) return true;
-	if (a[l] == 1) return false;
-	int ex = int(16 / log10((double)a[l])) + 1;
-	return Pow(a[l], min(get_exp(l + 1, r), ex), x) == 0; // !
 }
 
 int main()
 {
-//    Fout("in.txt");
-//    SR();
-//    int n=200000,i,j,q,x;
-//   PI(n);
-//  For(i,n)printf("%lld ",ll(random(1000000000)));
-//  Pn();
-//    PI(q=300000);
-//     while(q--)
-//     {
-//         int i=random(n-1)+1;
-//         int j=randomm(i,n);
-//         ll x=random(1000000000);
-//         printf("%d %d %lld\n",i,j,x);
-//     }
-	Fin("in.txt");
-	Fout("out.txt");
-	int n, i, l, r;
-	ll x;
-	SI(n);
-	SA(a + 1, i, n);
-	QQ
+	int g;
+	TT
 	{
-		SII(l, r);
-		SL(x);
-		puts(ok(l, r, x) ? "Yes" : "No");
+		Pcas();
+		SI(g);
+		SS(s);
+		n = strlen(s) + 1;
+		build_sa();
+		build_h();
+		get_lr();
+		PI(solve(g));
 	}
 	return 0;
 }
