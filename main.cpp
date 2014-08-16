@@ -1,26 +1,4 @@
-#include<cstdio>
-#include<cctype>
-#include<cstring>
-#include<cmath>
-#include<cstdlib>
-#include<climits>
-#include<cassert>
-#include<iostream>
-#include<sstream>
-#include<algorithm>
-#include<functional>
-#include<numeric>
-#include<utility>
-#include<vector>
-#include<string>
-#include<bitset>
-#include<list>
-#include<deque>
-#include<stack>
-#include<queue>
-#include<set>
-#include<map>
-//#include<bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -57,10 +35,10 @@ using namespace std;
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
 
-#define setInter(a, b, to) set_intersection(all(a), all(b), inserter(to, to.begin())) // 调用to.insert()
-#define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin())) // 调用to.insert()
+#define setInter(a, b, to) set_intersection(all(a), all(b), inserter(to, to.begin()))
+#define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin()))
 
-#define Cnt1 __builtin_popcount // Cnt1ll就是ull的了
+#define Cnt1 __builtin_popcount /// Cnt1ll就是ull的了
 #define LBpos(n) (31 - __builtin_clz(n))
 #define LBposll(n) (63 - __builtin_clzll(n))
 #define RBpos(n) (__builtin_ffs(n) - 1)
@@ -82,15 +60,15 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%I64d", &a)
-#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
-#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
+#define SL(a) scanf("%lld", &a)
+#define SLL(a, b) scanf("%lld%lld", &a, &b)
+#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
 #define SDDDD(a, b, c, d) scanf("%lf%lf%lf%lf", &a, &b, &c, &d)
-#define SA(a, i, n) For(i, n) scanf("%d", a + i) // 便于扩展 *不要在后面加逗号！
+#define SA(a, i, n) For(i, n) scanf("%lld", a + i) // 便于扩展 *不要在后面加逗号！
 #define SAA(a, i, n, j, m) For(i, n) For(j, m) SI(a[i][j]) // *不要在后面加逗号！
 #define SAA1(a, i, n, j, m) Forr(i, 1, n + 1) Forr(j, 1, m + 1) SI(a[i][j]) // *不要在后面加逗号！
 #define SS(s) scanf("%s", s)
@@ -105,9 +83,9 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%I64d\n", a)
-#define PLL(a, b) printf("%I64d %I64d\n", a, b)
-#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
+#define PL(a) printf("%lld\n", a)
+#define PLL(a, b) printf("%lld %lld\n", a, b)
+#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
@@ -124,8 +102,8 @@ using namespace std;
 #define SUni(a) sort(all(a)); Uni(a) // STL专用
 #define Unii(a, n) (unique(a, a + (n)) - a)
 #define SUnii(a, n) sort(a, a + n); Unii(a, n)
-#define Acc(a, n) (accumulate(a, a + (n), 0)) // 可以Acc(a.begin(), k);    *注意0LL以及0.0！
-#define Accv(a) (accumulate(all(a), 0)) /// *注意0LL以及0.0！
+#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 可以Acc(a.begin(), k); *注意0LL以及0.0！
+#define Accv(a) (accumulate(all(a), 0)) // *注意0LL以及0.0！
 #define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) // *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
@@ -137,7 +115,7 @@ using namespace std;
 #define GE(T) greater_equal<T>
 #define NET(T) not_equal_to<T>
 
-#define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *可能要事先--k
+#define nth(a, k, n) nth_element(a + 0, a + k, a + n) // *可能要事先--k
 #define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) // *可能要事先--k
 #define Min(a, n) (*min_element(a, a + (n)))
 #define Max(a, n) (*max_element(a, a + (n)))
@@ -155,8 +133,8 @@ using namespace std;
 template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
 template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} // *若考虑位置，加上等号
 
-const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
-const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
+const int inf = 0x3f3f3f3f; // 1.06e9 (INT_MAX为2.147e9)
+const long long llinf = 0x3f3f3f3f3f3f3f3fLL; // 4.56e18 (LLONG_MAX为9.22e18)
 const double pi = acos(-1.0);
 //const double tens[11] = {0.0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
 //double fgcd(double a, double b) {return fabs(b) > eps ? fgcd(b, fmod(a, b)) : a;}
@@ -174,7 +152,11 @@ const double pi = acos(-1.0);
 // advance(it, n); 相当于 For(i, n) ++it; 但是它是O(1)的
 // size()是ui类型的，应该(int)xx.size()
 
-//#pragma comment(linker, "/STACK:102400000,102400000")
+/*G++扩栈
+int __size__ = 256 << 20; // 256MB
+char *__p__ = (char*)malloc(__size__) + __size__;
+__asm__("movl %0, %%esp\n" :: "r"(__p__));
+*/
 
 //ios_base::sync_with_stdio(false);
 #define _set() cout.precision(15)//, cout.setf(ios::hex, ios::basefield), cout.setf(ios::showbase)
@@ -203,15 +185,14 @@ typedef priority_queue<int> pq;
 typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 #define MT(a, b, c) p3(p2(a, b), c)
 //#define MT(a, b, c) p3(a, p2(b, c))
-#define x first
-#define y second
+//#define x first
+//#define y second
 //p2 operator + (const p2 &a, const p2 &b) {return p2(a.x + b.x, a.y + b.y);}
 //p2 operator += (p2 &a, const p2 &b) {return a = a + b;}
 
 //const double eps = 1e-8;
 //const ll mod = ll(1e9) + 7; // *或int
 inline int Qceil(int x, int y) {return x ? (x - 1) / y + 1 : 0;} // *注意类型。y必须为正
-inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
 //ll gcd(ll a, ll b){return b ? gcd(b, a % b) : a;}
@@ -226,31 +207,93 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 1e5 + 5;
+const int mx = 2e5 + 5;
 
-vector<p2> e[mx];
-int n, m, u, v, w, maxw, dp[mx * 3][2], tmp[mx * 3], i, j, ans, now;
+ll a[mx];
+
+inline ll mul_mod(ll a, ll b, ll mod)
+{
+	b %= mod;
+	ll ret = 0;
+	for (; b; b >>= 1)
+	{
+		if (b & 1) ret = (ret + a) % mod;
+		a = (a + a) % mod;
+	}
+	return ret;
+}
+
+inline ll Pow(ll a, int r, ll mod)
+{
+	ll ans = 1LL;
+	for (; r; r >>= 1)
+	{
+		if (r & 1) ans = mul_mod(ans, a, mod);
+		a = mul_mod(a, a, mod);
+	}
+	return ans;
+}
+
+inline ll calc(ll a, ll r)
+{
+	if (a == 0) return 0;
+	if (a == 1 || r == 0) return 1;
+	ll ans = a;
+	while (r--)
+	{
+		if (ans > 55) break; // !
+		ans *= a;
+	}
+	return ans;
+}
+
+inline int get_exp(int l, int r)
+{
+	if (l > r) return 1;
+	if (l == r) return a[l];
+	Qmin(r, l + 3); // !
+	ll ans = a[r];
+	int i;
+	rForr(i, r - 1, l) ans = calc(a[i - 1], ans);
+	return ans;
+}
+
+inline bool ok(int l, int r, ll x)
+{
+	if (x == 1 || a[l] == 0) return true;
+	if (a[l] == 1) return false;
+	int ex = int(16 / log10((double)a[l])) + 1;
+	return Pow(a[l], min(get_exp(l + 1, r), ex), x) == 0; // !
+}
 
 int main()
 {
-	SII(n, m);
-	while (m--)
+//    Fout("in.txt");
+//    SR();
+//    int n=200000,i,j,q,x;
+//   PI(n);
+//  For(i,n)printf("%lld ",ll(random(1000000000)));
+//  Pn();
+//    PI(q=300000);
+//     while(q--)
+//     {
+//         int i=random(n-1)+1;
+//         int j=randomm(i,n);
+//         ll x=random(1000000000);
+//         printf("%d %d %lld\n",i,j,x);
+//     }
+	Fin("in.txt");
+	Fout("out.txt");
+	int n, i, l, r;
+	ll x;
+	SI(n);
+	SA(a + 1, i, n);
+	QQ
 	{
-		SIII(u, v, w);
-		e[w].PB(p2(u, v));
-		Qmax(maxw, w);
+		SII(l, r);
+		SL(x);
+		puts(ok(l, r, x) ? "Yes" : "No");
 	}
-	Forr(i, 1, maxw + 1)
-	{
-		now = i & 1;
-		For(j, e[i].size()) printf("%d ", dp[e[i][j].x][!now]);
-		Pn();
-		For(j, e[i].size()) Qmax(dp[e[i][j].y][now], dp[e[i][j].x][!now] + 1);
-	}
-//	Forr(i, 1, n + 1)
-//	{
-//		Qmax(ans, dp[i][now]);
-//	}
-//	PI(ans);
 	return 0;
 }
+
