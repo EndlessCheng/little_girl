@@ -1,0 +1,117 @@
+
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+#include <vector>
+
+const int N = 100 + 5;
+int n, m, path[N], pa[7][N], depth[N], coutWillVis[N];
+bool willVis[N];
+std::vector<int> edges[N], childs[N];
+
+void dfs(int u = 1, int fa = -1)
+{
+	if (fa != -1)
+	{
+		depth[u] = depth[fa] + 1;
+	}
+	pa[0][u] = fa;
+	for (int i = 1; i < 7; ++ i)
+	{
+		pa[i][u] = -1;
+		if (pa[i - 1][u] != -1)
+			pa[i][u] = pa[i - 1][pa[i - 1][u]];
+	}
+	coutWillVis[u] = willVis[u];
+	for (int i = 0; i < (int)edges[u].size(); ++ i)
+	{
+		int v = edges[u][i];
+		if (v == fa) continue;
+		childs[u].push_back(v);
+		dfs(v, u);
+		coutWillVis[u] += coutWillVis[v];
+	}
+}
+
+int jump(int u, int length)
+{
+	for (int i = 0; i < 7; ++ i)
+	{
+		if (length >> i & 1) u = pa[i][u];
+	}
+	return u;
+}
+
+int getLCA(int a, int b)
+{
+	if (depth[a] < depth[b]) std::swap(a, b);
+	a = jump(a, depth[a] - depth[b]);
+	for (int i = 6; i >= 0; -- i)
+	{
+		if (pa[i][a] != pa[i][b])
+		{
+			a = pa[i][a];
+			b = pa[i][b];
+		}
+	}
+	return a == b ? a : pa[0][a];
+}
+
+bool check()
+{
+	if (m == 0) return true;
+	if (willVis[1] && path[0] != 1) return false; // 特判根节点
+	int now = 1;
+	for (int i = path[0] == 1; i < m; ++i)
+	{
+		int next = path[i];
+		int lca = getLCA(now, next);
+		willVis[now] = willVis[next] = false; // 已经经过
+		for (int u = now;; u = pa[0][u])
+		{
+			if (willVis[u]) return false;
+			if (u == lca) break;
+			if (coutWillVis[u]) return false; // 关键
+		}
+		for (int u = next; ; u = pa[0][u])
+		{
+			if (willVis[u]) return false;
+			if (u == lca) break;
+		}
+		for (int u = next; u != -1; u = pa[0][u]) --coutWillVis[u];
+		now = next;
+	}
+	return true;
+}
+
+int main()
+{
+	int cas;
+	scanf("%d", &cas);
+	while (cas--)
+	{
+		scanf("%d", &n);
+		for (int i = 1; i <= n; ++ i)
+		{
+			willVis[i] = false;
+			edges[i].clear();
+			childs[i].clear();
+		}
+		for (int i = 0; i < n - 1; ++ i)
+		{
+			int a, b;
+			scanf("%d%d", &a, &b);
+			edges[a].push_back(b);
+			edges[b].push_back(a);
+		}
+		scanf("%d", &m);
+		for (int i = 0; i < m; ++ i)
+		{
+			scanf("%d", &path[i]);
+			willVis[path[i]] = true;
+		}
+		dfs();
+		puts(check() ? "YES" : "NO");
+	}
+	return 0;
+}
