@@ -239,10 +239,11 @@ int num[mx];
 
 int main()
 {
-	puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    puts("ok?????");
+    puts("wowowowowowowowowowowowowowowowowowowowowwoowowowowwowoowowwoqowowowwo!!!!!!!");
+	puts("aaaaaaareaaaaaaaaaaaaaaaaaaaaaaa");
+	puts("aaaaaaaaaaaaaaa\aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	puts("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	puts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 }
