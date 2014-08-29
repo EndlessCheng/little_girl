@@ -1,9 +1,7 @@
-def cmp(lst1, lst2):
+def cmplst(lst1, lst2):
 	if len(lst1) != len(lst2):
 		return len(lst2) - len(lst1)
-	if lst1[0] < lst2[0]:
-		return -1
-	return 1
+	return cmp(lst1[0], lst2[0])
 	
 filename = 'words.dic'
 f = open(filename, 'r')
@@ -27,7 +25,7 @@ for wordclass in tmplists:
 	wordclass.sort()
 	anslists.append(wordclass)
 
-anslists.sort(cmp)
+anslists.sort(cmplst)
 
 for lst in anslists:
 	for word in lst:
