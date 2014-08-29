@@ -1,35 +1,38 @@
-import random
-
+def cmp(lst1, lst2):
+	if len(lst1) != len(lst2):
+		return len(lst2) - len(lst1)
+	if lst1[0] < lst2[0]:
+		return -1
+	return 1
+	
 filename = 'words.dic'
 f = open(filename, 'r')
-allLines = f.readlines()
+
+dict = {}
+
+for line in f:
+	words = line.split()
+	for word in words:
+		sword = ''.join(sorted(word))
+		if dict.has_key(sword):
+			dict[sword].append(word)
+		else:
+			dict[sword] = [word]
+			
 f.close()
 
-i = random.randint(0, len(allLines) - 1)
-words = allLines[i].split()
-i = random.randint(0, len(words) - 1)
-word = words[i]
+tmplists = dict.values()
+anslists = []
+for wordclass in tmplists:
+	wordclass.sort()
+	anslists.append(wordclass)
 
-sz = len(word)
-guess = '*' * sz
-cnt = 0
+anslists.sort(cmp)
 
-while(guess.count('*') != 0):
-	ch = raw_input('Enter a letter in word ' + guess + ':')
-	if word.find(ch) == -1:
-		print ch + ' is not in the word'
-		cnt += 1
-	elif guess.find(ch) != -1:
-		print ch + ' is already in the word'
-	else:
-		tmp = ''
-		for i in range(sz):
-			if guess[i] != '*':
-				tmp += guess[i]
-			elif word[i] == ch:
-				tmp += ch
-			else:
-				tmp += '*'
-		guess = tmp
-	
-print 'The word is %s. You missed %d time(s).' % (word, cnt)
+for lst in anslists:
+	for word in lst:
+		print word,
+	print ''
+
+
+
