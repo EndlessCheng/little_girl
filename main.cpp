@@ -1,5 +1,26 @@
-
-#include<bits/stdc++.h>
+#include<cstdio>
+#include<cctype>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+#include<climits>
+#include<cassert>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+#include<utility>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<list>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<set>
+#include<map>
+//#include<bits/stdc++.h>
 using namespace std;
 
 #define tm ttttttt
@@ -36,10 +57,10 @@ using namespace std;
 #define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
 #define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
 
-#define setInter(a, b, to) set_intersection(all(a), all(b), inserter(to, to.begin()))
-#define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin()))
+#define setInter(a, b, to) set_intersection(all(a), all(b), inserter(to, to.begin())) // 调用to.insert()
+#define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin())) // 调用to.insert()
 
-#define Cnt1 __builtin_popcount /// Cnt1ll就是ull的了
+#define Cnt1 __builtin_popcount // Cnt1ll就是ull的了
 #define LBpos(n) (31 - __builtin_clz(n))
 #define LBposll(n) (63 - __builtin_clzll(n))
 #define RBpos(n) (__builtin_ffs(n) - 1)
@@ -61,10 +82,10 @@ using namespace std;
 #define SIIII(a, b, c, d) scanf("%d%d%d%d", &a, &b, &c, &d)
 #define SIIIII(a, b, c, d, e) scanf("%d%d%d%d%d", &a, &b, &c, &d, &e)
 #define SIIIIII(a, b, c, d, e, f) scanf("%d%d%d%d%d%d", &a, &b, &c, &d, &e, &f)
-#define SL(a) scanf("%lld", &a)
-#define SLL(a, b) scanf("%lld%lld", &a, &b)
-#define SLLL(a, b, c) scanf("%lld%lld%lld", &a, &b, &c)
-#define SLLLL(a, b, c, d) scanf("%lld%lld%lld%lld", &a, &b, &c, &d)
+#define SL(a) scanf("%I64d", &a)
+#define SLL(a, b) scanf("%I64d%I64d", &a, &b)
+#define SLLL(a, b, c) scanf("%I64d%I64d%I64d", &a, &b, &c)
+#define SLLLL(a, b, c, d) scanf("%I64d%I64d%I64d%I64d", &a, &b, &c, &d)
 #define SD(a) scanf("%lf", &a)
 #define SDD(a, b) scanf("%lf%lf", &a, &b)
 #define SDDD(a, b, c) scanf("%lf%lf%lf", &a, &b, &c)
@@ -84,10 +105,10 @@ using namespace std;
 #define PIII(a, b, c) printf("%d %d %d\n", a, b, c)
 #define PIIII(a, b, c, d) printf("%d %d %d %d\n", a, b, c, d)
 #define PIIIII(a, b, c, d, e) printf("%d %d %d %d %d\n", a, b, c, d, e)
-#define PL(a) printf("%lld\n", a)
-#define PLL(a, b) printf("%lld %lld\n", a, b)
-#define PLLL(a, b, c) printf("%lld %lld %lld\n", a, b, c)
-#define PD(a) printf("%.5f\n", a)
+#define PL(a) printf("%I64d\n", a)
+#define PLL(a, b) printf("%I64d %I64d\n", a, b)
+#define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
+#define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, i, n) For(i, (n) - 1) printf("%d ", a[i]); PI(a[(n) - 1]) // *(有时要在前面加花括号)由于要支持STL的数据类型，故不用+的形式，必要时请手动改成+
@@ -103,8 +124,8 @@ using namespace std;
 #define SUni(a) sort(all(a)); Uni(a) // STL专用
 #define Unii(a, n) (unique(a, a + (n)) - a)
 #define SUnii(a, n) sort(a, a + n); Unii(a, n)
-#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 可以Acc(a.begin(), k); *注意0LL以及0.0！
-#define Accv(a) (accumulate(all(a), 0)) // *注意0LL以及0.0！
+#define Acc(a, n) (accumulate(a, a + (n), 0)) // 可以Acc(a.begin(), k);    *注意0LL以及0.0！
+#define Accv(a) (accumulate(all(a), 0)) /// *注意0LL以及0.0！
 #define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) // *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
 #define mem(a, num) memset(a, num, sizeof(a))
 #define cpy(to, from) memcpy(to, from, sizeof(from))
@@ -116,7 +137,7 @@ using namespace std;
 #define GE(T) greater_equal<T>
 #define NET(T) not_equal_to<T>
 
-#define nth(a, k, n) nth_element(a + 0, a + k, a + n) // *可能要事先--k
+#define nth(a, k, n) nth_element(a + 0, a + k, a + n) /// *可能要事先--k
 #define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) // *可能要事先--k
 #define Min(a, n) (*min_element(a, a + (n)))
 #define Max(a, n) (*max_element(a, a + (n)))
@@ -134,8 +155,8 @@ using namespace std;
 template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
 template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} // *若考虑位置，加上等号
 
-const int inf = 0x3f3f3f3f; // 1.06e9 (INT_MAX为2.147e9)
-const long long llinf = 0x3f3f3f3f3f3f3f3fLL; // 4.56e18 (LLONG_MAX为9.22e18)
+const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
+const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
 const double pi = acos(-1.0);
 //const double tens[11] = {0.0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
 //double fgcd(double a, double b) {return fabs(b) > eps ? fgcd(b, fmod(a, b)) : a;}
@@ -154,11 +175,7 @@ const double pi = acos(-1.0);
 // size()是ui类型的，应该(int)xx.size()
 // 截取整数部分 trunc()
 
-/*G++扩栈
-int __size__ = 256 << 20; // 256MB
-char *__p__ = (char*)malloc(__size__) + __size__;
-__asm__("movl %0, %%esp\n" :: "r"(__p__));
-*/
+//#pragma comment(linker, "/STACK:102400000,102400000")
 
 //ios_base::sync_with_stdio(false);
 #define _set() cout.precision(15)//, cout.setf(ios::hex, ios::basefield), cout.setf(ios::showbase)
@@ -196,6 +213,7 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 //const ll mod = ll(1e9) + 7; // *或int
 //template<typename ... T> void RI(int &head, T &... tail) {scanf("%d", &head), RI(tail ...);}
 template<class T> inline T Qceil(T x, T y) {return x ? (x - 1) / y + 1 : 0;} // *y必须为正
+inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
 //template<class T> inline T gcd(T a, T b) {T c; while (b) c = a % b, a = b, b = c; return a;}
@@ -210,92 +228,55 @@ template<class T> inline T Qceil(T x, T y) {return x ? (x - 1) / y + 1 : 0;} // 
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 10;
+const int mx = 1e5 + 5;
 
-double p[2][mx], q[2][mx];
-int k;
-double lowy;
 
-double f(double x, int i)
+
+
+bool ok(int n, int k)
 {
-	double sump = p[i][0], sumq = q[i][0];
-	int j;
-	Forr(j, 1, k + 1) sump += p[i][j] * pow(x, (double)j);
-	Forr(j, 1, k + 1) sumq += q[i][j] * pow(x, (double)j);
-	return max(lowy, sump / sumq);
-}
-
-double f0(double x)
-{
-	return f(x, 0);
-}
-
-double f1(double x)
-{
-	return f(x, 1);
-}
-
-double(*F)(double);
-
-double asr(double a, double b, double eps, double A, double fa, double fb, double fc) // A为[a,b]上的三点simpson值
-{
-	double c = (a + b) / 2, d = (a + c) / 2, e = (c + b) / 2;
-	double fd = F(d), fe = F(e);
-	double L = (c - a) * (fa + 4 * fd + fc) / 6, R = (b - c) * (fc + 4 * fe + fb) / 6, LR = L + R;
-	if (fabs(LR - A) <= 15 * eps) return LR + (LR - A) / 15.0;
-	return asr(a, c, eps / 2, L, fa, fc, fd) + asr(c, b, eps / 2, R, fc, fb, fe);
-}
-
-double asr(double a, double b, double eps)
-{
-	double c = (a + b) / 2;
-	double fa = F(a), fb = F(b), fc = F(c);
-	return asr(a, b, eps, (b - a) * (fa + 4 * fc + fb) / 6, fa, fb, fc);
-}
-
-double low = 0.0, upp; // *get in main()
-
-double getDefiniteIntegral()
-{
-	return asr(low, upp, 1e-7); //*eps
-}
-
-int a;
-
-bool ok(double x)
-{
-	lowy = x;
-	F = f0;
-	double s0 = getDefiniteIntegral();
-	F = f1;
-	double s1 = getDefiniteIntegral();
-	return s0 - s1 > (double)a;
-}
-
-double solve(double l, double r)
-{
-	double md;
-	int i;
-	For(i, 40) // *
+	int tmp, sum, rem, i;
+	sum = (k * (k - 1) / 2);
+	for (i = 1; i * i < n; i++)
 	{
-		md = (l + r) / 2.0;
-		ok(md) ? l = md : r = md;
+		rem = n - i * i;
+		tmp = i * i;
+		if (tmp < sum) continue;
+		if ((rem <= k - 1) && (tmp - sum < k - rem)) continue;
+		//if ((tmp==sum)&&(rem<=k-1)) continue;
+		if ((tmp == sum + 1) && (rem == k)) continue;
+		return 1;
 	}
-	return md;
+	return 0;
+}
+
+bool ok3(int n, int k)
+{
+	int left, i;
+	if (n < (k + 1) * k / 2) return false;
+	if (k == 2) return true;
+	int sn = Sqrt(n - 1);
+	sn*=sn;
+	int someone = n - sn;
+	if (someone <= k) left = (k + 2) * (k + 1) / 2 - someone;
+	if (left > sn) return false;
+	if (left == sn||someone <= k) return true;
+	// up but not equal to someone
+	if(sn-someone+k==someone) return false;
+	return true;
+
 }
 
 int main()
 {
-	int w, d, i, j;
-	while (~SIIII(w, d, a, k))
+	int k, n;
+	Forr(k, 2, 31)
 	{
-		For(i, 2)
+		Forr(n, k * (k + 1) / 2, 200000 + 1)
 		{
-			For(j, k + 1) SD(p[i][j]);
-			For(j, k + 1) SD(q[i][j]);
+			if (ok(n, k) != ok3(n, k))
+				DIIII(ok(n, k), ok3(n, k), n, k);
 		}
-		upp = (double)w;
-		PD(-solve(-d, 0.0));
 	}
 	return 0;
 }
