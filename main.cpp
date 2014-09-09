@@ -215,11 +215,10 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
 //const double eps = 1e-8;
-//const ll mod = ll(1e9) + 7; // *或int
+
 //ll pow(ll a, ll r) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;}
 //ll mul_mod(ll a, ll b, ll mod) {b %= mod; ll ret = 0; for (; b; b >>= 1) {if (b & 1) ret = (ret + a) % mod; a = (a + a) % mod;} return ret;}
 //ll pow(ll a, ll r, ll mod) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = mul_mod(ans, a, mod); a = mul_mod(a, a, mod);} return ans;}
-//ll powsum(ll a, int r) {ll ans = 1LL, tmp = 1LL; for (; r; r >>= 1) {if (r & 1) ans = (ans * a + tmp) % mod; tmp = tmp * (1LL + a) % mod; a = a * a % mod;} return ans;}
 
 template<class T> inline T Qceil(T x, T y) {return x ? (x - 1) / y + 1 : 0;} // *y必须为正
 inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
@@ -237,16 +236,29 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 int cas;
 const int mx = 1e5 + 5;
 
-double H(int n) // 误差为1/(252*n^6)
+
+ll powsum(ll a, ll r, ll mod)
 {
-	if (n == 1) return 1.0;
-	if (n == 2) return 1.5;
-	return log((double)n) + 0.57721566490153286060651209 + 1 / (2.0 * n) - 1 / (12.0 * n * n) + 1 / (120.0 * n * n * n * n);
+	ll ans = 1LL, tmp = 1LL;
+	for (; r; r >>= 1)
+	{
+		if (r & 1) ans = (ans * a + tmp) % mod;
+		tmp = tmp * (1LL + a) % mod;
+		a = a * a % mod;
+	}
+	return ans;
+}
+
+ll solve(ll n, ll m)
+{
+	if (m == 1) return 0;
+	if (n & 1) return powsum(4, (n - 1) / 2, m);
+	return powsum(4, (n - 2) / 2, m) * 2 % m;
 }
 
 int main()
 {
-	int n;
-	while (~SI(n)) printf("%.15f\n", H(n));
+	ll n, m;
+	while (~SLL(n, m)) PL(solve(n, m));
 	return 0;
 }
