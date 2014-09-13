@@ -1,157 +1,81 @@
-#include <iostream>
-#include <vector>
-#include <queue>
 #include <cstdio>
 #include <cstring>
-#include <ctime>
-#include <cstdlib>
+
 using namespace std;
 
-const int n = 16, m = 10;
-int mp[10][18][12], id[18][12], mp2[170][170], co[15], vis[170], px[170], py[170];
-int t, ln, mn;
-int xx[5] = {0, 1, 0, -1}, yy[5] = {1, 0, -1, 0};
-char c;
-vector <int> g;
+const int MaxN = 210;
 
-void dfs (int c, int x ,int y) {
-    id[x][y] = ln;
-    for (int i = 0; i < 4; i++) {
-        int dx = x + xx[i], dy = y + yy[i];
-        if (dx > n || dx < 1 || dy > m || dy < 1 || id[dx][dy]) continue;
-        if (mp[0][dx][dy] != c) continue;
-        dfs (c, dx, dy);
+struct Node{
+    int v;
+    Node *nxt;
+}pool[MaxN*MaxN],*g[MaxN],*tail=pool;
+
+int n;
+int c1[MaxN],c2[MaxN];
+int f[MaxN][2],flag[MaxN];
+char op[MaxN][2];
+
+inline void make_edge(int u,int v){tail->v=v;tail->nxt=g[u];g[u]=tail++;}
+inline int ckmax(int &a,int b){return b>a ? a=b,1 : 0;}
+inline int ckmin(int &a,int b){return b<a ? a=b,1 : 0;}
+
+void dp(int u){
+    if(flag[u]) return;
+    flag[u]=1;
+    if(!g[u]) f[u][0]=c1[u],f[u][1]=c2[u];
+    for(Node *p=g[u];p;p=p->nxt){
+        dp(p->v);
+        if(op[u][0]=='A') ckmax(f[u][0],f[p->v][0]) ? f[u][1]=f[p->v][1] : 0;
+        else ckmax(f[u][1],f[p->v][1]) ? f[u][0]=f[p->v][0] : 0;
     }
 }
-
-int d[170];
-
-void bfs (int k) {
-    queue <int> q;
-    q.push(k);
-    memset (d, 0, sizeof d);
-    d[k] = 1;
-    int m = 0;
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-        for (int i = 1; i <= ln; i++) {
-            if (!d[i] && mp2[u][i]) {
-                d[i] = d[u] + 1;
-                q.push(i);
-                m = max (d[i], m);
-            }
+void dp2(int u,int k){
+    if(flag[u]) return;
+    flag[u]=1;
+    if(!g[u]) {f[u][0]=(u==k),f[u][1]=c1[u];return;}
+    int F=0;
+    if(op[u][0]=='X') f[u][1]=0x7f7f7f7f;
+    for(Node *p=g[u];p;p=p->nxt){
+        dp2(p->v,k);
+        if(op[u][0]=='X'){
+            if(f[p->v][0]) {f[u][0]=1;f[u][1]=c1[k];break;}
+            ckmin(f[u][1],f[p->v][1]);
+        }
+        else{
+            if(f[p->v][0]) F=1;
+            else ckmax(f[u][1],f[p->v][1]);
         }
     }
-    if (m == mn) {
-        g.push_back(k);
-    } else if (m < mn) {
-        mn = m;
-        g.clear();
-        g.push_back(k);
-    }
+    if(F) f[u][0]=ckmax(f[u][1],c1[k]);
 }
-
-int jug (int k, int l) {
-    int vis2[5], sum = 0;
-    memset (vis2, 0, sizeof vis2);
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= m; j++) {
-            int tmp = mp[k][i][j];
-//            cout << tmp ;
-            if (!vis2[tmp]) {
-                vis2[tmp] = 1;
-                sum++;
-            }
-        }
-//        cout << endl;
-    }
-    if (sum > l) return 1;
-    return 0;
-}
-
-int c1, c2;
-
-void cg (int k, int i, int j) {
-    mp[k][i][j] = c2;
-    int dx, dy;
-    for (int d = 0; d < 4; d++) {
-        dx = i + xx[d], dy = j + yy[d];
-        if (mp[k][dx][dy] == c1) cg (k, dx, dy);
-    }
-}
-
-int dfs2 (int k, int x, int y) {
-    if (t - k < 4 && jug (k, t - k + 1)) {
-//        cout << 'x' <<endl;
-        return 0;
-    }
-    if (k == t) {
-        return 1;
-    }
-    for (int i = 1; i <= 4; i++) {
-        if (i == mp[k][x][y]) continue;
-        co[k] = i;
-        memcpy (mp[k + 1], mp[k], sizeof mp[k]);
-        c1 = mp[k][x][y], c2 = i;
-//        cout << k << ' ' << c1 << ' ' << c2 << endl;
-        cg(k + 1, x, y);
-        if (dfs2 (k + 1, x, y)) return 1;
-    }
-    return 0;
-}
-
 int main()
 {
-//    freopen ("in", "r", stdin);
-    srand (time (NULL));
-    int T, cas = 1;
-    cin >> T;
-    while (T--) {
-        cin >> t;
-        g.clear();
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) {
-                cin >> c;
-                mp[0][i][j] = c - '0';
+    int T;
+    for(scanf("%d",&T);T--;){
+        scanf("%d",&n);
+        memset(g,0,sizeof(g));tail=pool;
+        memset(c1,0,sizeof(c1));
+        memset(c2,0,sizeof(c2));
+        memset(f,0,sizeof(f));
+        memset(flag,0,sizeof(flag));
+        for(int i=1;i<=n;i++){
+            int m;scanf("%d",&m);
+            if(!m) scanf("%d%d",&c1[i],&c2[i]);
+            else{
+                for(int j=1,v;j<=m;j++) scanf("%d",&v),make_edge(i,v);
+                scanf("%s",op[i]);
             }
         }
-        memset (mp2, 0, sizeof mp2);
-        memset (id, 0, sizeof id);
-        ln = 0;
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) if (!id[i][j]){
-                ln++;
-                px[ln] = i, py[ln] = j;
-                dfs (mp[0][i][j], i, j);
-            }
+        dp(1);
+        int ans=f[1][1];
+        printf("%d ",f[1][1]);
+        for(int i=1;i<=n;i++) if(!g[i]){
+            memset(flag,0,sizeof(flag));
+            memset(f,0,sizeof(f));
+            dp2(1,i);
+            if(f[1][0]) ckmax(ans,c2[i]);
         }
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) {
-                for (int k = 0; k < 4; k++) {
-                    int dx = i + xx[k], dy = j + yy[k];
-                    if (dx > n || dx < 1 || dy > m || dy < 1) continue;
-                    int id1 = id[i][j], id2 = id[dx][dy];
-                    if (id1 != id2) mp2[id1][id2] = mp2[id2][id1] = 1;
-                }
-            }
-        }
-        mn = 1e9;
-        for (int i = 1; i <= ln; i++) {
-            bfs (i);
-        }
-//        int sz = g.size();
-        int x, y;
-        printf ("Case #%d:\n", cas++);
-        for (int tmp = 1; tmp <= ln; tmp++)
-//            int j = px[tmp], k = py[tmp];
-            if (dfs2 (0, px[tmp], py[tmp])) {
-                x = px[tmp], y = py[tmp];
-                for (int k = 0; k < t; k++) {
-                    cout << co[k] << ' ' << x << ' ' << y << endl;
-                }
-                break;
-            }
-        }
+        printf("%d\n",ans);
+    }
     return 0;
 }
