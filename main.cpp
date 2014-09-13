@@ -113,7 +113,7 @@ using namespace std;
 #define PLLL(a, b, c) printf("%I64d %I64d %I64d\n", a, b, c)
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
-#define PDDD(a, b, c) printf("%.15f %.15f %.15f\n", a, b, c)
+#define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
 #define PA(a, n) for(int i = 0; i < n - 1; ++i) printf("%d ", a[i]); PI(a[(n) - 1]) // *函数体可能要用花括号括起来
 #define PAA(a, n, m) for(int i = 0; i < n; ++i) {for(int j = 0; j < m - 1; ++j) printf("%d ", a[i][j]); PI(a[i][(m) - 1]);}
 #define PAn(a, n) for(int i = 0; i < n; ++i) PI(a[i])
@@ -239,117 +239,38 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 1005;
+const int mx = 45;
 
-struct Point
+inline ui id(char c)
 {
-	double x, y;
-	double alpha;
-	Point(double x = 0, double y = 0): x(x), y(y) {} // *必要时请手动改int
-	void read() {SDDD(x, y, alpha);}
-	bool operator < (const Point &b) const
-	{
-		return x < b.x || x == b.x && y < b.y;
-		//return x + eps < b.x || fabs(x - b.x) < eps && y + eps < b.y;
-	}
-	bool operator == (const Point &b) const
-	{
-		return x == b.x && y == b.y;
-	}
-} p[mx];
-
-typedef Point Vec;
-Vec operator + (const Vec &a, const Vec &b) {return Vec(a.x + b.x, a.y + b.y);}
-Vec operator - (const Point &a, const Point &b) {return Vec(a.x - b.x, a.y - b.y);}
-Vec operator - (const Point &a) {return Vec(-a.x, -a.y);}
-Vec operator * (const Vec &a, double p) {return Vec(a.x * p, a.y * p);}
-Vec operator / (const Vec &a, double p) {return Vec(a.x / p, a.y / p);}
-
-Vec operator * (const Vec &a, const Vec &b) {return Vec(a.x * b.x - a.y * b.y, a.x * b.y + b.x * a.y);}
-inline double Dot(const Vec &a, const Vec &b) {return a.x * b.x + a.y * b.y;}
-inline double Cross(const Vec a, const Vec b) {return a.x * b.y - a.y * b.x;} // b在a左边为正，b在a右边为负，等于0就是平行
-inline double Len(const Vec &a) {return hypot(a.x, a.y);}
-inline ll Len2(const Vec &a) {return sq(a.x) + sq(a.y);}
-inline double Angle(const Vec a, const Vec b) {return acos(Dot(a, b) / Len(a) / Len(b));} // 向量夹角
-inline double cosA(const Vec &a, const Vec &b) {return Dot(a, b) / Len(a) / Len(b);} // 向量夹角的余弦
-
-
-
-inline Vec Rotate(const Vec a, double rad) {return Vec(a.x * cos(rad) - a.y * sin(rad), a.x * sin(rad) + a.y * cos(rad));} // 逆时针旋转向量a
-
-
-
-
-inline Vec UnitVec(Vec a) {return Vec(-a.y , a.x);}
-inline Vec conj(Vec &a) {return Vec(a.x, -a.y);}
-//inline bool isCollinear(const Point &p1, const Point &p2, const Point &p3) {return fabs(Cross(p2 - p1, p3 - p1)) < eps;} // 共线
-
-/// 角度转弧度 *注意正负
-inline double deg2rad(double deg) {return deg / 180.0 * pi;}
-/// 弧度转角度 *注意正负
-inline double rad2deg(double rad) {return rad / pi * 180.0;}
-/// 求向量极角 *注意范围是(-pi,pi] *有时要去掉引用
-inline double PolarAngle(Vec &v) {return atan2(v.y, v.x);}
-
-int n;
-
-/*
-
-pp.x = 0, pp.y = 0
-pp.x = 1.30116867893976, pp.y = -0.381773290676036
-pp.x = 3.62661294231258, pp.y = 0.125076119045424
-
-pp.x = 0.54030230586814, pp.y = 0.841470984807897
-pp.x = 0.885021842392614, pp.y = 0.527524136149646
-pp.x = 2.63662044571214, pp.y = 0.266196127105292
-
-1.269101239447510 0.043769285620156 2.999999999999999
-
-*/
-
-Point solve(Point pp)
-{
-	int i;
-	For(i, n)
-	{
-		pp = p[i] + Rotate(pp - p[i], p[i].alpha);
-		//DII(pp.x, pp.y);
-	}
-	return pp;
+	return isdigit(c) ? c & 15 : c - 'a' + 10;
 }
 
-inline Point getLineIntersection(Point P, Vec v, Point Q, Vec w)
+char s[mx][5], tmp[10];
+ui num[mx];
+int n;
+
+ui solve()
 {
-	double t = Cross(w, P - Q) / Cross(v, w); /// *有些题要求返回(时间)参量t
-	//double t2 = Cross(v, Q - P) / Cross(w, v); /// *Q的t
-	//if(t < 0 || t2 < 0) return ...-1; /// 对于射线的判断 *有些题不算端点，则<=0也返回...-1
-	return P + v * t;
+    int i;
+    For(i,n)
+    {
+
+    }
 }
 
 int main()
 {
-	int i;
-	Point a, b, aa, bb, ansp;
+    int i;
 	TT
 	{
 		SI(n);
-		For(i, n) p[i].read();
-//            SD(alpha);
-//            if(p.x==0&&p.y==0) continue;
-//            v=Rotate(now-p[i])
-		a = Point(0, 0);
-		b = Point(1, 0);
-		aa = solve(a);
-		bb = solve(b);
-		ansp = getLineIntersection((a + aa) / 2, UnitVec(aa - a), (b + bb) / 2, UnitVec(bb - b));
-		///
-		double alpha = Angle(b - a, bb - aa);
-		double pos = Cross(b - a, bb - aa);
-		if (pos < 0)
+		For(i, n)
 		{
-			alpha = 2 * pi - alpha;
+			SSS(s[i], tmp);
+			rFor(i, 7) num[i] |= id(tmp[i]) << (i << 4u);
 		}
-		PDDD(ansp.x, ansp.y, alpha);
+		printf("%u\n", solve());
 	}
 	return 0;
 }
