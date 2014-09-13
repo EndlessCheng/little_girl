@@ -250,25 +250,57 @@ char s[mx][5], tmp[10];
 ui num[mx];
 int n;
 
+void solve(ui& ans, ui num, char op)
+{
+	switch (op)
+	{
+		case '+':
+			ans += num;
+			break;
+		case '-':
+			ans -= num;
+			break;
+		case '&':
+			ans &= num;
+			break;
+		case '|':
+			ans |= num;
+			break;
+		case '^':
+			ans ^= num;
+			break;
+	}
+}
+
 ui solve()
 {
-    int i;
-    For(i,n)
-    {
-
-    }
+	ui ans, tmp;
+	int i;
+	Forr(ans, 0, 100)
+	{
+		tmp = ans;
+		For(i, n) solve(tmp, num[i], s[i][0]);
+		DII(ans, tmp);
+	}
+	rForr(ans, -1, -100)
+	{
+		tmp = ans;
+		For(i, n) solve(tmp, num[i], s[i][0]);
+		DII(ans, tmp);
+	}
+	return tmp;
 }
 
 int main()
 {
-    int i;
+	int i, j;
 	TT
 	{
 		SI(n);
 		For(i, n)
 		{
 			SSS(s[i], tmp);
-			rFor(i, 7) num[i] |= id(tmp[i]) << (i << 4u);
+			rFor(j, 7) num[j] |= id(tmp[j]) << (j << 4u);
 		}
 		printf("%u\n", solve());
 	}
