@@ -114,8 +114,8 @@ using namespace std;
 #define PD(a) printf("%f\n", a)
 #define PDD(a, b) printf("%f %f\n", a, b)
 #define PDDD(a, b, c) printf("%f %f %f\n", a, b, c)
-#define PA(a, n) for(int ii = 0; ii < n - 1; ++ii) printf("%f ", a[ii]); PD(a[(n) - 1]) // *函数体可能要用花括号括起来
-#define PAA(a, n, m) for(int ii = 0; ii < n; ++ii) {for(int jj = 0; jj < m - 1; ++jj) printf("%f ", a[ii][jj]); PD(a[ii][(m) - 1]);}
+#define PA(a, n) for(int i = 0; i < n - 1; ++i) printf("%d ", a[i]); PI(a[(n) - 1]) // *函数体可能要用花括号括起来
+#define PAA(a, n, m) for(int i = 0; i < n; ++i) {for(int j = 0; j < m - 1; ++j) printf("%d ", a[i][j]); PI(a[i][(m) - 1]);}
 #define PAn(a, n) for(int i = 0; i < n; ++i) PI(a[i])
 #define rPA(a, n) for(int i = n - 1; i > 0; --i) printf("%d ", a[i]); PI(a[0])
 #define rPAn(a, n) for(int i = n - 1; i >= 0; --i) PI(a[i])
@@ -241,225 +241,268 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 int cas;
 const int mx = 1e5 + 5;
 
-double x[3];
-
-
-inline vector<double> QuadraticEquation(double a, double b, double c)
+struct Point
 {
-	vector<double> ans;
-//if (fabs(a) < eps) return ans.PB(-c / b), ans;
-	double delta = b * b - 4 * a * c;
-//	if (delta < -eps) return ans;
-//	if (fabs(delta) < eps) return ans.PB(-b / (2 * a)), ans;
-	delta = sqrt(delta);
-	if (a > 0) ans.PB((-b - delta) / (2 * a)), ans.PB((-b + delta) / (2 * a));
-	else ans.PB((-b + delta) / (2 * a)), ans.PB((-b - delta) / (2 * a));
+	double x, y;
+	//double alpha; // 向量极角alpha = atan2(y, x); *注意范围是(-pi,pi]
+	Point(double x = 0, double y = 0): x(x), y(y) {} // *必要时请手动改int
+	void read() {SDD(x, y);}
+	bool operator < (const Point &b) const
+	{
+		return x < b.x || x == b.x && y < b.y;
+		//return x + eps < b.x || fabs(x - b.x) < eps && y + eps < b.y;
+	}
+	bool operator == (const Point &b) const
+	{
+		return x == b.x && y == b.y;
+	}
+} p[mx], ans1[mx], ans2[mx], you, him, dir_lp, dir_rp;
+
+typedef Point Vec;
+Vec operator + (const Vec &a, const Vec &b) {return Vec(a.x + b.x, a.y + b.y);}
+Vec operator - (const Point &a, const Point &b) {return Vec(a.x - b.x, a.y - b.y);}
+Vec operator - (const Point &a) {return Vec(-a.x, -a.y);}
+Vec operator * (const Vec &a, double p) {return Vec(a.x * p, a.y * p);}
+Vec operator / (const Vec &a, double p) {return Vec(a.x / p, a.y / p);}
+
+Vec operator * (const Vec &a, const Vec &b) {return Vec(a.x * b.x - a.y * b.y, a.x * b.y + b.x * a.y);}
+inline double Dot(const Vec &a, const Vec &b) {return a.x * b.x + a.y * b.y;}
+inline double Cross(const Vec &a, const Vec &b) {return a.x * b.y - a.y * b.x;} // b在a左边为正，b在a右边为负，等于0就是平行
+inline double Len(const Vec &a) {return hypot(a.x, a.y);}
+inline ll Len2(const Vec &a) {return sq(a.x) + sq(a.y);}
+inline double Angle(const Vec &a, const Vec &b) {return acos(Dot(a, b) / Len(a) / Len(b));} // 向量夹角
+inline double cosA(const Vec &a, const Vec &b) {return Dot(a, b) / Len(a) / Len(b);} // 向量夹角的余弦
+inline Vec Rotate(const Vec &a, double rad) {return Vec(a.x * cos(rad) - a.y * sin(rad), a.x * sin(rad) + a.y * cos(rad));} // 逆时针旋转向量a
+
+inline Vec NormalVec(Vec a) {return Vec(-a.y , a.x);} // 返回a的法向量
+inline Vec UnitVec(Vec &a) {double l = Len(a); return Vec(-a.y / l, a.x / l);} // 返回a的单位法向量
+inline Vec conj(Vec &a) {return Vec(a.x, -a.y);}
+inline bool isCollinear(const Point &p1, const Point &p2, const Point &p3) {return fabs(Cross(p2 - p1, p3 - p1)) < eps;} // 共线
+
+/// 角度转弧度 *注意正负
+inline double deg2rad(double deg) {return deg / 180.0 * pi;}
+/// 弧度转角度 *注意正负
+inline double rad2deg(double rad) {return rad / pi * 180.0;}
+/// 求向量极角 *注意范围是(-pi,pi] *有时要去掉引用
+inline double PolarAngle(Vec &v) {return atan2(v.y, v.x);}
+
+// 点到线段的距离
+inline double PointToSeg(Point &P, Point &A, Point &B)
+{
+	Vec v1 = B - A, v2 = P - A, v3 = P - B;
+	if (Dot(v1, v2) < -eps) return Len(v2);
+	if (Dot(v1, v3) > eps) return Len(v3);
+	return fabs(Cross(v1, v2)) / Len(v1);
+}
+
+// 凸包内部点距凸包的最近距离
+// 注意事先p[n]=p[0]
+double PointToConvexhull(Point &o, Point *p, int n)
+{
+	int i;
+	double ans = 1e100;
+	For(i, n) Qmin(ans, PointToSeg(o, p[i], p[i + 1]));
 	return ans;
 }
 
-double solve1(double l, double r, double b, double c, double d) /// bool ok(double x)
+
+
+/// 求凸包, 返回凸包的逆时针顶点数, ***结果保存在ans中, 一定要注意！！
+int convex_hull(Point *p, Point *ans, int n)
 {
-	double m;
-	int i;
-	For(i, 70)
+	sort(p, p + n);
+// *判重的代码 at here //
+//n = unique(p, p + n) - p; /// *去重，看题意
+	int cnt = 0, i;
+	For(i, n) ///构建一个下凸包，从0到n-1
 	{
-		m = (l + r) / 2.0;
-		m*m*m + b*m*m + c*m + d < 0.0 ? l = m : r = m;
+		while (cnt >= 2 && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps) // * < -eps 表示不去掉凸包边上的点
+			--cnt;
+		ans[cnt++] = p[i];
 	}
-	return l; //return calc(l);
-}
-
-double solve_1(double l, double r, double b, double c, double d) /// bool ok(double x)
-{
-	double m;
-	int i;
-	For(i, 70)
+///注意在构建上凸包的过程中我们用到了n-1这个点
+///为什么0要算两次？因为我们要借助它来删去那些在凸包内的点
+	int tmp = cnt;
+	rFor(i, n - 2) ///构建一个上凸包，从n-2到0
 	{
-		m = (l + r) / 2.0;
-		m*m*m + b*m*m + c*m + d > 0.0 ? l = m : r = m;
+		while (cnt > tmp && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps) // * < -eps 表示不去掉凸包边上的点
+			--cnt;
+		ans[cnt++] = p[i];
 	}
-	return l; //return calc(l);
+	if (cnt > 1) --cnt; /// 0算了两次
+	ans[cnt] = ans[0]; /// *方便后续操作
+	return cnt;
+//return cnt == 1 ? 0 : cnt;
 }
 
-// a=1的简化版
-// <del>我们可以根据两个最值乘积的符号来判定解的个数：>0 1个，==0 2个，<0 3个</del>
-void CubicEquation(double b, double c, double d)
+
+double lenc;
+set<Point> s;
+
+int get_directline(int n)
 {
-	vector<double> x_ = QuadraticEquation(3, 2 * b, c);
-	x[0] = solve1(-1000, x_[0], b, c, d);
-	x[1] = solve_1(x_[0], x_[1], b, c, d);
-	x[2] = solve1(x_[1], 1000, b, c, d);
-	///
-	printf("%.15f\n", d);
-	DIII(b, c, d);
-	DIII(x[0], x[1], x[2]);
-	///
+	convex_hull(p, ans1, n);
+	int i;
+	s.clear();
+	For(i, n) s.insert(p[i]);
+	int sz = convex_hull(p, ans2, n + 1);
+	lenc = 0.0;
+	For(i, sz) lenc += Len(ans2[i], ans2[i + 1]), s.erase(ans2[i]);
+	For(i, sz) if (ans2[i] == you) break;
+	//youpos=i;
+	dir_lp = ans2[(i - 1 + sz) % sz], dir_rp = ans2[i + 1];
+	return sz;
 }
 
-typedef vector<double> vec;
-typedef vector<vec> Mat;
+double t, vr, vs;
+double racc;
 
 
 
-//struct matrix
-//{
-//	int n = 3, m = 3;
-//	Mat mat = Mat(3, vec(3));
-//
-//	//matrix(int n = 0, int m = 0): n(n), m(m) {mem(mat, 0);}
-//
-//	matrix operator * (const matrix &b)
-//	{
-//		int i, j, k;
-//		matrix tmp;
-//		For(i, n) For(j, b.m) For(k, m) tmp.mat[i][j] += mat[i][k] * b.mat[k][j];
-//		//For(i, n) For(j, b.m) For(k, m) tmp.mat[i][j] = (tmp.mat[i][j] + mat[i][k] * b.mat[k][j]) % mod; /// *注意mat用ll
-//		return tmp;
-//	}
-//
-//	matrix trans() /// 转置
-//	{
-//		int i, j;
-//		matrix tmp;
-//		For(i, n) For(j, m) tmp.mat[j][i] = mat[i][j];
-//		return tmp;
-//	}
-//
-//} Q, AA, anss;
 
-///// A为n*n矩阵
-//vec gauss_jordan(Mat A)
-//{
-//	int n = A.size(), i, j, k, pivot;
-//	Mat B(n, vec(n + 1)); /// 把A和b都放在B中处理
-//	For(i, n) copy(all(A[i]), B[i].begin()), B[i][n] =1.0;
-//	For(i, n)
-//	{
-//	  //  DI(i);
-//		pivot = i; /// 中心
-//		Forr(j, i, n) if (fabs(B[j][i]) > fabs(B[pivot][i]) + eps) pivot = j;
-//		swap(B[i], B[pivot]);
-//		if (fabs(B[i][i]) < eps) return vec(3); /// 无穷多组解或无解
-//		Forr(j, i + 1, n + 1) B[i][j] /= B[i][i];
-//		For(j, n) if (i != j) Forr(k, i + 1, n + 1) B[j][k] -= B[j][i] * B[i][k];
-//		//DI(i);
-//	}
-//	vec x = vec(n);
-//	double sum = 0.0;
-//	For(i, n) sum += sq(B[i][n]);
-//	sum = sqrt(sum);
-//	///
-//DI(sum);
-/////
-//	For(i, n) x[i] = B[i][n] / sum;
-//	return x;
-//}
-const int ttt[3][3] =
+
+struct Line
 {
-	1, 1, 1, 1, 1, -1, 1, -1, -1
+	Point p;
+	Vec v;
+	Line() {}
+	Line(Point p, Vec v): p(p), v(v) {}
+	Point point(double t) {return p + v * t;}
 };
 
-void solve(double a[3][3])
+struct CC
 {
-	double tmp;
-	int n = 3;
-	int i, j, k;
-	For(i, 3) For(j, 3) a[i][j] = ttt[i][j];
-	For(i, n)
+	Point c; /// *o
+	double r;
+	CC() {}
+	CC(Point c, double r): c(c), r(r) {}
+	Point point(double a) {return Point(c.x + r * cos(a), c.y + r * sin(a));}
+} cir;
+
+inline int getLineCCIntersection(Line &L, CC &C, vector<Point> &ans)
+{
+	double a = L.v.x, b = L.p.x - C.c.x, c = L.v.y, d = L.p.y - C.c.y;
+	double e = a * a + c * c, f = 2 * (a * b + c * d), g = b * b + d * d - C.r * C.r;
+	double delta = f * f - 4 * e * g;
+	if (delta < -eps) return 0; /// 相离
+	if (fabs(delta) < eps) /// 相切
 	{
-		For(j, n) if (fabs(a[j][j]) < eps) break;
-		if (j < n)
-		{
-			Forr(j, i + 1, n) if (fabs(a[i][j]) > eps) break;
-			if (j == n) continue;
-			For(k, n)
-			{
-				a[k][i] += a[k][j];
-				a[i][k] += a[j][k];
-			}
-//			For(j, n) Forr(k, i, n)
-//			{
-//				a[k][i] += a[k][j];
-//				a[i][k] += a[j][k];
-//			}
-			PAA(a, 3, 3);
-			Pn();
-		}
-		Forr(j, i + 1, n)
-		{
-			// if(fabs(a[i][i])<eps) continue;
-			tmp = -a[i][j] / a[i][i];
-//		temp1[i][j] = -a[i][j] * b[i][i];
-//		temp2[i][j] = b[i][j] * a[i][i];
-//		//△循环取乘数 -aij / aii
-			Forr(k, i, n)
-			{
-				a[k][j] += tmp * a[k][i];
-//			m = temp1[i][j] * a[k][i];
-//			n = temp2[i][j] * b[k][i];
-//			// △分子、分母分别相乘
-//			　　a[k][j] = a[k][j] * n + m * b[k][j];
-//			//△两分数相加
-//			　　b[k][j] = b[k][j] * n；//　huajian(&a[k][j]，&b[k][j]); △简化
-//							　　
-			}
-			Forr(k, i, n) //△类似进行行变换　　
-			{
-				a[j][k] += tmp * a[i][k];
-//			m = temp1[i][j] * a[i][k];
-//			n = temp2[i][j] * b[i][k];
-//			a[j][k] = a[j][k] * n + m * b[j][k];
-//			b[j][k] = b[j][k] * n;
-//			// ajian（&a[j][k]，&b[j][k]）；　　
-			}
-		}
-		PAA(a, 3, 3);
-		Pn();
+		t1 = t2 = -f / (2 * e);
+		if (t1 > -eps && t1 < 1 + eps) ans.push_back(t1);
+		return ans.size();
 	}
+	/// 相交
+	delta = sqrt(delta);
+	t1 = (-f - delta) / (2 * e);
+	t2 = (-f + delta) / (2 * e);
+	if (t1 > t2) swap(t1, t2);
+	if (t1 < eps) t1 = 0.0;
+	if (t2 + eps > 1) t2 = 1.0;
+	if (t1 > t2) return 0;
+	ans.push_back(L.point(t1));
+	ans.push_back(L.point(t2));
+	return 2;
+}
+
+vector<Point> crossp;
+
+double solve(double l,double r)
+{
+
+}
+
+/// 点在直线上的投影(垂足)
+inline double getLineProj(Point &p, Point &a, Point &b)
+{
+	Vec v = b - a;
+	v = v / Len(v);
+	return t = Dot(v, p - a);
+	//return a + v * t;
+}
+
+double solvetime(Point &p1, Point &p2)
+{
+	crossp.clear();
+	int num = getLineCCIntersection(Line(p1, p2 - p1), cir, crossp);
+	if (num == 0) return 1e100;
+	double len = 1e100;
+	if (racc)
+	{
+		lacc = lenc - racc - Len(p1, p2);
+		// 从右游
+
+		// 从左游
+	}
+	else
+	{
+	    t1 = getLineProj(you,p1,p2);
+	    t2 = getLineProj(him,p1,p2);
+	    if(t1>t2) swap(t1,t2);
+        midt = solve(t1,t2);
+
+	}
+	return ;
 }
 
 int main()
 {
-	double a, b, c, d, e, f, aa;
-	int i, j;
-	double mat[3][3];
-	//vec ans;
-	//Mat A(3, vec(3));
-	while (~scanf("%lf%lf%lf%lf%lf%lf", &a, &b, &c, &d, &e, &f))
+	int n, i;
+	double mint;
+	TT
 	{
-		aa = 0.0;
-//		if (d != 0 || e != 0 || f != 0)
-//		{
-		mat[0][0] = a ;
-		mat[1][1] = b ;
-		mat[2][2] = c ;
-		mat[0][1] = mat[1][0] = f / 2;
-		mat[0][2] = mat[2][0] = e / 2;
-		mat[1][2] = mat[2][1] = d / 2;
-		solve(mat);
-		PAA(mat, 3, 3);
-//			CubicEquation(-a - b - c, a * b + a * c + b * c - (d * d + e * e + f * f) / 4, (a * d * d + b * e * e + c * f * f - d * e * f) / 4 - a * b * c);
-//			A[0][1] = A[1][0] = f / 2;
-//			A[0][2] = A[2][0] = e / 2;
-//			A[1][2] = A[2][1] = d / 2;
-//			For(i, 3)
-//			{
-//				A[0][0] = a - x[i];
-//				A[1][1] = b - x[i];
-//				A[2][2] = c - x[i];
-//				ans = solve(A);
-//				For(j, 3) Q.mat[j][i] = ans[j];
-//			}
-//			anss = Q.trans() * AA * Q;  // !!!!!!!!!
-		For(i, 3) Qmax(aa, fabs(mat[i][i]));
-//		}
-//		else
-//		{
-//			Qmax(aa, a);
-//			Qmax(aa, b);
-//			Qmax(aa, c);
-//		}
-		printf("%.15f\n", 1.0 / sqrt(aa));
+		SDDD(t, vr, vs);
+		you.read();
+		him.read();
+		SI(n);
+		For(i, n) p[i].read();
+		p[n] = p[0];
+		timepart2 = PointToConvexhull(him, p, n) * 2 / vs;
+		t -= timepart2;
+		if (t < 0)
+		{
+			PI(-1);
+			continue;
+		}
+		cir = CC(him, t * vs);
+		p[n] = you;
+		get_directline();
+		// 下面用ans1作答
+		For(i, n)
+		{
+			if (ans1[i] == dir_lp) lpos = i;
+			if (ans1[i] == dir_rp) rpos = i;
+			ans1[i + n] = ans1[i];
+		}
+		mint = 1e100;
+		racc = 0.0;
+		if (lpos < rpos)
+		{
+			Forr(i, lpos, rpos)
+			{
+				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
+			}
+			racc = Len(you, ans1[rpos]);
+			Forr(i, rpos, lpos + n)
+			{
+				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
+				racc += Len(ans1[i], ans1[i + 1]);
+			}
+		}
+		else
+		{
+			Forr(i, lpos, rpos + n)
+			{
+				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
+			}
+			racc = Len(you, ans1[rpos]);
+			Forr(i, rpos, lpos)
+			{
+				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
+				racc += Len(ans1[i], ans1[i + 1]);
+			}
+		}
+		if (mint == 1e100) PI(-1);
+		else printf("%.2f\n", mint + timepart2);
 	}
 	return 0;
 }
