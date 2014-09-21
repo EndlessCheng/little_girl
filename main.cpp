@@ -214,7 +214,7 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
-const double eps = 1e-8;
+//const double eps = 1e-8;
 
 //const ll mod = ll(1e9) + 7; // *或int
 //ll pow(ll a, ll r) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
@@ -237,272 +237,28 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //template<class T> inline T Xor(const T &x, const T &y) {return x ^ y;}
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
-#define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
+#define Pcas() printf("Case #%d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
 const int mx = 1e5 + 5;
 
-struct Point
-{
-	double x, y;
-	//double alpha; // 向量极角alpha = atan2(y, x); *注意范围是(-pi,pi]
-	Point(double x = 0, double y = 0): x(x), y(y) {} // *必要时请手动改int
-	void read() {SDD(x, y);}
-	bool operator < (const Point &b) const
-	{
-		return x < b.x || x == b.x && y < b.y;
-		//return x + eps < b.x || fabs(x - b.x) < eps && y + eps < b.y;
-	}
-	bool operator == (const Point &b) const
-	{
-		return x == b.x && y == b.y;
-	}
-} p[mx], ans1[mx], ans2[mx], you, him, dir_lp, dir_rp;
 
-typedef Point Vec;
-Vec operator + (const Vec &a, const Vec &b) {return Vec(a.x + b.x, a.y + b.y);}
-Vec operator - (const Point &a, const Point &b) {return Vec(a.x - b.x, a.y - b.y);}
-Vec operator - (const Point &a) {return Vec(-a.x, -a.y);}
-Vec operator * (const Vec &a, double p) {return Vec(a.x * p, a.y * p);}
-Vec operator / (const Vec &a, double p) {return Vec(a.x / p, a.y / p);}
-
-Vec operator * (const Vec &a, const Vec &b) {return Vec(a.x * b.x - a.y * b.y, a.x * b.y + b.x * a.y);}
-inline double Dot(const Vec &a, const Vec &b) {return a.x * b.x + a.y * b.y;}
-inline double Cross(const Vec &a, const Vec &b) {return a.x * b.y - a.y * b.x;} // b在a左边为正，b在a右边为负，等于0就是平行
-inline double Len(const Vec &a) {return hypot(a.x, a.y);}
-inline ll Len2(const Vec &a) {return sq(a.x) + sq(a.y);}
-inline double Angle(const Vec &a, const Vec &b) {return acos(Dot(a, b) / Len(a) / Len(b));} // 向量夹角
-inline double cosA(const Vec &a, const Vec &b) {return Dot(a, b) / Len(a) / Len(b);} // 向量夹角的余弦
-inline Vec Rotate(const Vec &a, double rad) {return Vec(a.x * cos(rad) - a.y * sin(rad), a.x * sin(rad) + a.y * cos(rad));} // 逆时针旋转向量a
-
-inline Vec NormalVec(Vec a) {return Vec(-a.y , a.x);} // 返回a的法向量
-inline Vec UnitVec(Vec &a) {double l = Len(a); return Vec(-a.y / l, a.x / l);} // 返回a的单位法向量
-inline Vec conj(Vec &a) {return Vec(a.x, -a.y);}
-inline bool isCollinear(const Point &p1, const Point &p2, const Point &p3) {return fabs(Cross(p2 - p1, p3 - p1)) < eps;} // 共线
-
-/// 角度转弧度 *注意正负
-inline double deg2rad(double deg) {return deg / 180.0 * pi;}
-/// 弧度转角度 *注意正负
-inline double rad2deg(double rad) {return rad / pi * 180.0;}
-/// 求向量极角 *注意范围是(-pi,pi] *有时要去掉引用
-inline double PolarAngle(Vec &v) {return atan2(v.y, v.x);}
-
-// 点到线段的距离
-inline double PointToSeg(Point &P, Point &A, Point &B)
-{
-	Vec v1 = B - A, v2 = P - A, v3 = P - B;
-	if (Dot(v1, v2) < -eps) return Len(v2);
-	if (Dot(v1, v3) > eps) return Len(v3);
-	return fabs(Cross(v1, v2)) / Len(v1);
-}
-
-// 凸包内部点距凸包的最近距离
-// 注意事先p[n]=p[0]
-double PointToConvexhull(Point &o, Point *p, int n)
-{
-	int i;
-	double ans = 1e100;
-	For(i, n) Qmin(ans, PointToSeg(o, p[i], p[i + 1]));
-	return ans;
-}
-
-
-
-/// 求凸包, 返回凸包的逆时针顶点数, ***结果保存在ans中, 一定要注意！！
-int convex_hull(Point *p, Point *ans, int n)
-{
-	sort(p, p + n);
-// *判重的代码 at here //
-//n = unique(p, p + n) - p; /// *去重，看题意
-	int cnt = 0, i;
-	For(i, n) ///构建一个下凸包，从0到n-1
-	{
-		while (cnt >= 2 && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps) // * < -eps 表示不去掉凸包边上的点
-			--cnt;
-		ans[cnt++] = p[i];
-	}
-///注意在构建上凸包的过程中我们用到了n-1这个点
-///为什么0要算两次？因为我们要借助它来删去那些在凸包内的点
-	int tmp = cnt;
-	rFor(i, n - 2) ///构建一个上凸包，从n-2到0
-	{
-		while (cnt > tmp && Cross(ans[cnt - 1] - ans[cnt - 2], p[i] - ans[cnt - 2]) < eps) // * < -eps 表示不去掉凸包边上的点
-			--cnt;
-		ans[cnt++] = p[i];
-	}
-	if (cnt > 1) --cnt; /// 0算了两次
-	ans[cnt] = ans[0]; /// *方便后续操作
-	return cnt;
-//return cnt == 1 ? 0 : cnt;
-}
-
-
-double lenc;
-set<Point> s;
-
-int get_directline(int n)
-{
-	convex_hull(p, ans1, n);
-	int i;
-	s.clear();
-	For(i, n) s.insert(p[i]);
-	int sz = convex_hull(p, ans2, n + 1);
-	lenc = 0.0;
-	For(i, sz) lenc += Len(ans2[i], ans2[i + 1]), s.erase(ans2[i]);
-	For(i, sz) if (ans2[i] == you) break;
-	//youpos=i;
-	dir_lp = ans2[(i - 1 + sz) % sz], dir_rp = ans2[i + 1];
-	return sz;
-}
-
-double t, vr, vs;
-double racc;
-
-
-
-
-
-struct Line
-{
-	Point p;
-	Vec v;
-	Line() {}
-	Line(Point p, Vec v): p(p), v(v) {}
-	Point point(double t) {return p + v * t;}
-};
-
-struct CC
-{
-	Point c; /// *o
-	double r;
-	CC() {}
-	CC(Point c, double r): c(c), r(r) {}
-	Point point(double a) {return Point(c.x + r * cos(a), c.y + r * sin(a));}
-} cir;
-
-inline int getLineCCIntersection(Line &L, CC &C, vector<Point> &ans)
-{
-	double a = L.v.x, b = L.p.x - C.c.x, c = L.v.y, d = L.p.y - C.c.y;
-	double e = a * a + c * c, f = 2 * (a * b + c * d), g = b * b + d * d - C.r * C.r;
-	double delta = f * f - 4 * e * g;
-	if (delta < -eps) return 0; /// 相离
-	if (fabs(delta) < eps) /// 相切
-	{
-		t1 = t2 = -f / (2 * e);
-		if (t1 > -eps && t1 < 1 + eps) ans.push_back(t1);
-		return ans.size();
-	}
-	/// 相交
-	delta = sqrt(delta);
-	t1 = (-f - delta) / (2 * e);
-	t2 = (-f + delta) / (2 * e);
-	if (t1 > t2) swap(t1, t2);
-	if (t1 < eps) t1 = 0.0;
-	if (t2 + eps > 1) t2 = 1.0;
-	if (t1 > t2) return 0;
-	ans.push_back(L.point(t1));
-	ans.push_back(L.point(t2));
-	return 2;
-}
-
-vector<Point> crossp;
-
-double solve(double l,double r)
-{
-
-}
-
-/// 点在直线上的投影(垂足)
-inline double getLineProj(Point &p, Point &a, Point &b)
-{
-	Vec v = b - a;
-	v = v / Len(v);
-	return t = Dot(v, p - a);
-	//return a + v * t;
-}
-
-double solvetime(Point &p1, Point &p2)
-{
-	crossp.clear();
-	int num = getLineCCIntersection(Line(p1, p2 - p1), cir, crossp);
-	if (num == 0) return 1e100;
-	double len = 1e100;
-	if (racc)
-	{
-		lacc = lenc - racc - Len(p1, p2);
-		// 从右游
-
-		// 从左游
-	}
-	else
-	{
-	    t1 = getLineProj(you,p1,p2);
-	    t2 = getLineProj(him,p1,p2);
-	    if(t1>t2) swap(t1,t2);
-        midt = solve(t1,t2);
-
-	}
-	return ;
-}
 
 int main()
 {
-	int n, i;
-	double mint;
-	TT
-	{
-		SDDD(t, vr, vs);
-		you.read();
-		him.read();
-		SI(n);
-		For(i, n) p[i].read();
-		p[n] = p[0];
-		timepart2 = PointToConvexhull(him, p, n) * 2 / vs;
-		t -= timepart2;
-		if (t < 0)
-		{
-			PI(-1);
-			continue;
-		}
-		cir = CC(him, t * vs);
-		p[n] = you;
-		get_directline();
-		// 下面用ans1作答
-		For(i, n)
-		{
-			if (ans1[i] == dir_lp) lpos = i;
-			if (ans1[i] == dir_rp) rpos = i;
-			ans1[i + n] = ans1[i];
-		}
-		mint = 1e100;
-		racc = 0.0;
-		if (lpos < rpos)
-		{
-			Forr(i, lpos, rpos)
-			{
-				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
-			}
-			racc = Len(you, ans1[rpos]);
-			Forr(i, rpos, lpos + n)
-			{
-				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
-				racc += Len(ans1[i], ans1[i + 1]);
-			}
-		}
-		else
-		{
-			Forr(i, lpos, rpos + n)
-			{
-				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
-			}
-			racc = Len(you, ans1[rpos]);
-			Forr(i, rpos, lpos)
-			{
-				Qmin(mint, solvetime(ans1[i], ans1[i + 1]));
-				racc += Len(ans1[i], ans1[i + 1]);
-			}
-		}
-		if (mint == 1e100) PI(-1);
-		else printf("%.2f\n", mint + timepart2);
-	}
-	return 0;
+    int n,i;
+    double p,sum;
+    TT
+    {
+        Pcas();
+        sum=0.0;
+        SI(n);
+        For(i,n)
+        {
+            SD(p);
+            sum+=p;
+        }
+        For(i,n) SD(p);
+        PD((n+1)/sum);
+    }
+    return 0;
 }
