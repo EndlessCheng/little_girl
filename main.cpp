@@ -237,7 +237,7 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //template<class T> inline T Xor(const T &x, const T &y) {return x ^ y;}
 #define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
-#define Pcas() printf("Case #%d: ", ++cas) // *注意C的大小写，空输出注意去空格
+#define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
 const int mx = 1e5 + 5;
 
@@ -245,20 +245,6 @@ const int mx = 1e5 + 5;
 
 int main()
 {
-    int n,i;
-    double p,sum;
-    TT
-    {
-        Pcas();
-        sum=0.0;
-        SI(n);
-        For(i,n)
-        {
-            SD(p);
-            sum+=p;
-        }
-        For(i,n) SD(p);
-        PD((n+1)/sum);
-    }
+
     return 0;
 }
