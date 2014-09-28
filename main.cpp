@@ -1,3 +1,4 @@
+
 #include<cstdio>
 #include<cctype>
 #include<cstring>
@@ -214,7 +215,7 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
-//const double eps = 1e-8;
+const double eps = 1e-8;
 
 //const ll mod = ll(1e9) + 7; // *或int
 //ll pow(ll a, ll r) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
@@ -241,32 +242,77 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 int cas;
 const int mx = 1e5 + 5;
 
-char tmp[mx];
-set<string> s;
 
-int main()
-{
-    int n,m,i,len;
-    TT
-    {
-        s.clear();
-        Pcas();
-        SII(n,m);
-        while(n--)
-        {
-            SS(tmp);
-            len=strlen(tmp);
-            if(len>3) sort(tmp+1,tmp+len-1);
-            s.insert(tmp);
-        }
-        while(m--)
-        {
-            SS(tmp);
-            len=strlen(tmp);
-            if(len>3) sort(tmp+1,tmp+len-1);
-            PC(s.find(tmp)==s.end()?'0':'1');
-        }
-        Pn();
-    }
-    return 0;
+
+
+
+
+struct Point {
+	double x, y;
+	//double alpha; // 向量极角alpha = atan2(y, x); *注意范围是(-pi,pi]
+	Point(double x = 0, double y = 0): x(x), y(y) {} // *必要时请手动改int
+	void read() {SDD(x, y);}
+	bool operator < (const Point &b) const {
+		return x < b.x || x == b.x && y < b.y;
+		//return x + eps < b.x || fabs(x - b.x) < eps && y + eps < b.y;
+	}
+	bool operator == (const Point &b) const {
+		return x == b.x && y == b.y;
+	}
+};
+
+typedef Point Vec;
+Vec operator + (const Vec &a, const Vec &b) {return Vec(a.x + b.x, a.y + b.y);}
+Vec operator - (const Point &a, const Point &b) {return Vec(a.x - b.x, a.y - b.y);}
+Vec operator - (const Point &a) {return Vec(-a.x, -a.y);}
+Vec operator * (const Vec &a, double p) {return Vec(a.x * p, a.y * p);}
+Vec operator / (const Vec &a, double p) {return Vec(a.x / p, a.y / p);}
+
+Vec operator * (const Vec &a, const Vec &b) {return Vec(a.x * b.x - a.y * b.y, a.x * b.y + b.x * a.y);}
+inline double Dot(const Vec &a, const Vec &b) {return a.x * b.x + a.y * b.y;}
+inline double Cross(const Vec &a, const Vec &b) {return a.x * b.y - a.y * b.x;} // b在a左边为正，b在a右边为负，等于0就是平行
+inline double Len(const Vec &a) {return hypot(a.x, a.y);}
+inline ll Len2(const Vec &a) {return sq(a.x) + sq(a.y);}
+inline double Angle(const Vec &a, const Vec &b) {return acos(Dot(a, b) / Len(a) / Len(b));} // 向量夹角
+inline double cosA(const Vec &a, const Vec &b) {return Dot(a, b) / Len(a) / Len(b);} // 向量夹角的余弦
+inline Vec Rotate(const Vec &a, double rad) {return Vec(a.x * cos(rad) - a.y * sin(rad), a.x * sin(rad) + a.y * cos(rad));} // 逆时针旋转向量a
+
+inline Vec NormalVec(Vec a) {return Vec(-a.y , a.x);} // 返回a的法向量
+inline Vec UnitVec(Vec &a) {double l = Len(a); return Vec(-a.y / l, a.x / l);} // 返回a的单位法向量
+inline Vec conj(Vec &a) {return Vec(a.x, -a.y);}
+inline bool isCollinear(const Point &p1, const Point &p2, const Point &p3) {return fabs(Cross(p2 - p1, p3 - p1)) < eps;} // 共线
+
+/// 角度转弧度 *注意正负
+inline double deg2rad(double deg) {return deg / 180.0 * pi;}
+/// 弧度转角度 *注意正负
+inline double rad2deg(double rad) {return rad / pi * 180.0;}
+/// 求向量极角 *注意范围是(-pi,pi] *有时要去掉引用
+inline double PolarAngle(Vec &v) {return atan2(v.y, v.x);}
+
+
+struct CC {
+	Point o; /// *o
+	double r;
+	CC() {}
+//CC(Point c, double r): c(c), r(r) {}
+	void read() {o.read(), SD(r);}
+// Point point(double a) {return Point(c.x + r * cos(a), c.y + r * sin(a));}
+};
+
+double CirCirCrossArea(CC c1, CC c2) { // *或者加上&
+	double d = Len(c1.o - c2.o);
+	if (d + eps > c1.r + c2.r) return 0.0;
+	if (c1.r < c2.r) swap(c1, c2); // 保证c1>=c2
+	if (c1.r + eps > d + c2.r) return pi * sq(c2.r);
+	return c1.r * c1.r * acos((c1.r * c1.r + d * d - c2.r * c2.r) / (2 * d * c1.r)) + c2.r * c2.r * acos((c2.r * c2.r + d * d - c1.r * c1.r) / (2 * d * c2.r)) - 0.5 * sqrt((c1.r + c2.r - d) * (c1.r + c2.r + d) * (d + c1.r - c2.r) * (d - c1.r + c2.r));
+}
+
+int main() {
+	CC c1, c2;
+	TT {
+		Pcas();
+		c1.read(), c2.read();
+		printf("%.15f\n", pi * sq(c1.r) - CirCirCrossArea(c1, c2));
+	}
+	return 0;
 }
