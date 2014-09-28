@@ -195,7 +195,7 @@ typedef unsigned int ui;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double ld;
-typedef pair<ll, ll> p2;
+typedef pair<int, int> p2;
 typedef pair<pair<int, int>, int> p3;
 typedef pair<int, pair<int, int> > pi3;
 typedef vector<int>::iterator viter;
@@ -214,7 +214,7 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
-
+//const double eps = 1e-8;
 
 //const ll mod = ll(1e9) + 7; // *或int
 //ll pow(ll a, ll r) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
@@ -229,7 +229,7 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 //void exgcd(ll a, ll b, ll& d, ll& x, ll& y) {b ? (exgcd(b, a % b, d, y, x), y -= x * (a / b)) : (d = a, x = 1LL, y = 0LL);}
 //template<class T> inline T lcm(T a, T b) {return a / gcd(a, b) * b;}
 
-template<class T> inline T _len(T x) {int cnt = 0;  /* set<int> s; */  for (; x; ++cnt, x /= 10) {   /* s.insert(x % 10); */   ;} return cnt; /* return s.size() == cnt;  */ }
+//template<class T> inline T _len(T x) {int cnt = 0;  /* set<int> s; */  for (; x; ++cnt, x /= 10){   /* s.insert(x % 10); */   ;} return cnt; /* return s.size() == cnt;  */ }
 //template<class T> inline T isSQ(T n) {T tmp = Sqrt(n); return sq(tmp) == n ? tmp : 0;} // 参数应为正数
 //inline bool isint(double x) {return fabs(x - round(x)) < eps;}
 //inline int sign(double x) {return x < -eps ? -1 : x > eps;} // *
@@ -241,120 +241,32 @@ template<class T> inline T _len(T x) {int cnt = 0;  /* set<int> s; */  for (; x;
 int cas;
 const int mx = 1e5 + 5;
 
-//double len, log10b,log10q;
-//double intpart;
-//double q;
-//int n;
-//
-//inline bool f(double k) {
-//    bool ans=(int)(pow(10.0, len + modf(log10b + k * log10q, &intpart))+1e-6) == n;
-//    if(!ans)
-//    {
-//        ;
-//        DI(log10b + k * log10q);
-//        DI(pow(10.0, len + modf(log10b + k * log10q, &intpart)));
-//    }
-//    return ans;
-//	return (int)(pow(10.0, len + modf(log10b + k * log10q, &intpart)) + eps) == n;
-//}
-//
-//int main() {
-//	int i, cnt;
-//	double b;
-//	int test = 2000000;
-//	TT {
-//		Pcas();
-//
-//
-//
-//		SI(n);
-//		SDD(b, q);
-//		log10q=log10(q);
-//		log10b = log10(b);
-//		len = (double)(_len(n) - 1);
-//		cnt = f(0);
-//		Forr(i, 1, test) if (f(i)) {
-//			++cnt;
-//
-//		}
-//		else
-//        {
-//           ;
-//            DI(i);
-//        }
-//		DI(cnt);
-//		printf("%.5f\n", (double)cnt / test);
-//	}
-//	return 0;
-//}
-//
+char tmp[mx];
+set<string> s;
 
-const double eps = 1e-12;
-
-double f(double x) {
-	if (x < eps) return 1.0;
-	int maxc = 50;
-	ll a[50], p[50], q[50];
-	int cnt = 2, i = 2;
-	while (x >= 1e-8 && cnt < maxc) {
-		a[cnt++] = ll(x = 1.0 / x);
-		x -= ll(x);
-	}
-	p[0] = q[1] = 0;
-	p[1] = q[0] = 1;
-	for (;; ++i) {
-		//p[i] = a[i] * p[i - 1] + p[i - 2];
-		q[i] = a[i] * q[i - 1] + q[i - 2];
-		//DII(i,q[i]);
-		//DI(q[i]);
-		if (q[i] > ll(1e16) || i + 1 == cnt) break; //???
-	}
-	return q[i];
-	//return p2(p[i], q[i]);
-}
-
-double solve(double la, double a) {
-	// if(la<eps)
-	if(la<eps) return 1.0;
-	//DI(la);
-	double p = f(la);
-	//DII(p,a);
-	return ceil(p * a) / p;
-}
-
-double solve(double la, double upp, double low) {
-	return solve(la, upp) - solve(la, low);
-}
-
-int main() {
-	int n, len;
-	double b, q, upp, low, log10b, log10q;
-	TT {
-		Pcas();
-		SI(n), SDD(b, q);
-		len = _len(n) - 1;
-		log10b = log10(b);
-		log10b -= int(log10b);
-		//DI(log10b);
-		//DII(log10(double(n)),log10(double(n + 1)));
-		upp = log10(double(n + 1) / b) - len;
-		//DI(upp);
-		while (upp < eps) upp += 1;
-		low = log10(double(n) / b) - len;
-		while (low < eps) low += 1;
-		//DII(upp, low);
-	//	 特判 0.0, 1.0
-		bool swp = (upp < low);
-		if (swp) swap(upp, low);
-		log10q = log10(q);
-		//DI(log10q);
-		log10q -= int(log10q);
-
-	//	DIII(log10q, upp,low);
-
-		double ans = solve(log10q, upp, low);
-		if (swp) ans = 1.0 - ans;
-		printf("%.5f\n", ans);
-	}
-	return 0;
+int main()
+{
+    int n,m,i,len;
+    TT
+    {
+        s.clear();
+        Pcas();
+        SII(n,m);
+        while(n--)
+        {
+            SS(tmp);
+            len=strlen(tmp);
+            if(len>3) sort(tmp+1,tmp+len-1);
+            s.insert(tmp);
+        }
+        while(m--)
+        {
+            SS(tmp);
+            len=strlen(tmp);
+            if(len>3) sort(tmp+1,tmp+len-1);
+            PC(s.find(tmp)==s.end()?'0':'1');
+        }
+        Pn();
+    }
+    return 0;
 }
