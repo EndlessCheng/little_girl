@@ -1,6 +1,54 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+/*
+#include<ext/rope>
+using namespace __gnu_cxx;
+*/
+
+#define tm ttttttt
+#define j0 jjjjjjj
+#define j1 jjjjjjjj
+#define jn jjjjjjjjj
+#define y0 yyyyyyy
+#define y1 yyyyyyyy
+#define yn yyyyyyyyy
+#define arg aaaaaaa
+
+#define Fin(f) freopen(f, "r", stdin)
+#define Fout(f) freopen(f, "w", stdout)
+#define CI() fclose(stdin)
+#define CO() fclose(stdout)
+#define SR() srand((unsigned)time(NULL))
+#define random(m) ((rand() << 16 | rand()) % m) // [0,m)之间的伪随机数
+#define randomm(a, b) (a + ((rand() << 16 | rand()) % (b - a))) // [a,b)之间的伪随机数
+#define randomP(a, n) srand((unsigned)time(NULL)), random_shuffle(a, a + (n))
+#define AS(a) assert(a)
+
+#define all(a) a.begin(), a.end()
+#define PB push_back
+#define sq(x) ((x) * (x))
+#define Sqrt(n) (int)round(sqrt((double)n))
+
+// 注意在调用前v一定要开足量的空间
+#define Inter(v, a, n, b, m) v.resize(set_intersection(a, a + (n), b, b + (m), v.begin()) - v.begin())
+#define SInter(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Inter(v, a, n, b, m)
+#define Union(v, a, n, b, m) v.resize(set_union(a, a + (n), b, b + (m), v.begin()) - v.begin());
+#define SUnion(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Union(v, a, n, b, m)
+#define Diff(v, a, n, b, m) v.resize(set_difference(a, a + (n), b, b + (m), v.begin()) - v.begin())
+#define SDiff(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Diff(v, a, n, b, m)
+#define Sym(v, a, n, b, m) v.resize(set_symmetric_difference(a, a + (n), b, b + (m) v.begin()) - v.begin())
+#define SSym(v, a, n, b, m) v.resize((n) + (m)); sort(a, a + (n)); sort(b, b + (m)); Sym(v, a, n, b, m)
+
+#define setInter(a, b, to) set_intersection(all(a), all(b), inserter(to, to.begin()))
+#define setUnion(a, b, to) set_union(all(a), all(b), inserter(to, to.begin()))
+
+#define Cnt1 __builtin_popcount /// Cnt1ll就是ull的了
+#define LBpos(n) (31 - __builtin_clz(n))
+#define LBposll(n) (63 - __builtin_clzll(n))
+#define RBpos(n) (__builtin_ffs(n) - 1)
+#define RBposll(n) (__builtin_ffsll(n) - 1)
+
 #define For(i, n) for (i = 0; i < (n); ++i)
 //#define For(i, n) for (int i = 0, _ = (n); i < _; ++i)
 #define Forr(i, start, n) for (i = start; i < (n); ++i)
@@ -57,215 +105,134 @@ using namespace std;
 #define Pn() putchar(10)
 #define Ps() putchar(32)
 
-char numstr[200];
+#define Uni(a) a.resize(unique(all(a)) - a.begin()) // STL专用
+#define SUni(a) sort(all(a)); Uni(a) // STL专用
+#define Unii(a, n) (unique(a, a + (n)) - a)
+#define SUnii(a, n) sort(a, a + n); Unii(a, n)
+#define Acc(a, n) (accumulate(a, a + (n), 0)) /// 可以Acc(a.begin(), k); *注意0LL以及0.0！
+#define Accv(a) (accumulate(all(a), 0)) // *注意0LL以及0.0！
+#define AaddB(a, n, b) transform(a, a + (n), b, a, plus<int>()) // *慢的话就改为For(i, n) a[i] += b[i](注意加int i)
+#define mem(a, num) memset(a, num, sizeof(a))
+#define cpy(to, from) memcpy(to, from, sizeof(from))
+#define Rcpy(l, r, b) reverse_copy(l, r, b) // 注意为左闭右开区间
+#define kTo10(ans, str, s, m, k) strncpy(str, s, m), str[m] = 0, ans = strtol(str, NULL, k)
 
-struct bign {
-	int len, s[200];
+#define LE(T) less_equal<T>
+#define GR(T) greater<T>
+#define GE(T) greater_equal<T>
+#define NET(T) not_equal_to<T>
 
-	bign() {
-		memset(s, 0, sizeof(s));
-		len = 1;
-	}
+#define nth(a, k, n) nth_element(a + 0, a + k, a + n) // *可能要事先--k
+#define nthg(a, k, n) nth_element(a + 0, a + k, a + n, greater<int>()) // *可能要事先--k
+#define Min(a, n) (*min_element(a, a + (n)))
+#define Max(a, n) (*max_element(a, a + (n)))
+#define Minpos(a, n) (min_element(a, a + (n)) - (a))
+#define Maxpos(a, n) (max_element(a, a + (n)) - (a))
+#define Lval(a, n, x) (*lower_bound(a, a + (n), x))
+#define Uval(a, n, x) (*upper_bound(a, a + (n), x))
+#define Lpos(a, n, x) (lower_bound(a, a + (n), x) - (a)) // *加个gr()变成<=
+#define Upos(a, n, x) (upper_bound(a, a + (n), x) - (a)) // *加个gr()变成<
+//#define BS(a, n, x) binary_search(a, a + (n), x) // 返回bool值
+#define Range(a, n, x) equal_range(a, a + (n), x) // 返回pair
+#define Fpos(a, n, x) (find(a, a + (n), x) - (a))
+#define Fd(a, x) (a.find(x) != a.end())
+#define Fdd(a, x) (find(all(a), x) != a.end())
+template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
+template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} // *若考虑位置，加上等号
 
-	bign(int num) {
-		*this = num;
-	}
+const int inf = 0x3f3f3f3f; // 1.06e9 (INT_MAX为2.147e9)
+const long long llinf = 0x3f3f3f3f3f3f3f3fLL; // 4.56e18 (LLONG_MAX为9.22e18)
+const double pi = acos(-1.0);
+//const double tens[11] = {0.0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
+//double fgcd(double a, double b) {return fabs(b) > eps ? fgcd(b, fmod(a, b)) : a;}
 
-	bign(const char* num) { /// 也就是说：b = a / "123";是允许的
-		*this = num;
-	}
+//const int dir[4][2] = {1, 0, 0, 1, -1, 0, 0, -1};
+//const int dirr[8][2] = {1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
+//const int knight_dir[8][2] = {1, 2, 1, -2, -1, 2, -1, -2, 2, 1, 2, -1, -2, 1, -2, -1};
 
-	bign operator = (const int num) {
-		char s[200];
-		sprintf(s, "%d", num);
-		*this = s;
-		return *this;
-	}
+// INT_MAX = -1u >> 1
+// 如果用gets(s), GC(ch)读入WA的话，请用SS(s), SC(ch)代替
+// 在main()中大量初始化STL类型容易死机
+// 不要出现 val[i] = ++i 这样的未定义的行为！
+// 注意strncpy不会加尾0，请手动添加
+// 相对位置不变的排序stable_sort(a, a + n);
+// advance(it, n); 相当于 For(i, n) ++it; 但是它是O(1)的
+// size()是ui类型的，应该(int)xx.size()
+// 截取整数部分 trunc()
 
-	bign operator = (const char* num) {
-		len = strlen(num);
-		for (int i = 0; i < len; i++) s[i] = num[len - i - 1] & 15;
-		return *this;
-	}
+/*G++扩栈
+int __size__ = 256 << 20; // 256MB
+char *__p__ = (char*)malloc(__size__) + __size__;
+__asm__("movl %0, %%esp\n" :: "r"(__p__));
+*/
 
-///输出
-	const char* str() const {
-		if (len) {
-			for (int i = 0; i < len; i++)
-				numstr[i] = '0' + s[len - i - 1];
-			numstr[len] = '\0';
-		} else strcpy(numstr, "0");
-		return numstr;
-	}
+//ios_base::sync_with_stdio(false);
+#define _set() cout.precision(15)//, cout.setf(ios::hex, ios::basefield), cout.setf(ios::showbase)
+#define _unset() cout.unsetf(ios::floatfield)//, cout.unsetf(ios::hex), cout.unsetf(ios::showbase)
+#define DI(a) _set(), printf(#a" = "), cout << (a) << endl, _unset()
+#define DII(a, b) _set(), printf(#a" = "), cout << (a), printf(", "#b" = "), cout << (b) << endl, _unset()
+#define DIII(a, b, c) _set(), printf(#a" = "), cout << (a), printf(", "#b" = "), cout << (b), printf(", "#c" = "), cout << (c) << endl, _unset()
+#define DIIII(a, b, c, d) _set(), printf(#a" = "), cout << (a), printf(", "#b" = "), cout << (b), printf(", "#c" = "), cout << (c), printf(", "#d" = "), cout << (d) << endl, _unset()
+#define DA(a, n) _set(); for(int iiiii = 0; iiiii < n; ++iiiii) printf(#a"[%2d] = ", iiiii), cout << a[iiiii] << endl; _unset()
+#define DAA(a, n, m) for(int iiiii = 0; iiiii < n; ++iiiii) for(int jjjjj = 0; jjjjj < m; ++jjjjj) printf(#a"[%2d][%2d] = ", iiiii, jjjjj), cout << a[iiiii][jjjjj] << endl
 
-///去前导零
-	void clear() {
-		while (len > 1 && !s[len - 1]) len--;
-	}
+// *修改模板参数
+typedef unsigned int ui;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> p2;
+typedef pair<pair<int, int>, int> p3;
+typedef pair<int, pair<int, int> > pi3;
+/*
+typedef vector<int>::iterator viter;
+typedef set<int>::iterator siter;
+typedef map<int, int>::iterator miter;
+typedef multiset<int>::iterator msiter;
+typedef multimap<int, int>::iterator mmter;
+*/
+typedef priority_queue<int> pq;
+typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
+#define MT(a, b, c) p3(p2(a, b), c)
+//#define MT(a, b, c) p3(a, p2(b, c))
+//#define x first
+//#define y second
+//p2 operator + (const p2 &a, const p2 &b) {return p2(a.x + b.x, a.y + b.y);}
+//p2 operator += (p2 &a, const p2 &b) {return a = a + b;}
 
-///加
-	bign operator + (const bign& b) const {
-		bign c;
-		c.len = 0;
-		for (int i = 0, g = 0; g || i < max(len, b.len); i++) {
-			int x = g;
-			if (i < len) x += s[i];
-			if (i < b.len) x += b.s[i];
-			c.s[c.len++] = x % 10;
-			g = x / 10;
-		}
-		return c;
-	}
+//inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
+//inline bool okS(char *s) {return s = gets(s), s && *s;}
+//const double eps = 1e-8;
 
-///减
-	bign operator - (const bign& b) const {
-		bign c;
-		c.len = 0;
-		for (int i = 0, g = 0; i < len; i++) {
-			int x = s[i] - g;
-			if (i < b.len) x -= b.s[i];
-			if (x >= 0) g = 0;
-			else {
-				g = 1;
-				x += 10;
-			}
-			c.s[c.len++] = x;
-		}
-		c.clear();
-		return c;
-	}
+//const ll mod = ll(1e9) + 7; // *或int
+//ll pow(ll a, ll r) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
+//ll mul_mod(ll a, ll b, ll mod) {b %= mod; ll ret = 0; for (; b; b >>= 1) {if (b & 1) ret = (ret + a) % mod; a = (a + a) % mod;} return ret;} // *使用前特判m==1
+//ll pow(ll a, ll r, ll mod) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = mul_mod(ans, a, mod); a = mul_mod(a, a, mod);} return ans;} // *使用前特判m==1
+//ll powsum(ll a, int r) {ll ans = 1LL, tmp = 1LL; for (; r; r >>= 1) {if (r & 1) ans = (ans * a + tmp) % mod; tmp = tmp * (1LL + a) % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
 
-///乘
-	bign operator * (const bign& b) const {
-		bign c;
-		c.len = len + b.len;
-		for (int i = 0; i < len; i++)
-			for (int j = 0; j < b.len; j++)
-				c.s[i + j] += s[i] * b.s[j];
-		for (int i = 0; i < c.len - 1; i++) {
-			c.s[i + 1] += c.s[i] / 10;
-			c.s[i] %= 10;
-		}
-		c.clear();
-		return c;
-	}
+template<class T> inline T Qceil(T x, T y) {return (T)ceil(double(x) / y - 1e-8);}
+//template<class T> inline T Qceil(T x, T y) {return x ? (x - 1) / y + 1 : 0;} // *y必须为正
+//template<class T> inline T gcd(T a, T b) {T c; while (b) c = a % b, a = b, b = c; return a;}
+//void exgcd(ll a, ll b, ll& d, ll& x, ll& y) {b ? (exgcd(b, a % b, d, y, x), y -= x * (a / b)) : (d = a, x = 1LL, y = 0LL);}
+//template<class T> inline T lcm(T a, T b) {return a / gcd(a, b) * b;}
 
-///除
-	bign operator / (const bign &b) const {
-		bign ret, cur = 0;
-		ret.len = len;
-		for (int i = len - 1; i >= 0; i--) {
-			cur = cur * 10;
-			cur.s[0] = s[i];
-			while (cur >= b) {
-				cur -= b;
-				ret.s[i]++;
-			}
-		}
-		ret.clear();
-		return ret;
-	}
+//template<class T> inline T _len(T x) {int cnt = 0;  /* set<int> s; */  for (; x; ++cnt, x /= 10){   /* s.insert(x % 10); */   ;} return cnt; /* return s.size() == cnt;  */ }
+//template<class T> inline T isSQ(T n) {T tmp = Sqrt(n); return sq(tmp) == n ? tmp : 0;} // 参数应为正数
+//inline bool isint(double x) {return fabs(x - round(x)) < eps;}
+//inline int sign(double x) {return x < -eps ? -1 : x > eps;} // *
+//struct comp {bool operator()(const double &a, const double &b)const {return a + eps < b;}};
+//template<class T> inline T Xor(const T &x, const T &y) {return x ^ y;}
+#define TT int tttt; scanf("%d%*c", &tttt); while(tttt--) // TT{ ... }
+#define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
+#define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
+int cas;
+const int mx = 1e5 + 5;
 
-///模、余
-	bign operator % (const bign &b) const {
-		bign c = *this / b;
-		return *this - c * b;
-	}
 
-	bool operator < (const bign& b) const {
-		if (len != b.len) return len < b.len;
-		for (int i = len - 1; i >= 0; i--)
-			if (s[i] != b.s[i]) return s[i] < b.s[i];
-		return false;
-	}
-	bool operator > (const bign& b) const {
-		return b < *this;
-	}
-	bool operator <= (const bign& b) const {
-		return !(b < *this);
-	}
-	bool operator >= (const bign &b) const {
-		return !(*this < b);
-	}
-	bool operator == (const bign& b) const {
-		return !(b < *this) && !(*this < b);
-	}
-	bool operator != (const bign &a) const {
-		return *this > a || *this < a;
-	}
-	bign operator += (const bign &a) {
-		*this = *this + a;
-		return *this;
-	}
-	bign operator -= (const bign &a) {
-		*this = *this - a;
-		return *this;
-	}
-	bign operator *= (const bign &a) {
-		*this = *this * a;
-		return *this;
-	}
-	bign operator /= (const bign &a) {
-		*this = *this / a;
-		return *this;
-	}
-	bign operator %= (const bign &a) {
-		*this = *this % a;
-		return *this;
-	}
-};
 
-int s[1000];
-int cnt;
+int main()
+{
 
-void init() {
-	int i, j;
-	bool vis[1000] = {0};
-	Forr(i, 2, 1000) {
-		if (!vis[i]) {
-			s[++cnt] = i;
-			Forrr(j, i * i, 1000, i) vis[j] = true;
-		}
-	}
+    return 0;
 }
 
-const int mx = 105;
-bool vis[mx][mx];
-
-int main() {
-	int n, m, i, j, k, t, x;
-	init();
-	SII(n, m);
-	Forr(i, 1, m + 1) {
-		SI(x);
-		Forr(j, 1, n + 1) {
-			while (x % s[j] == 0) {
-				x /= s[j];
-				vis[j][i] = !vis[j][i];
-			}
-		}
-	}
-	k = 1;
-	Forr(i, 1, m + 1) {
-		Forr(j, k, n + 1) if (vis[j][i]) break;
-		if (j == n + 1) continue;
-		Forr(t, 1, m + 1) {
-			swap(vis[j][t], vis[k][t]);
-		}
-		Forr(j, k + 1, n + 1) {
-			if (vis[j][i]) {
-				Forr(t, i, m + 1) vis[j][t] ^= vis[k][t];
-			}
-		}
-		++k;
-	}
-	--k;
-	bign ans(1);
-	k = m - k;
-	while (k--) {
-		ans *= 2;
-	}
-	ans -= 1;
-	puts(ans.str());
-	return 0;
-}
