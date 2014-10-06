@@ -189,6 +189,8 @@ const double pi = acos(-1.0);
 #define DIIII(a, b, c, d) _set(), printf(#a" = "), cout << (a), printf(", "#b" = "), cout << (b), printf(", "#c" = "), cout << (c), printf(", "#d" = "), cout << (d) << endl, _unset()
 #define DA(a, n) _set(); for(int iiiii = 0; iiiii < n; ++iiiii) printf(#a"[%2d] = ", iiiii), cout << a[iiiii] << endl; _unset()
 #define DAA(a, n, m) for(int iiiii = 0; iiiii < n; ++iiiii) for(int jjjjj = 0; jjjjj < m; ++jjjjj) printf(#a"[%2d][%2d] = ", iiiii, jjjjj), cout << a[iiiii][jjjjj] << endl
+#define DS(s) puts("set "#s":"); loop(it, s) DI(*it)
+#define DM(seg_gcd) puts("map "#seg_gcd":"); loop(it, seg_gcd) DII(it->first, it->second)
 
 // *修改模板参数
 typedef unsigned int ui;
@@ -209,8 +211,8 @@ typedef priority_queue<int> pq;
 typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 #define MT(a, b, c) p3(p2(a, b), c)
 //#define MT(a, b, c) p3(a, p2(b, c))
-#define x first
-#define id second
+//#define x first
+//#define y second
 //p2 operator + (const p2 &a, const p2 &b) {return p2(a.x + b.x, a.y + b.y);}
 //p2 operator += (p2 &a, const p2 &b) {return a = a + b;}
 
@@ -241,35 +243,24 @@ template<class T> inline T gcd(T a, T b) {T c; while (b) c = a % b, a = b, b = c
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 3e5 + 5;
+const int mx = 1e5 + 5;
 
-map<int, int> in, out;
-map<int, pair<ll, vector<int> > > q;
+map<int, ll> seg_gcd, new_seg_gcd, ans;
 
 int main() {
+	int n, x, g;
 	SI(n);
-	SA(a, n);
-	SI(m);
-	For(i, m) SI(xx), q[xx].x = 0, q[xx].id.PB(i);
-	For(i, n) {
-		g = a[i];
-		if (out.find(g) != out.end()) {
-			pos = out[g];
-			if (pos >= i) {
-				if (q.find(g) != q.end()) q[g].x += pos - i + 1;
-				continue;
-			}
+	while (n--) {
+		SI(x), ++seg_gcd[x];
+		new_seg_gcd.clear();
+		loop (it, seg_gcd) {
+			g = gcd(it->first, x);
+			new_seg_gcd[g] += it->second;
+			ans[g] += it->second;
 		}
-		if()
-		last=g;
-		Forr(j, i+1, n) {
-		    g=gcd(g,a[j]);
-		    if(g!=last)
-            {
-                out[g]=j-1;
-                in[g]=j;
-            }
-		}
+		seg_gcd = new_seg_gcd;
 	}
+	SI(n);
+	while (n--) SI(x), PL(ans[x]);
 	return 0;
 }
