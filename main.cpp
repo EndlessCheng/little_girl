@@ -1,4 +1,3 @@
-
 #include<cstdio>
 #include<cctype>
 #include<cstring>
@@ -212,20 +211,20 @@ typedef priority_queue<int> pq;
 typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 #define MT(a, b, c) p3(p2(a, b), c)
 //#define MT(a, b, c) p3(a, p2(b, c))
-#define x first
-#define y second
+//#define x first
+//#define y second
 //p2 operator + (const p2 &a, const p2 &b) {return p2(a.x + b.x, a.y + b.y);}
 //p2 operator += (p2 &a, const p2 &b) {return a = a + b;}
 
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
-//const double eps = 1e-8;
+const double eps = 1e-8;
 
 const ll mod = ll(1e9) + 7; // *或int
-//ll pow(ll a, ll r) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
+ll Pow(ll a, ll r) {ll ans = 1 ; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
 //ll mul_mod(ll a, ll b, ll mod) {b %= mod; ll ret = 0; for (; b; b >>= 1) {if (b & 1) ret = (ret + a) % mod; a = (a + a) % mod;} return ret;} // *使用前特判m==1
-//ll pow(ll a, ll r, ll mod) {ll ans = 1LL; for (; r; r >>= 1) {if (r & 1) ans = mul_mod(ans, a, mod); a = mul_mod(a, a, mod);} return ans;} // *使用前特判m==1
-//ll powsum(ll a, int r) {ll ans = 1LL, tmp = 1LL; for (; r; r >>= 1) {if (r & 1) ans = (ans * a + tmp) % mod; tmp = tmp * (1LL + a) % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
+//ll Pow(ll a, ll r, ll mod) {ll ans = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = mul_mod(ans, a, mod); a = mul_mod(a, a, mod);} return ans;} // *使用前特判m==1
+//ll powsum(ll a, int r) {ll ans = 1LL % mod, tmp = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = (ans * a + tmp) % mod; tmp = tmp * (1LL + a) % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
 
 template<class T> inline T Qceil(T x, T y) {return (T)ceil(double(x) / y - 1e-8);}
 //template<class T> inline T Qceil(T x, T y) {return x ? (x - 1) / y + 1 : 0;} // *y必须为正
@@ -244,116 +243,77 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 5e4 + 5;
+const int mx = 1e3 + 5;
 
-const int mxm = 2;
-
-struct matrix {
-	int n, m;
-	ll mat[mxm][mxm];
-
-	matrix(int n = 0, int m = 0): n(n), m(m){}
-
-	void toI() {mem(mat,0);int i; For(i, n) mat[i][i] = 1LL;} /// *要求n==m
-
-	matrix operator * (const matrix &b) {
-		int i, j, k;
-		matrix tmp(n, b.m);
-// For(i, n) For(j, b.m) For(k, m) tmp.mat[i][j] += mat[i][k] * b.mat[k][j];
-		For(i, n) For(j, b.m) For(k, m) tmp.mat[i][j] = (tmp.mat[i][j] + mat[i][k] * b.mat[k][j]) % mod; /// *注意mat用ll
-		return tmp;
-	}
-
-
-
-} mat[16];
-
-matrix Pow(matrix a, int r) {
-	int i;
-	matrix ans(2, 2);
-	ans.toI();
-	for (; r; r >>= 1) {
-		if (r & 1) ans = ans * a;
-		a = a * a;
-	}
-	return ans;
-}
-
-int n;
-struct BIT {
-	int tree[mx]; // 注意n已经是全局变量
-	inline void init() {mem(tree, 0);}
-	inline void U(int pos, int val = 1) {for (; pos <= n; pos += pos & -pos) tree[pos] += val;} // 传入的pos一定不能是0
-	inline int sum(int pos) {int ans = 0; for (; pos > 0; pos &= pos - 1) ans += tree[pos]; return ans;} // 传入的pos可以是0
-	inline int Q(int l, int r) {return sum(r) - sum(l - 1);} // 闭区间
-} bit[16];
-
-int con[mx];
+char r[mx];
+ll two[mx] = {0LL, 1LL};
+ll dp[mx][mx];
 
 void init() {
-	int i, j, k;
-	For(i, 16) bit[i].init();
-	Forr(i, 1, n) bit[15].U(i);
-	Forr(i, 1, n) con[i] = 15;
+	int i;
+	Forr(i, 2, mx) {
+		two[i] = 2 * two[i - 1] % mod;
+	}
+	// DA(two,10);
 }
 
-void U(int x, int y, int z) {
-	bit[con[x]].U(x, -1);
-	int pos = y << 1 | z;
-	con[x] ^= 1 << pos;
-	bit[con[x]].U(x);
+ll C[mx][mx];
+
+void init_C(int n) {
+	int i, j;
+	C[0][0] = 1LL;
+	For(i, n + 1) {
+		C[i][0] = C[i][i] = 1LL;
+		Forr(j, 1, i) C[i][j] = (C[i - 1][j] + C[i - 1][j - 1]) % mod;
+	}
 }
 
-ll Q(int l, int r) {
-	matrix ans(2, 2);
-	ans.toI();
-	int i, j,k;
+inline ll f(int n, int len) {
 
+    return (len-1)*C[len][n]%mod;
 
-
-	For(i, 16) {
-	    DI(bit[i].Q(l, r));
-	    matrix ttt=Pow(mat[15], bit[i].Q(l, r));
-
-For(j,2)For(k,2)DI(ttt.mat[j][k]);
-		ans = ans * Pow(mat[i], bit[i].Q(l, r));
-	}
-	ll sum = 0LL;
-	For(i, 2) For(j, 2)
-	{
-	    sum += ans.mat[i][j];
-	    DI(sum);
-	}
-	return sum % mod;
-}
-
-
-void allinit() {
-	int i, j, k, pos;
-	For(i, 16) {
-		For(j, 2) For(k, 2) {
-			pos = j << 1 | k;
-			mat[i].mat[j][k] = (i >> pos) & 1;
-		}
-	}
+//	if (len < 1) return 0;
+//	if (n > len || n < 1) return 0;
+//	if (len == 1) return 1;
+//	if (~dp[n][len]) return dp[n][len];
+////   DI(C[n-1][len-1]);
+//	return dp[n][len] = ((C[len - 1][n - 1]) * two[len] + f(n - 1, len - 1) + f(n, len - 1)) % mod;
+//    if(~(dp[n][len].x)) return dp[n][len];
+//    if(n==0) return p2(0,0);
+//    if(n>len) return p2(0,0);
+//  //  if() return
+//    if(n==1||n==len) return p2(two[len],1);
+//
+//
+//    return dp[n][len]=f(n-1,len-1)+f(n,len-1);
 }
 
 int main() {
-	allinit();
-	int m, op, x, y, z, l, r;
-	while (~SII(n, m)) {
-		init();
-		while (m--) {
-			SI(op);
-			//	DI(op);
-			if (op) { // U
-				SIII(x, y, z);
-				U(x, y - 1, z - 1);
-			} else { // Q
-				SII(l, r);
-				PL(Q(l, r));
-			}
+	init();
+	init_C(mx - 2);
+	//mem(dp, -1);
+//    For(i,mx) For(j,mx) dp[i][j].x=-1;
+//    DII(f(2,4).x,f(2,4).y);
+//DI(f(2,3));
+	int n, len, i, cnt, all;
+	ll ans, sum;
+	while (~scanf("%d%s", &n, r)) {
+		len = strlen(r);
+		ans = cnt = sum = 0;
+		all = 0;
+		//For(i, len) if (r[i] == '1') ++all;
+		For(i, len) if (r[i] == '1') {
+
+			ans = (ans + f(n - cnt, len - i - 1) + sum * C[len - i - 1][n - cnt]) % mod;
+			//	DI(ans);
+			++cnt;
+			sum = (sum + two[len - i]) % mod;
+//			if (cnt == n&&cnt!=all) {
+//				ans = (ans + sum) % mod;
+//				break;
+//			}
 		}
+		PL(ans);
 	}
 	return 0;
 }
