@@ -155,8 +155,12 @@ using namespace std;
 #define Fpos(a, n, x) (find(a, a + (n), x) - (a))
 #define Fd(a, x) (a.find(x) != a.end())
 #define Fdd(a, x) (find(all(a), x) != a.end())
-template<class T> inline void Qmin(T &a, const T b) {if (b < a) a = b;}
-template<class T> inline void Qmax(T &a, const T b) {if (a < b) a = b;} // *若考虑位置，加上等号
+template<class T> inline void Qmin(T &a, const T b) {
+	if (b < a) a = b;
+}
+template<class T> inline void Qmax(T &a, const T b) {
+	if (a < b) a = b;   // *若考虑位置，加上等号
+}
 
 const int inf = 0x3f3f3f3f; /// 1.06e9 (INT_MAX为2.147e9)
 const long long llinf = 0x3f3f3f3f3f3f3f3fLL; /// 4.56e18 (LLONG_MAX为9.22e18)
@@ -218,17 +222,21 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 
 //inline bool okC(char &c) {return c = getchar(), c != 10 && ~c;} //return (c = getchar()) == 32;
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
-const double eps = 1e-8;
+//const double eps = 1e-8;
 
-const ll mod = ll(1e9) + 7; // *或int
-ll Pow(ll a, ll r) {ll ans = 1 ; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
+//const ll mod = ll(1e9) + 7; // *或int
+//ll Pow(ll a, ll r) {ll ans = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
 //ll mul_mod(ll a, ll b, ll mod) {b %= mod; ll ret = 0; for (; b; b >>= 1) {if (b & 1) ret = (ret + a) % mod; a = (a + a) % mod;} return ret;} // *使用前特判m==1
 //ll Pow(ll a, ll r, ll mod) {ll ans = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = mul_mod(ans, a, mod); a = mul_mod(a, a, mod);} return ans;} // *使用前特判m==1
 //ll powsum(ll a, int r) {ll ans = 1LL % mod, tmp = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = (ans * a + tmp) % mod; tmp = tmp * (1LL + a) % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
 
-template<class T> inline T Qceil(T x, T y) {return (T)ceil(double(x) / y - 1e-8);}
+template<class T> inline T Qceil(T x, T y) {
+	return (T)ceil(double(x) / y - 1e-8);
+}
 //template<class T> inline T Qceil(T x, T y) {return x ? (x - 1) / y + 1 : 0;} // *y必须为正
-inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
+inline double round(double x) {
+	return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);
+}
 //template<class T> inline T gcd(T a, T b) {T c; while (b) c = a % b, a = b, b = c; return a;}
 //void exgcd(ll a, ll b, ll& d, ll& x, ll& y) {b ? (exgcd(b, a % b, d, y, x), y -= x * (a / b)) : (d = a, x = 1LL, y = 0LL);}
 //template<class T> inline T lcm(T a, T b) {return a / gcd(a, b) * b;}
@@ -243,77 +251,34 @@ inline double round(double x) {return x > 0.0 ? floor(x + 0.5) : ceil(x - 0.5);}
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
-const int mx = 1e3 + 5;
+const int mx = 1e5 + 5;
 
-char r[mx];
-ll two[mx] = {0LL, 1LL};
-ll dp[mx][mx];
+int maxp[mx];
 
-void init() {
-	int i;
-	Forr(i, 2, mx) {
-		two[i] = 2 * two[i - 1] % mod;
-	}
-	// DA(two,10);
-}
-
-ll C[mx][mx];
-
-void init_C(int n) {
+void sieve() {
 	int i, j;
-	C[0][0] = 1LL;
-	For(i, n + 1) {
-		C[i][0] = C[i][i] = 1LL;
-		Forr(j, 1, i) C[i][j] = (C[i - 1][j] + C[i - 1][j - 1]) % mod;
-	}
+	Forr(i, 2, mx) if (!maxp[i]) Forrr(j, i, mx, i) maxp[j] = i; /// j最大素因子为i
 }
 
-inline ll f(int n, int len) {
-
-    return (len-1)*C[len][n]%mod;
-
-//	if (len < 1) return 0;
-//	if (n > len || n < 1) return 0;
-//	if (len == 1) return 1;
-//	if (~dp[n][len]) return dp[n][len];
-////   DI(C[n-1][len-1]);
-//	return dp[n][len] = ((C[len - 1][n - 1]) * two[len] + f(n - 1, len - 1) + f(n, len - 1)) % mod;
-//    if(~(dp[n][len].x)) return dp[n][len];
-//    if(n==0) return p2(0,0);
-//    if(n>len) return p2(0,0);
-//  //  if() return
-//    if(n==1||n==len) return p2(two[len],1);
-//
-//
-//    return dp[n][len]=f(n-1,len-1)+f(n,len-1);
+int get_maxp(int n) {
+	if (n < 2) return 0;
+	if (n < mx) return maxp[n];
+	int maxpp;
+	for (int i = 2; i * i <= n; ++i) {
+		if (n % i) continue;
+		maxpp = i;
+		do n /= i;
+		while (n % i == 0);
+	}
+	if (n > 1) maxpp = n;
+	return maxpp;
 }
 
 int main() {
-	init();
-	init_C(mx - 2);
-	//mem(dp, -1);
-//    For(i,mx) For(j,mx) dp[i][j].x=-1;
-//    DII(f(2,4).x,f(2,4).y);
-//DI(f(2,3));
-	int n, len, i, cnt, all;
-	ll ans, sum;
-	while (~scanf("%d%s", &n, r)) {
-		len = strlen(r);
-		ans = cnt = sum = 0;
-		all = 0;
-		//For(i, len) if (r[i] == '1') ++all;
-		For(i, len) if (r[i] == '1') {
-
-			ans = (ans + f(n - cnt, len - i - 1) + sum * C[len - i - 1][n - cnt]) % mod;
-			//	DI(ans);
-			++cnt;
-			sum = (sum + two[len - i]) % mod;
-//			if (cnt == n&&cnt!=all) {
-//				ans = (ans + sum) % mod;
-//				break;
-//			}
-		}
-		PL(ans);
+	sieve();
+	int n;
+	while (~SI(n)) {
+		PI(n<2?0:n/get_maxp(n));
 	}
 	return 0;
 }
