@@ -1,11 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-/*
-#include<ext/rope>
-using namespace __gnu_cxx;
-*/
-
 #define tm ttttttt
 #define j0 jjjjjjj
 #define j1 jjjjjjjj
