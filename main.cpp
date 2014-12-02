@@ -1,15 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define tm ttttttt
-#define j0 jjjjjjj
-#define j1 jjjjjjjj
-#define jn jjjjjjjjj
-#define y0 yyyyyyy
-#define y1 yyyyyyyy
-#define yn yyyyyyyyy
-#define arg aaaaaaa
-
 #define Fin(f) freopen(f, "r", stdin)
 #define Fout(f) freopen(f, "w", stdout)
 #define CI() fclose(stdin)
