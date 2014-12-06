@@ -1,31 +1,19 @@
 #include<bits/stdc++.h>
 using namespace std;
-<<<<<<< HEAD
-void print(char ch[5][2]);
-int main() {
-	char ch[5][5];
-	char notasd;
-	//printf("%x\n",&ch[4][4]+8);
-	//printf("%x\n",&notasd);
-	for (int  i = 0; i < 5; i++) {
-		//	printf("%x %x\n",&i);
-	//scanf("%c",&notasd);
-//	printf("%d\n",i);
-		cout << i << endl;
-		cin >> &ch[i][0];
-		printf("%d %d %d\n",ch[i][0],ch[i][1],i);
-	}
-	//print(ch);
-}
-//void print(char ch[5][2]) {
-//	for (int i = 0; i < 5; i++) {
-//		for (int j = 0; j < 5; j++) {
-//			cout << ch[i][j];
-//		}
-//		cout << endl;
-//	}
-//}
-=======
+
+/*
+#include<ext/rope>
+using namespace __gnu_cxx;
+*/
+
+#define tm ttttttt
+#define j0 jjjjjjj
+#define j1 jjjjjjjj
+#define jn jjjjjjjjj
+#define y0 yyyyyyy
+#define y1 yyyyyyyy
+#define yn yyyyyyyyy
+#define arg aaaaaaa
 
 #define Fin(f) freopen(f, "r", stdin)
 #define Fout(f) freopen(f, "w", stdout)
@@ -218,8 +206,8 @@ typedef priority_queue<int, vector<int>, greater<int> > spq; // 小的在top
 //inline bool okS(char *s) {return s = gets(s), s && *s;}
 //const double eps = 1e-8;
 
-const ll mod = ll(1e9) + 7; // *或int
-ll Pow(ll a, ll r) {ll ans = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
+//const ll mod = ll(1e9) + 7; // *或int
+//ll Pow(ll a, ll r) {ll ans = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = ans * a % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
 //ll mul_mod(ll a, ll b, ll mod) {b %= mod; ll ret = 0; for (; b; b >>= 1) {if (b & 1) ret = (ret + a) % mod; a = (a + a) % mod;} return ret;} // *使用前特判m==1
 //ll Pow(ll a, ll r, ll mod) {ll ans = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = mul_mod(ans, a, mod); a = mul_mod(a, a, mod);} return ans;} // *使用前特判m==1
 //ll powsum(ll a, int r) {ll ans = 1LL % mod, tmp = 1LL % mod; for (; r; r >>= 1) {if (r & 1) ans = (ans * a + tmp) % mod; tmp = tmp * (1LL + a) % mod; a = a * a % mod;} return ans;} // *使用前特判m==1
@@ -240,4 +228,48 @@ template<class T> inline T Qceil(T x, T y) {return (T)ceil(double(x) / y - 1e-8)
 #define QQ int qqqq; scanf("%d%*c", &qqqq); while(qqqq--) // QQ{ ... }
 #define Pcas() printf("Case %d: ", ++cas) // *注意C的大小写，空输出注意去空格
 int cas;
->>>>>>> origin/master
+const int mx = 1e5 + 5;
+
+vector<int> g[mx];
+int in[mx], qu[mx];
+
+bool topo(int n) {
+	int head = 1, tail = 0, i, v, u;
+	For(i, n + 1) if (!in[i]) qu[++tail] = i;
+	while (head <= tail) {
+		v = qu[head++];
+		For(i, g[v].size()) {
+			u = g[v][i];
+			--in[u];
+			if (!in[u]) qu[++tail] = u;
+		}
+	}
+	return tail == n + 1;
+}
+
+int sum[mx];
+
+void print_ans(int n) {
+	int zero_pos, i;
+	rForr(i, n + 1, 1) if (!qu[i]) {zero_pos = i; break;}
+	DI(zero_pos);
+	Forr(i, 1, n + 2) sum[qu[i]] = i - zero_pos;
+	DA(sum, n + 2);
+	Forr(i, 1, n + 1) printf("%d%c", sum[i - 1] - sum[i], (i != n ?  32 : 10));
+}
+
+bool solve(int n, int p, int q) {
+	int i;
+	Forr(i, 1, n + 1) {
+		if (i >= p) g[i].PB(i - p), ++in[i - p], DII(i, i - p);
+		if (i >= q) g[i - q].PB(i), ++in[i], DII(i - q, i);
+	}
+	if (topo(n)) return print_ans(n), true;
+	return false;
+}
+
+int main() {
+
+	return 0;
+}
+
